@@ -24,3 +24,4 @@ stseclearn73696            # Storage account with security configs
 - Key Vault setup
 - Network security groups
 - Monitoring configuration
+# Quick test change
