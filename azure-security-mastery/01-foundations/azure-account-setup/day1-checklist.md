@@ -22,7 +22,7 @@
 
 ## 🎯 **Phase 2: Local Environment Test (20 minutes)**
 
-### **Step 3: Azure CLI Authentication** ⏱️ 10 min
+### **Step 3: Azure CLI Authentication** ⏱️ 10 min ✅
 ```bash
 # Login to Azure
 az login
@@ -48,7 +48,7 @@ Get-AzSubscription
 
 ## 🎯 **Phase 3: First Infrastructure (45 minutes)**
 
-### **Step 5: Resource Group Creation** ⏱️ 10 min
+### **Step 5: Resource Group Creation** ⏱️ 10 min ✅
 ```bash
 # Create resource group in West Europe
 az group create --name rg-learning-day1 --location westeurope
@@ -57,7 +57,7 @@ az group create --name rg-learning-day1 --location westeurope
 az group show --name rg-learning-day1 --output table
 ```
 
-### **Step 6: First Bicep Template** ⏱️ 25 min
+### **Step 6: First Bicep Template** ⏱️ 25 min ✅
 
 **Create**: `storage-account.bicep`
 ```bicep
@@ -86,7 +86,7 @@ output storageAccountName string = storageAccount.name
 output storageAccountId string = storageAccount.id
 ```
 
-### **Step 7: Deploy Infrastructure** ⏱️ 10 min
+### **Step 7: Deploy Infrastructure** ⏱️ 10 min ✅
 ```bash
 # Deploy Bicep template
 az deployment group create \
