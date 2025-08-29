@@ -100,13 +100,13 @@ az storage account list --resource-group rg-learning-day1 --output table
 
 ## 🎯 **Phase 4: Documentation & Git (25 minutes)**
 
-### **Step 8: GitHub Repository** ⏱️ 15 min
-- [ ] Create GitHub repository: `azure-security-mastery`
-- [ ] Clone locally to cybersecurity-journey folder
-- [ ] Add initial README with project structure
-- [ ] Add .gitignore for Azure/Bicep projects
+### **Step 8: GitHub Repository** ⏱️ 15 min ✅
+- [x] Create GitHub repository: `azure-security-mastery`
+- [x] Clone locally to cybersecurity-journey folder
+- [x] Add initial README with project structure
+- [x] Add .gitignore for Azure/Bicep projects
 
-### **Step 9: First Commit** ⏱️ 10 min
+### **Step 9: First Commit** ⏱️ 10 min ✅
 ```bash
 # Add files
 git add .
@@ -131,13 +131,13 @@ git push origin main
 ## ✅ **Success Criteria**
 
 At the end of Day 1, you should have:
-- [ ] **Working Azure subscription** with free credits
-- [ ] **Secure account setup** with MFA enabled
-- [ ] **Resource group created** in West Europe
-- [ ] **Storage account deployed** using Bicep IaC
-- [ ] **GitHub repository** with first commit
-- [ ] **Development environment** fully functional
-- [ ] **Confidence** in Azure CLI, PowerShell, and Bicep
+- [x] **Working Azure subscription** with free credits
+- [x] **Secure account setup** with MFA enabled
+- [x] **Resource group created** in West Europe
+- [x] **Storage account deployed** using Bicep IaC
+- [x] **GitHub repository** with first commit
+- [x] **Development environment** fully functional
+- [x] **Confidence** in Azure CLI, PowerShell, and Bicep
 
 ## 📝 **Learning Log Entry**
 
