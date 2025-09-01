@@ -142,9 +142,9 @@ At the end of Day 1, you should have:
 ## 📝 **Learning Log Entry**
 
 **What I learned today**:
-- 
-- 
-- 
+- tenants
+- Bicep config // Infrastructure as code
+-  // resources
 
 **Challenges encountered**:
 - 
