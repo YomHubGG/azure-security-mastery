@@ -66,12 +66,23 @@ az acr update --name REGISTRY_NAME --admin-enabled true
 
 ### Azure Container Instances (ACI)
 ```bash
-# Deploy container to cloud
-az deployment group create --resource-group RG_NAME --template-file container-instance.bicep --parameters @aci-dev.parameters.json
+# ⚠️  COST WARNING: Container Instances charge ~€0.32/day while running!
+# ALWAYS get human approval before deploying costly resources
+
+# Preview costs BEFORE deploying
+az deployment group what-if --resource-group RG_NAME --template-file container-instance.bicep --parameters @aci-dev.parameters.json
+
+# Deploy container to cloud (ONLY with explicit approval)
+echo "⚠️  WARNING: This will incur costs! Proceed? (y/N)" && read -r response
+[[ "$response" =~ ^[Yy]$ ]] && az deployment group create --resource-group RG_NAME --template-file container-instance.bicep --parameters @aci-dev.parameters.json || echo "❌ Deployment cancelled"
 
 # Test running container
 curl http://CONTAINER_IP:3000
 curl http://CONTAINER_IP:3000/health
+
+# Cost management - ALWAYS clean up after sessions
+az container stop --name CONTAINER_NAME --resource-group RG_NAME    # Stop (but restarts due to policy)
+az container delete --name CONTAINER_NAME --resource-group RG_NAME --yes  # Delete completely
 ```
 
 ## 🎯 Current Infrastructure
@@ -80,7 +91,7 @@ curl http://CONTAINER_IP:3000/health
 - **Storage**: Multiple secure storage accounts
 - **Containers**: 
   - Registry: devacr4uybw3c2lbkwm.azurecr.io/secure-app:v1
-  - Running: http://4.175.207.4:3000 (dev-secure-container)
+  - Status: ⏹️ **STOPPED** (deleted to save costs - can redeploy anytime)
 
 ## 📋 Session Progress
 - [x] **Phase 1**: IaC Foundations (Bicep, multi-resource templates)
@@ -89,4 +100,9 @@ curl http://CONTAINER_IP:3000/health
 - [ ] **Phase 4**: Application Security (Key Vault, web apps) ← **NEXT SESSION**
 - [ ] **Phase 5**: Compliance & Governance (Policy, RBAC)
 
-*Updated: September 1, 2025*
+*Updated: September 2, 2025*
+
+---
+## 🚨 COST SAFETY COMMITMENT
+**NEVER deploy costly resources without explicit human consent!**  
+See: [Cost Safety Guidelines](azure-security-mastery/cost-safety-guidelines.md)
