@@ -43,25 +43,27 @@ az group create --name rg-learning-day1 --location westeurope
 
 **What to explore**:
 1. **Overview tab**: Basic info, status, location
-2. **Security + networking**: 
-   - See your HTTPS-only setting
-   - Find the TLS 1.2 minimum setting
-   - Look for public access settings
-3. **Configuration**: Access tier, replication
-4. **Monitoring**: Metrics and logs
+2. **Configuration tab** (LEFT MENU):
+   - ✅ **Secure transfer required**: Should be "Enabled" (your `supportsHttpsTrafficOnly: true`)
+   - ✅ **Minimum TLS version**: Should show "Version 1.2" (your `minimumTlsVersion: 'TLS1_2'`)
+   - ✅ **Allow Blob public access**: Should be "Disabled" (your `allowBlobPublicAccess: false`)
+3. **Security + networking tab** (LEFT MENU):
+   - Look for additional security features
+   - Network access rules
+4. **Data protection**: Backup and recovery options
 
-**Visual Learning**:
-- See how your Bicep security settings appear in the GUI
-- Notice the visual indicators for security features
-- Explore tabs you didn't configure (but could with IaC)
+**🎯 UPDATED FINDING GUIDE**:
+- Your Bicep security settings are mainly in the **"Configuration"** tab
+- Some security features moved to **"Security + networking"** 
+- Portal layout updated since 2024 - look in left sidebar menu
 
 **CLI Connection**:
 ```bash
 # Your Bicep template created all these security settings:
 properties: {
-  supportsHttpsTrafficOnly: true    # ← Find this in Security tab
-  minimumTlsVersion: 'TLS1_2'       # ← Find this setting
-  allowBlobPublicAccess: false      # ← Look for this security feature
+  supportsHttpsTrafficOnly: true    # ← "Configuration" → "Secure transfer required"
+  minimumTlsVersion: 'TLS1_2'       # ← "Configuration" → "Minimum TLS version"  
+  allowBlobPublicAccess: false      # ← "Configuration" → "Allow Blob public access"
 }
 ```
 
@@ -69,16 +71,35 @@ properties: {
 
 **Navigate**: Search for "Virtual Networks" or check your resource groups
 
-**What to explore**:
+**💰 COST SAFETY FIRST**:
+```
+✅ COMPLETELY FREE TO EXPLORE:
+├── Virtual Network creation and configuration
+├── Subnet design and setup  
+├── Network Security Groups (NSG rules)
+├── Route tables and DNS settings
+└── Basic networking features
+
+❌ AVOID CREATING (COSTS MONEY):
+├── VPN Gateways (~€20-30/month)
+├── Application Gateways (~€20/month)  
+├── Load Balancers with rules (~€15/month)
+├── NAT Gateways (~€30/month)
+└── Additional Public IP addresses (~€3/month each)
+```
+
+**What to explore** (SAFELY):
 1. **Network topology diagrams**
-2. **Address spaces** and subnets
+2. **Address spaces** and subnets  
 3. **Connected resources**
 4. **Security rules** and NSGs
+5. **Peering** possibilities (free to configure, not create)
 
 **Visual Learning**:
 - See network architecture as diagrams
 - Understand how subnets relate to resources
 - Visualize security boundaries
+- **SAFE TO CLICK**: All viewing and configuration options are free!
 
 ## 🐳 **Tour Stop 4: Container Registry (If Deployed)**
 
@@ -115,15 +136,33 @@ Every `az deployment group create` command shows up here!
 **Learning Value**: 
 See the financial impact of your infrastructure choices!
 
-## 🛡️ **Tour Stop 7: Security Center**
+## 🛡️ **Tour Stop 7: Security Center (You Found This!)**
 
 **Navigate**: Search "Microsoft Defender for Cloud" or "Security Center"
+
+**🎉 YOU DISCOVERED**: 5 moderate security recommendations for your container!
 
 **What to explore**:
 1. **Secure score**: Overall security rating
 2. **Recommendations**: What could be more secure?
+   - ✅ **Your 5 moderate recommendations** - these are learning opportunities!
+   - Click each recommendation to understand the security improvement
+   - See estimated impact on security score
 3. **Compliance**: Standards alignment
 4. **Inventory**: All your resources with security status
+
+**Learning Value**:
+- These recommendations are **exactly** what Azure Security Engineers work with daily
+- Each recommendation teaches you a security best practice
+- **Don't fix them yet** - just understand what they're suggesting
+- This is Microsoft teaching you enterprise security patterns!
+
+**Professional Context**: 
+In your future role, you'll:
+- Review security recommendations daily
+- Prioritize fixes based on severity  
+- Implement security improvements via IaC
+- Report security posture to management
 
 **Eye-opening**: See how your security-first IaC approach pays off!
 
