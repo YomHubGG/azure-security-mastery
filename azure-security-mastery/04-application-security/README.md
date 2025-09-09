@@ -31,7 +31,7 @@ These skills are **essential** for Azure Security Engineers:
 - **100% of jobs** require Key Vault knowledge
 - **95% of roles** involve secure app deployment
 - **90% of positions** need managed identity expertise
-- **Salary impact**: €15K-25K premium for application security skills
+- **Industry standard** security practices for cloud applications
 
 ## 🏗️ **Phase 4 Roadmap & Completion Status**
 
@@ -87,4 +87,4 @@ These skills are **essential** for Azure Security Engineers:
 
 ---
 
-*Building the skills that command €70K-120K salaries in Azure Security!* 💪
+*Building professional-grade Azure Security expertise!* 💪
