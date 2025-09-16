@@ -1,18 +1,32 @@
-# 🚀 1-Year Azure Security Portfolio Plan (Every Other Day, 1-2 Hours)
+# 🚀 1-Year Azure Security Mastery Plan (European Market Focus)
 
-## 🎯 **Goal**: Green GitHub + Strong Azure Security Portfolio + European Career-Ready Skills
+## 🎯 **Goal**: Expert-Level Azure Security Skills + RGPD/GDPR Compliance + European Career Readiness
 
 **Schedule**: Every other day, 1-2 hours (flexible around 42 workload)
 **Total commitment**: ~180 sessions, 270-360 hours over 12 months
-**End result**: 20+ projects, Azure certifications, job-ready portfolio
+**End result**: 20+ projects, Azure certifications, RGPD/GDPR expertise, European market readiness
 
-## 🇪🇺 **Why Azure for European Careers**:
-- **70% market share** in European enterprises (vs AWS 20%)
-- **GDPR compliance** built-in (critical for EU companies)
-- **Microsoft ecosystem** integration (Office 365, Active Directory)
-- **Government contracts** (Azure Government in EU regions)
-- **Banking preference** (Deutsche Bank, ING, Santander all Azure-heavy)
-- **Remote work** (Microsoft Teams integration everywhere)
+## 🇪🇺 **Why Azure Security for European Careers**:
+- **Enterprise dominance** in European cloud infrastructure
+- **RGPD/GDPR compliance** built-in (critical for EU companies)
+- **Data sovereignty** requirements in European regulations
+- **Microsoft ecosystem** integration (M365, Active Directory, Teams)
+- **Banking & government preference** across EU markets
+- **Future-proof RGPD skills** - increasingly mandatory for tech rolesre Security Mastery Plan
+
+## 🎯 **Goal**: Expert-Level Azure Security Skills + Portfolio + Professional Competency
+
+**Schedule**: Every other day, 1-2 hours (flexible around 42 workload)
+**Total commitment**: ~180 sessions, 270-360 hours over 12 months
+**End result**: 20+ projects, Azure certifications, production-ready expertise
+
+## �️ **Why Focus on Azure Security**:
+- **Enterprise dominance** in cloud infrastructure
+- **Security-first architecture** with built-in compliance frameworks  
+- **Comprehensive toolchain** for end-to-end security management
+- **Integration ecosystem** (M365, Active Directory, DevOps)
+- **Professional demand** for cloud security specialists
+- **Future-proof skills** in cloud-native security
 
 ---
 
@@ -310,7 +324,7 @@
 
 ---
 
-# 📅 **QUARTER 3 (Months 7-9): Advanced Security & European Compliance**
+# 📅 **QUARTER 3 (Months 7-9): Advanced Security & European RGPD/GDPR Compliance**
 
 ## **Month 7: Identity & Zero Trust Architecture**
 
@@ -362,7 +376,7 @@
 └── Commit: "Multi-tenant security"
 ```
 
-## **Month 8: European Compliance & Governance**
+## **Month 8: European RGPD/GDPR Compliance & Governance**
 
 ### **Week 29-30: GDPR & Data Protection**
 ```bash
@@ -388,14 +402,14 @@
 └── Commit: "Legal compliance framework"
 ```
 
-### **Week 31-32: European Regulatory Compliance**
+### **Week 31-32: European RGPD/GDPR Compliance**
 ```bash
 # Day 87: Industry-Specific Compliance
 ├── Configure financial services controls (PSD2, MiFID II)
 ├── Set up healthcare compliance (Medical Device Regulation)
 ├── Implement manufacturing standards (ISO 27001)
 ├── Add energy sector requirements (NIS Directive)
-└── Commit: "European industry compliance"
+└── Commit: "European RGPD/GDPR compliance mastery"
 
 # Day 89: Sovereign Cloud & Data Residency
 ├── Configure EU Data Boundary
@@ -455,16 +469,16 @@
 └── Commit: "Cloud security posture"
 
 # Day 103: Q3 Capstone Project
-├── Build European compliance SOC
+├── Build European RGPD/GDPR compliance SOC
 ├── Integrate all security services
 ├── Add GDPR automated compliance
 ├── Create executive dashboards
-└── Commit: "Q3 Capstone: European Compliance SOC"
+└── Commit: "Q3 Capstone: European RGPD/GDPR Compliance SOC"
 ```
 
 ---
 
-# 📅 **QUARTER 4 (Months 10-12): Specialization & European Career Prep**
+# 📅 **QUARTER 4 (Months 10-12): Specialization & European Career Preparation**
 
 ## **Month 10: Choose Your Azure Specialization**
 
@@ -478,9 +492,9 @@
 ├── Viva security and compliance
 └── Exchange Online protection
 
-# Perfect for: Traditional enterprises, government, consulting
-# Certifications: SC-200, SC-300, SC-400
-# Salary range: €70K-120K
+# Perfect for: European enterprises, government, consulting
+# Certifications: SC-200, SC-300, SC-400 + RGPD/GDPR
+# European salary range: €70K-120K
 ```
 
 ### **Option B: Azure Infrastructure & Cloud Architecture Track** 🏗️
@@ -493,9 +507,9 @@
 ├── Cost optimization with security
 └── Infrastructure automation at scale
 
-# Perfect for: Large enterprises, system integrators
-# Certifications: AZ-305, SC-100
-# Salary range: €80K-140K
+# Perfect for: Large European enterprises, system integrators
+# Certifications: AZ-305, SC-100 + RGPD/GDPR
+# European salary range: €80K-140K
 ```
 
 ### **Option C: DevSecOps & Application Modernization Track** ⚡
@@ -508,9 +522,9 @@
 ├── API security and management
 └── Supply chain security
 
-# Perfect for: Tech companies, digital transformation
-# Certifications: AZ-400 + security specializations
-# Salary range: €85K-130K
+# Perfect for: European tech companies, digital transformation
+# Certifications: AZ-400 + security specializations + RGPD/GDPR
+# European salary range: €85K-130K
 ```
 
 ### **Option D: Compliance & Risk Management Track** 📊
@@ -523,9 +537,9 @@
 ├── Vendor security management
 └── Board-level reporting
 
-# Perfect for: Financial services, healthcare, government
-# Certifications: SC-400, SC-100, plus industry-specific
-# Salary range: €80K-150K
+# Perfect for: European financial services, healthcare, government
+# Certifications: SC-400, SC-100, RGPD/GDPR + industry-specific
+# European salary range: €80K-150K (RGPD expertise premium)
 ```
 
 ## **Month 11: Certification Sprint & Portfolio Finalization**
@@ -583,11 +597,11 @@
 ### **Week 45-46: Career Preparation**
 ```bash
 # Day 129: CV/Resume Optimization
-├── Tailor for European market
+├── Tailor for European market (RGPD/GDPR focus)
 ├── Highlight Azure certifications
 ├── Emphasize compliance experience
 ├── Add multilingual capabilities
-└── Document: "European-optimized CV"
+└── Document: "European-market CV with RGPD/GDPR expertise"
 
 # Day 131: LinkedIn Optimization
 ├── Professional headshot
@@ -781,11 +795,11 @@ azure-security-mastery/
 # 📊 **Weekly Schedule Template**
 
 ## **Monday (Off)**: Focus on 42 curriculum
-## **Tuesday (1-2 hours)**: AWS security project work
+## **Tuesday (1-2 hours)**: Azure security project work
 ## **Wednesday (Off)**: 42 curriculum + rest
-## **Thursday (1-2 hours)**: AWS security project work
+## **Thursday (1-2 hours)**: Azure security project work
 ## **Friday (Off)**: 42 curriculum  
-## **Saturday (1-2 hours)**: AWS security project work
+## **Saturday (1-2 hours)**: Azure security project work
 ## **Sunday (Off)**: Rest/catch up
 
 **Flexibility**: If 42 workload is heavy, shift days around but maintain the every-other-day rhythm.

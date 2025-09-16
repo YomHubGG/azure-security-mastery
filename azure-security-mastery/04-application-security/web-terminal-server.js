@@ -18,6 +18,13 @@ const io = socketIo(server, {
 
 const PORT = process.env.PORT || 3000;
 
+// 📊 Visitor tracking
+let visitStats = {
+  totalVisitors: 0,
+  currentConnections: 0,
+  serverStartTime: new Date().toISOString()
+};
+
 // Serve static files (web terminal UI)
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,6 +37,14 @@ app.get('/health', (req, res) => {
   });
 });
 
+// 📊 Visitor stats endpoint
+app.get('/stats', (req, res) => {
+  res.json({
+    ...visitStats,
+    currentTime: new Date().toISOString()
+  });
+});
+
 // Main terminal page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'terminal.html'));
@@ -37,6 +52,26 @@ app.get('/', (req, res) => {
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
+  // 🕵️ VISITOR TRACKING
+  const clientIP = socket.handshake.headers['x-forwarded-for'] || 
+                   socket.handshake.headers['x-real-ip'] || 
+                   socket.handshake.address || 
+                   socket.conn.remoteAddress;
+  const userAgent = socket.handshake.headers['user-agent'] || 'Unknown';
+  const timestamp = new Date().toISOString();
+  
+  // Update stats
+  visitStats.totalVisitors++;
+  visitStats.currentConnections++;
+  
+  console.log(`\n🎯 === NEW VISITOR === [${timestamp}]`);
+  console.log(`📍 IP Address: ${clientIP}`);
+  console.log(`🌐 User Agent: ${userAgent}`);
+  console.log(`🔗 Socket ID: ${socket.id}`);
+  console.log(`📊 Total Visitors: ${visitStats.totalVisitors}`);
+  console.log(`👥 Current Connections: ${visitStats.currentConnections}`);
+  console.log(`=======================================\n`);
+  
   console.log('🔌 New terminal connection:', socket.id);
   
   // Detect which shell to use - prioritize our 42 minishell
@@ -109,6 +144,14 @@ io.on('connection', (socket) => {
 
   // Handle disconnection
   socket.on('disconnect', () => {
+    const disconnectTime = new Date().toISOString();
+    visitStats.currentConnections--;
+    
+    console.log(`\n👋 === VISITOR LEFT === [${disconnectTime}]`);
+    console.log(`📍 IP Address: ${clientIP}`);
+    console.log(`🔗 Socket ID: ${socket.id}`);
+    console.log(`👥 Current Connections: ${visitStats.currentConnections}`);
+    console.log(`=======================================\n`);
     console.log('💔 Terminal disconnected:', socket.id);
     shell.kill();
   });

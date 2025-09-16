@@ -85,6 +85,29 @@ az container stop --name CONTAINER_NAME --resource-group RG_NAME    # Stop (but 
 az container delete --name CONTAINER_NAME --resource-group RG_NAME --yes  # Delete completely
 ```
 
+### Azure Key Vault (FREE tier)
+```bash
+# Deploy Key Vault with IaC
+az deployment group create --resource-group RG_NAME --template-file key-vault.bicep --parameters @key-vault.parameters.json
+
+# Get access token for REST API (CLI has issues)
+ACCESS_TOKEN=$(az account get-access-token --resource https://vault.azure.net --query accessToken -o tsv)
+
+# Add secret
+curl -X PUT "https://VAULT_NAME.vault.azure.net/secrets/SECRET_NAME?api-version=7.3" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"value": "SECRET_VALUE"}'
+
+# Get secret
+curl -s "https://VAULT_NAME.vault.azure.net/secrets/SECRET_NAME?api-version=7.3" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+
+# List all secrets
+curl -s "https://VAULT_NAME.vault.azure.net/secrets?api-version=7.3" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
+
 ## 🎯 Current Infrastructure
 - **Networks**: dev-vnet-security (10.0.0.0/16), prod-vnet-security
 - **Security**: dev-nsg-security, prod-nsg-security  
@@ -92,6 +115,8 @@ az container delete --name CONTAINER_NAME --resource-group RG_NAME --yes  # Dele
 - **Containers**: 
   - Registry: devacr4uybw3c2lbkwm.azurecr.io/secure-app:v1
   - Status: ⏹️ **STOPPED** (deleted to save costs - can redeploy anytime)
+- **Key Vault**: kvlearning4uybw3c2lbkwm.vault.azure.net ✅ **ACTIVE**
+  - Secrets: database-password, jwt-secret, external-api-key
 
 ## 📋 Session Progress
 - [x] **Phase 1**: IaC Foundations (Bicep, multi-resource templates)
