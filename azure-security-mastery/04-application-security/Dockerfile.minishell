@@ -1,0 +1,58 @@
+# 🐚 Containerized Minishell - Cloud Shell Experience
+
+FROM alpine:3.18 as builder
+
+# Install build dependencies
+RUN apk add --no-cache gcc musl-dev make git readline-dev
+
+# Create working directory
+WORKDIR /minishell
+
+# Copy your minishell source code here
+# (You'll need to copy your minishell files)
+COPY . .
+
+# Build minishell
+RUN make clean && make
+
+# Runtime stage - minimal image
+FROM alpine:3.18
+
+# Install runtime dependencies
+RUN apk add --no-cache readline libgcc
+
+# Create non-root user for security
+RUN addgroup -g 1001 shell && \
+    adduser -D -s /bin/sh -u 1001 -G shell shelluser
+
+# Copy compiled minishell
+COPY --from=builder /minishell/minishell /usr/local/bin/minishell
+RUN chmod +x /usr/local/bin/minishell
+
+# Create a welcome message
+RUN echo '#!/bin/sh' > /usr/local/bin/welcome.sh && \
+    echo 'echo "🐚 Welcome to Cloud Minishell!"' >> /usr/local/bin/welcome.sh && \
+    echo 'echo "================================"' >> /usr/local/bin/welcome.sh && \
+    echo 'echo "Your 42 shell is now running in the cloud!"' >> /usr/local/bin/welcome.sh && \
+    echo 'echo "Available commands: ls, pwd, echo, env, exit, cd, etc."' >> /usr/local/bin/welcome.sh && \
+    echo 'echo "Type commands just like in your local minishell!"' >> /usr/local/bin/welcome.sh && \
+    echo 'echo ""' >> /usr/local/bin/welcome.sh && \
+    chmod +x /usr/local/bin/welcome.sh
+
+# Switch to non-root user
+USER shelluser
+WORKDIR /home/shelluser
+
+# Set up shell environment
+ENV PS1="minishell@cloud:$ "
+ENV PATH="/usr/local/bin:$PATH"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD echo "test" | minishell > /dev/null 2>&1 || exit 1
+
+# Expose port for web-based terminal (optional)
+EXPOSE 8080
+
+# Default command - run welcome then minishell
+CMD ["/usr/local/bin/welcome.sh", "&&", "/usr/local/bin/minishell"]

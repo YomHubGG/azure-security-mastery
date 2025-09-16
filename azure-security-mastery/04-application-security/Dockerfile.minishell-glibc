@@ -1,0 +1,66 @@
+# 🐚 Web Terminal for Minishell - Multi-stage build with compilation
+
+# Build stage - compile minishell
+FROM debian:bookworm-slim as builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    make \
+    libreadline-dev \
+    libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy minishell source code
+WORKDIR /build
+COPY minishell-master/ ./minishell-master/
+
+# Compile minishell
+WORKDIR /build/minishell-master
+RUN make clean && make
+
+# Runtime stage - Node.js application
+FROM node:18-bookworm-slim
+
+# Install runtime dependencies including build tools for node-pty
+RUN apt-get update && apt-get install -y \
+    libreadline8 \
+    curl \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install Node.js dependencies for web terminal
+RUN npm install express socket.io node-pty
+
+# Copy compiled minishell from builder stage
+COPY --from=builder /build/minishell-master/minishell /usr/local/bin/minishell
+RUN chmod +x /usr/local/bin/minishell
+
+# Copy web terminal server
+COPY web-terminal-server.js .
+COPY public/ ./public/
+
+# Create non-root user
+RUN groupadd -g 1001 shell && \
+    useradd -r -u 1001 -g shell shelluser
+
+# Switch to non-root user
+USER shelluser
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
+
+# Start the application
+CMD ["node", "web-terminal-server.js"]

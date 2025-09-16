@@ -1,0 +1,40 @@
+# 🔐 Secure Application with Key Vault Integration
+
+FROM node:18-alpine AS builder
+
+# Security: Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy application code
+COPY secure-app.js ./
+
+# Security: Change ownership to non-root user
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
+
+# Expose port
+EXPOSE 3000
+
+# Start application
+CMD ["node", "secure-app.js"]
+
+# 🎓 LEARNING NOTES:
+# - Multi-stage build for smaller image
+# - Non-root user for security
+# - Health checks for container orchestration
+# - No secrets in the image (loaded at runtime)
+# - Clean package manager cache
