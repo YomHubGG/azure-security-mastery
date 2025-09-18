@@ -780,16 +780,6 @@ azure-security-mastery/
 
 ---
 
-# 📊 **Weekly Schedule Template**
-
-## **Monday (Off)**: Focus on 42 curriculum
-## **Tuesday (1-2 hours)**: AWS security project work
-## **Wednesday (Off)**: 42 curriculum + rest
-## **Thursday (1-2 hours)**: AWS security project work
-## **Friday (Off)**: 42 curriculum  
-## **Saturday (1-2 hours)**: AWS security project work
-## **Sunday (Off)**: Rest/catch up
-
 **Flexibility**: If 42 workload is heavy, shift days around but maintain the every-other-day rhythm.
 
 ---
@@ -812,38 +802,41 @@ azure-security-mastery/
 
 ---
 
-# 🚀 **Getting Started This Week with Azure**
-
-## **Day 1 (2 hours)**:
-```bash
-# Set up Azure foundation
-├── Create Azure free subscription
-├── Set up Azure Active Directory tenant
-├── Enable MFA and security defaults
-├── Create GitHub repository: azure-security-mastery
-└── First commit: "Starting Azure security journey"
-```
-
-## **Day 3 (1.5 hours)**:
-```bash
-# Basic Azure services
-├── Install Azure CLI and PowerShell
-├── Deploy first Virtual Machine
-├── Create Storage Account with RBAC
-├── Document learnings in README
-└── Commit: "Basic Azure services setup"
-```
-
-## **Day 5 (2 hours)**:
-```bash
-# Infrastructure as Code with Bicep
-├── Install Bicep CLI
-├── Write first .bicep template
-├── Deploy infrastructure securely
-├── Add to portfolio with documentation
-└── Commit: "First Bicep infrastructure deployment"
-```
 
 **Remember**: This is a marathon, not a sprint. Consistency beats intensity! 🌱
 
-The goal is to build a habit that fits around your 42 curriculum while steadily building the most in-demand skillset in European cybersecurity. By the end of 12 months, you'll have a portfolio that makes European hiring managers excited to interview you! 🎯
+The goal is to build a habit that fits around your 42 curriculum while steadily building the most in-demand skillset in European cybersecurity.
+
+
+🎬 Better Video Resources for CLI-First Learning
+Azure CLI/PowerShell Focused Channels
+John Savill's Technical Training 🏆
+
+Deep technical content, lots of CLI examples
+"Azure Master Class" series with hands-on demos
+PowerShell and CLI heavy, not just clicking
+Scott Duffy (Azure courses)
+
+Good balance of concepts + CLI commands
+Often shows both portal and CLI approaches
+Microsoft Learn TV
+
+Official content with actual Azure engineers
+Many sessions focus on automation/CLI
+Pluralsight Azure paths (if you have access)
+
+Very CLI-focused courses
+"Azure CLI Deep Dive" specifically
+🚫 Avoid the "Click-Heavy" Channels
+Many popular Azure YouTubers focus on portal demos because it's visual, but terrible for real learning. Look for channels that show:
+
+✅ Actual terminal/CLI commands
+✅ Infrastructure as Code examples
+✅ Real-world automation scenarios
+❌ Avoid pure "click through the portal" content
+🧠 How I Created This Learning Plan
+The Design Philosophy
+Reverse-engineered from job requirements - What do Azure security professionals actually do daily?
+CLI-first approach - Portal clicking doesn't scale in enterprise environments
+Security-focused progression - Start with fundamentals, build to advanced threats
+Practical portfolio integration - Your minishell project becomes a real-world security showcase
