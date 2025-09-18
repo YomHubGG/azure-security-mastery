@@ -1,2 +1,0 @@
-export TEST=test
-export | grep TEST

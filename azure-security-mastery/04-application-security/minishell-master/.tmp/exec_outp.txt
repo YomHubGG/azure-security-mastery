@@ -1,3 +1,0 @@
-Minishell> export TEST=test
-Minishell> export | grep TEST
-Minishell> declare -x TEST="test"
