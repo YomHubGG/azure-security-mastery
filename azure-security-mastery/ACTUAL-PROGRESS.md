@@ -48,6 +48,11 @@
 **Status**: 🔄 Will circle back after establishing core patterns
 **Note**: Advanced work done provided practical experience with these concepts
 
+**📁 Directory Structure Created**:
+- ✅ `day13-defender-cloud/` - Microsoft Defender setup and configuration
+- ✅ `day15-azure-policy/` - Governance policies and resource tagging
+- 🔄 Content ready for future completion when returning to these topics
+
 ### **Day 17: Key Vault & Secrets Management** ✅ COMPLETED (September 18, 2025)
 **Evidence**:
 - `secrets-only.bicep` - Enterprise secrets deployment
@@ -97,6 +102,8 @@ azure-security-mastery/
 │   └── day11-monitoring-compliance/ ⏳ (Structure ready)
 │
 ├── 02-security-services/
+│   ├── day13-defender-cloud/ ✅ (Structure ready - Defender for Cloud)
+│   ├── day15-azure-policy/ ✅ (Structure ready - Governance & Policy)
 │   ├── day17-key-vault-secrets/ ✅ (Just completed)
 │   └── day39-container-instances/ ✅ (Planned with minishell)
 │
