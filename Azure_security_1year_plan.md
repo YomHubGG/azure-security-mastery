@@ -185,10 +185,12 @@
 
 # Day 39: Azure Container Instances (ACI)
 ├── Deploy secure container groups
+├── **PRACTICAL PROJECT: Deploy minishell container with security**
 ├── Implement virtual network integration
-├── Set up managed identity
+├── Set up managed identity for container access
 ├── Configure monitoring and logging
-└── Commit: "Serverless container security"
+├── **Create cost-management scripts (start/stop)**
+└── Commit: "Serverless container security + minishell demo"
 ```
 
 ### **Week 15-16: Azure Kubernetes Service (AKS)**

@@ -77,6 +77,22 @@
 ### **Day 19: Data Classification & Protection** 🔄 NEXT SESSION
 **Plan**: Microsoft Purview and data protection patterns
 
+## 🐳 **Special Project Integration: Minishell Container**
+
+**Scheduled for Day 39** (October 9, 2025 - Session #20):
+- **Target**: Deploy 42 minishell project as secure Azure Container Instance
+- **Learning Goals**: Combine container security with practical portfolio project
+- **Features**: Virtual network integration, managed identity, cost automation
+- **Value**: Demonstrates enterprise container security + showcases coding skills
+- **Timeline**: 11 more sessions (21 calendar days) from today
+
+This integration allows you to:
+- ✅ **Follow the structured learning path** (security fundamentals first)
+- ✅ **Build enterprise-grade deployment** (not just basic container)
+- ✅ **Create portfolio showcase** (42 project + Azure security skills)
+- ✅ **Learn cost management** (automated start/stop scripts)
+- ✅ **Demonstrate real-world experience** (job interview material)
+
 ## 📁 **Organization Status**
 
 ### ✅ **Properly Organized**
