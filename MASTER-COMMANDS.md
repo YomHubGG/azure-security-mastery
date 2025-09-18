@@ -1,5 +1,14 @@
 # 🎯 Azure Security Mastery - Master Command Reference
 
+## 🤖 **AGENT GUARDRAILS** - READ FIRST!
+```
+📖 ALWAYS reference: azure-security-mastery/_references/agent-guidelines.md
+⛔ NEVER start trials without explicit permission
+🔍 ALWAYS check current state before taking action
+💰 ALWAYS confirm cost implications before deployment
+📋 USE prompt templates to set clear expectations each session
+```
+
 ## 🔧 Essential Daily Commands
 
 ### Authentication
