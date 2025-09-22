@@ -156,4 +156,24 @@ Check guidelines before proceeding."
 
 **Remember**: Better to ask too many questions than create unexpected costs or complexity!
 
-*Last updated: September 18, 2025*
+*Last updated: September 22, 2025*
+
+## 📚 **Strategic Learning Context (NEW)**
+
+### **Microsoft Learn Navigation Strategy**
+- ✅ **Focus on certification-specific paths** (AZ-900, AZ-500)
+- ❌ **Avoid redundant survey modules** (already completed fundamentals)
+- 🎯 **90% hands-on labs, 10% theory** for optimal skill development
+- 📊 **Use Learned/Practiced/Mastered framework** for honest assessment
+
+### **Learning Efficiency Guidelines**
+- Reference `strategic-learning-guide.md` for optimal path planning
+- Use `microsoft-learn-navigation.md` to avoid content redundancy
+- Prioritize practical implementation over badge collection
+- Time-box theoretical study to prevent analysis paralysis
+
+### **Progress Tracking Patterns**
+- Update `ACTUAL-PROGRESS.md` with honest skill assessments
+- Use security scoring framework (0-10 scale) for practical evaluations
+- Document command mastery in `MASTER-COMMANDS.md`
+- Maintain certification timeline awareness (AZ-900 ready now, AZ-500 November)
