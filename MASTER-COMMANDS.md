@@ -115,6 +115,145 @@ curl -s "https://VAULT_NAME.vault.azure.net/secrets/SECRET_NAME?api-version=7.3"
 # List all secrets
 curl -s "https://VAULT_NAME.vault.azure.net/secrets?api-version=7.3" \
   -H "Authorization: Bearer $ACCESS_TOKEN"
+
+# Check existing Key Vault (Day 17)
+az keyvault show --name kvlearning4uybw3c2lbkwm --query "{name:name, location:location, sku:properties.sku.name, softDelete:properties.enableSoftDelete, purgeProtection:properties.enablePurgeProtection}"
+
+# List existing secrets
+az keyvault secret list --vault-name kvlearning4uybw3c2lbkwm --output table
+```
+
+## 🗄️ Day 19: Data Protection & Governance Commands
+
+### Data Discovery & Classification
+```bash
+# Check what data sources you have for governance
+az resource list --query "[?type=='Microsoft.Storage/storageAccounts' || type=='Microsoft.KeyVault/vaults'].{Name:name, Type:type, Location:location}" --output table
+
+# List all storage accounts (data repositories)
+az storage account list --query "[].{Name:name, Tier:sku.tier, Encryption:encryption.services.blob.enabled}" --output table
+
+# Check Key Vaults (secrets and sensitive data)
+az keyvault list --query "[].{Name:name, Location:location, SoftDelete:properties.enableSoftDelete}" --output table
+
+# List container registries (application data)
+az acr list --query "[].{Name:name, Tier:sku.tier, AdminEnabled:adminUserEnabled}" --output table
+```
+
+### Data Protection Configuration
+```bash
+# Check blob storage encryption status
+az storage account show --name "stlearning4uybw3c2lbkwm" --resource-group "rg-learning-day1" --query "encryption" --output json
+
+# Enable blob soft delete (data protection feature)
+az storage blob service-properties delete-policy update --account-name "stlearning4uybw3c2lbkwm" --enable true --days-retained 30
+
+# Check soft delete configuration
+az storage blob service-properties delete-policy show --account-name "stlearning4uybw3c2lbkwm" --output table
+
+# Enable blob versioning for data protection
+az storage blob service-properties update --account-name "stlearning4uybw3c2lbkwm" --enable-versioning true
+
+# Verify Key Vault soft delete protection
+az keyvault show --name "kvlearning4uybw3c2lbkwm" --query "{SoftDelete:properties.enableSoftDelete, PurgeProtection:properties.enablePurgeProtection}" --output table
+```
+
+### Data Governance with Azure Policy
+```bash
+# List data protection related policies
+az policy definition list --query "[?contains(displayName, 'data') || contains(displayName, 'encrypt')].{Name:displayName, Type:policyType}" --output table
+
+# Check which policies are assigned to your subscription
+az policy assignment list --output table
+
+# Find encryption policies (data protection requirement)
+az policy definition list --query "[?contains(displayName, 'encrypt') && contains(displayName, 'storage')].{Name:displayName}" --output table
+
+# View details of a specific data protection policy
+az policy definition show --name "404c3081-a854-4457-ae30-26a93ef643f9" --query "{Name:displayName, Description:description}" --output table
+```
+
+### Data Classification with Tags
+```bash
+# Add classification tags to storage accounts
+az storage account update --name "stlearning4uybw3c2lbkwm" --set tags.DataClassification=Public tags.Environment=Learning
+az storage account update --name "devsec4uybw3c2lbkwm" --set tags.DataClassification=Internal tags.Environment=Development
+az storage account update --name "prodsec4uybw3c2lbkwm" --set tags.DataClassification=Confidential tags.Environment=Production
+
+# Add tags to Key Vaults (highly confidential by nature)
+az keyvault update --name "kvlearning4uybw3c2lbkwm" --set tags.DataClassification=HighlyConfidential tags.Environment=Learning
+
+# Verify tagging
+az resource list --query "[?tags != null].{Name:name, Classification:tags.DataClassification, Environment:tags.Environment}" --output table
+
+# List resource tags (data classification metadata)
+az resource list --query "[?tags != null].{Name:name, Tags:tags}" --output table
+```
+
+### Cost & Compliance Monitoring
+```bash
+# Check current spending (important for cost management)
+az consumption usage list --top 5 --output table
+
+# List all resources and their costs
+az consumption usage list --include-additional-properties --include-meter-details --output table
+
+# Check free tier usage
+az consumption reservation summary list --grain monthly --output table
+
+# Check Azure Policy compliance (governance framework)
+az policy assignment list --query "[].{Name:displayName, Scope:scope}" --output table
+
+# Policy compliance check
+az policy state list --resource "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-learning-day1" --output table
+```
+
+### Access Control & Security Audit
+```bash
+# Check RBAC assignments (data access control)
+az role assignment list --all --query "[].{Principal:principalName, Role:roleDefinitionName, Scope:scope}" --output table
+
+# RBAC analysis for specific scope
+az role assignment list --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-learning-day1" --output table
+
+# RBAC assignments for current user
+az role assignment list --assignee $(az account show --query user.name -o tsv) --output table
+```
+
+## 🌐 Network Security Commands (Day 9)
+
+### Virtual Networks & Security Groups
+```bash
+# List virtual networks
+az network vnet list --resource-group rg-learning-day1 --output table
+
+# List network security groups
+az network nsg list --resource-group rg-learning-day1 --output table
+
+# Validate network security configuration
+az network nsg show --name dev-nsg-security --resource-group rg-learning-day1 --query "securityRules[].{Name:name,Priority:priority,Access:access,Direction:direction}"
+```
+
+## 🛡️ Security Services Commands
+
+### Microsoft Defender for Cloud (Day 13)
+```bash
+# Check current Defender status
+az security pricing list --output table
+
+# Enable Defender for different resource types (⚠️ COSTS MONEY!)
+az security pricing create --name "VirtualMachines" --tier "Standard"
+az security pricing create --name "StorageAccounts" --tier "Standard"
+az security pricing create --name "KeyVaults" --tier "Standard"
+```
+
+### Azure Policy (Day 15)
+```bash
+# Create management group hierarchy
+az account management-group create --name "security-learning" --display-name "Security Learning"
+
+# Move subscription to management group
+az account management-group subscription add --name "security-learning" --subscription $(az account show --query id -o tsv)
 ```
 
 ## 🎯 Current Infrastructure
@@ -127,14 +266,88 @@ curl -s "https://VAULT_NAME.vault.azure.net/secrets?api-version=7.3" \
 - **Key Vault**: kvlearning4uybw3c2lbkwm.vault.azure.net ✅ **ACTIVE**
   - Secrets: database-password, jwt-secret, external-api-key
 
-## 📋 Session Progress
+## � Day 21: Application Security Commands
+
+## 🔐 Day 21: Application Security Commands
+
+### App Service Discovery
+```bash
+# List existing web apps
+az webapp list --output table
+
+# List App Service plans with pricing tiers
+az appservice plan list --output table
+
+# Get detailed app configuration
+az webapp show --name APP_NAME --resource-group RG_NAME --output json
+
+# Check app settings and environment variables
+az webapp config appsettings list --name APP_NAME --resource-group RG_NAME --output table
+
+# Basic security configuration check
+az webapp show --name app-secureapp-dev-rubf4v --resource-group rg-security-learning-001 --query "{name:name, state:state, kind:kind, httpsOnly:httpsOnly, clientAffinityEnabled:clientAffinityEnabled}" --output table
+```
+
+### App Service Security Analysis
+```bash
+# Check SSL/TLS configuration
+az webapp config ssl list --resource-group RG_NAME --output table
+
+# View custom domains
+az webapp config hostname list --webapp-name APP_NAME --resource-group RG_NAME --output table
+
+# Check authentication settings
+az webapp auth show --name APP_NAME --resource-group RG_NAME --output json
+
+# Check CORS (Cross-Origin Resource Sharing) configuration
+az webapp cors show --name APP_NAME --resource-group RG_NAME --output json
+
+# Check managed identity status
+az webapp identity show --name APP_NAME --resource-group RG_NAME --output table
+
+# View network access restrictions
+az webapp config access-restriction show --name APP_NAME --resource-group RG_NAME --output table
+```
+
+### CORS Security Configuration
+```bash
+# Add allowed origins (secure approach)
+az webapp cors add --name APP_NAME --resource-group RG_NAME --allowed-origins "https://yourtrustedsite.com"
+
+# Remove overly permissive CORS (if present)
+az webapp cors remove --name APP_NAME --resource-group RG_NAME --allowed-origins "*"
+
+# Configure CORS for specific methods and headers
+az webapp cors add --name APP_NAME --resource-group RG_NAME \
+  --allowed-origins "https://yourfrontend.com" \
+  --allowed-methods "GET,POST,PUT" \
+  --allowed-headers "Content-Type,Authorization"
+```
+
+### App Service Security Configuration
+```bash
+# Verify HTTPS-only enforcement
+az webapp show --name APP_NAME --resource-group RG_NAME --query "httpsOnly" --output tsv
+
+# Configure security headers (requires app-level implementation)
+# Set client certificate mode for mutual TLS
+az webapp update --name APP_NAME --resource-group RG_NAME --client-cert-mode Required
+
+# Configure minimum TLS version
+az webapp config set --name APP_NAME --resource-group RG_NAME --min-tls-version "1.2"
+
+# Enable HTTP/2 support
+az webapp config set --name APP_NAME --resource-group RG_NAME --http20-enabled true
+```
+
+## �📋 Session Progress
 - [x] **Phase 1**: IaC Foundations (Bicep, multi-resource templates)
 - [x] **Phase 2**: Network Security (VNets, NSGs, subnetting)  
 - [x] **Phase 3**: Container Security (Podman, ACR, ACI) ✅ **COMPLETED Sept 1**
-- [ ] **Phase 4**: Application Security (Key Vault, web apps) ← **NEXT SESSION**
+- [x] **Phase 4**: Application Security (Key Vault, web apps) ← **IN PROGRESS Day 21**
 - [ ] **Phase 5**: Compliance & Governance (Policy, RBAC)
 
-*Updated: September 2, 2025*
+*Updated: September 22, 2025*
 
 ---
 ## 🚨 COST SAFETY COMMITMENT
