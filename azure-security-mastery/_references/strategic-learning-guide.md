@@ -1,6 +1,10 @@
 # Strategic Azure Security Learning Guide
 
-## 📋 Executive Summary
+## 📋 Executiv### **Phase 2: Portfolio-Focused Strategy (CPF Unavailable)**
+- **CPF Reality**: 4,500€ for 28-hour course packages - financially unrealistic
+- **Alternative Approach**: Focus on demonstrable skills and portfolio projects
+- **Market Reality**: Practical Azure security skills often more valuable than certificates
+- **Cost-Effective Path**: Self-funded targeted certifications only when career-criticalmmary
 
 This guide consolidates strategic insights from the Azure Security Journey, focusing on optimal learning paths, Microsoft Learn navigation, and practical skill development approaches. Created after comprehensive analysis of Day 21 completion and Microsoft Learn progress assessment.
 
@@ -106,11 +110,12 @@ Remaining: 2 assessments to complete current paths
 🎯 Day 30: Security Assessment & Penetration Testing
 ```
 
-### Certification Timeline
+### Revised Strategy Timeline
 ```
-📅 AZ-900: Ready Now (September 2025)
-📅 AZ-500: Target November 2025 (post Day 30)
-📅 Advanced Certs: Q1 2026 based on career focus
+📅 Portfolio First: Complete Days 23-30 practical implementations
+📅 GitHub Showcase: Comprehensive Azure security project repository
+📅 Certifications: Strategic self-funding only when job-critical
+📅 Market Entry: Skills-based approach targeting practical roles
 ```
 
 ---

@@ -353,3 +353,37 @@ az webapp config set --name APP_NAME --resource-group RG_NAME --http20-enabled t
 ## 🚨 COST SAFETY COMMITMENT
 **NEVER deploy costly resources without explicit human consent!**  
 See: [Cost Safety Guidelines](azure-security-mastery/cost-safety-guidelines.md)
+
+## Day 23: DevSecOps & CI/CD Security
+
+### GitHub Actions Security Pipeline
+```yaml
+# .github/workflows/secure-devsecops-pipeline.yml
+# Automated security scanning with CodeQL, ESLint security, dependency audit
+# Portfolio demonstration: Enterprise DevSecOps practices
+```
+
+### Security Scanning Commands
+```bash
+# CodeQL security analysis (automated in pipeline)
+# ESLint security rules for JavaScript
+npx eslint --ext .js --config .eslintrc.json "**/*.js"
+
+# NPM security audit
+npm audit --audit-level=moderate
+
+# Bicep template security validation
+bicep build template.bicep --outfile template.json
+```
+
+### Service Principal DevSecOps (Attempted)
+```bash
+# Create scoped service principal for CI/CD
+az ad sp create-for-rbac \
+  --name "sp-github-actions-day23" \
+  --role "Contributor" \
+  --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/rg-learning-day1"
+
+# Note: CLI v2.45.0 has role assignment bug - worked around with user auth
+```
+
