@@ -94,13 +94,14 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
     osProfile: {
       computerName: vmName
       adminUsername: adminUsername
-      disablePasswordAuthentication: true
       linuxConfiguration: {
+        disablePasswordAuthentication: true
         ssh: {
           publicKeys: [
             {
               path: '/home/${adminUsername}/.ssh/authorized_keys'
-              keyData: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7S1FZzB7QK+5Z0x...' // You'd use your actual SSH key
+              // SECURITY-EXCEPTION: Educational placeholder SSH key - replace with actual public key for deployment
+              keyData: 'PLACEHOLDER-SSH-PUBLIC-KEY-FOR-LEARNING-TEMPLATE'
             }
           ]
         }

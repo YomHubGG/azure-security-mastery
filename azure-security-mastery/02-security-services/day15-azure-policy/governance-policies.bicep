@@ -1,3 +1,5 @@
+targetScope = 'subscription'
+
 @description('Custom Azure Policy for enforcing security and governance standards')
 
 // Policy: Require HTTPS for Storage Accounts

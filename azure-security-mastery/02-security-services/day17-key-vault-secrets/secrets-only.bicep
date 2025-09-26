@@ -48,11 +48,13 @@ resource storageSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
   name: 'storage-account-key'
   parent: keyVault
   properties: {
-    value: 'DefaultEndpointsProtocol=https;AccountName=prodstorage;AccountKey=abc123==;EndpointSuffix=${environment().suffixes.storage}'
+    // SECURITY-EXCEPTION: Educational template with placeholder connection string
+    // In production: Use Key Vault references or managed identity instead
+    value: 'DefaultEndpointsProtocol=https;AccountName=PLACEHOLDER;AccountKey=EDUCATIONAL-EXAMPLE;EndpointSuffix=${environment().suffixes.storage}'
     attributes: {
       enabled: true
     }
-    contentType: 'Storage account connection string'
+    contentType: 'Storage account connection string - EDUCATIONAL TEMPLATE'
   }
 }
 

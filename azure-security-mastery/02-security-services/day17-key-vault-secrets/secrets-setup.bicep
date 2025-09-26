@@ -8,12 +8,13 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyVaultName
 }
 
-// Test secrets for our demo
+// SECURITY-EXCEPTION: Educational demo secrets - NOT for production use
+// These are placeholder values demonstrating Key Vault secret management patterns
 resource databaseSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
   name: 'database-connection-string'
   parent: keyVault
   properties: {
-    value: 'Server=myserver.${environment().suffixes.sqlServerHostname};Database=mydb;User Id=myuser;Password=MySecurePassword123!;'
+    value: 'PLACEHOLDER-DB-CONNECTION-FOR-LEARNING-ONLY'
     attributes: {
       enabled: true
     }
@@ -24,7 +25,7 @@ resource apiKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
   name: 'external-api-key'
   parent: keyVault
   properties: {
-    value: 'sk-1234567890abcdef'
+    value: 'EXAMPLE-API-KEY-FOR-EDUCATIONAL-PURPOSE'
     attributes: {
       enabled: true
     }
@@ -35,7 +36,7 @@ resource jwtSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
   name: 'jwt-signing-key'
   parent: keyVault
   properties: {
-    value: base64('MyJWTSigningKeyThatIsVerySecure123456789')
+    value: base64('DEMO-JWT-KEY-LEARNING-TEMPLATE-ONLY')
     attributes: {
       enabled: true
     }
