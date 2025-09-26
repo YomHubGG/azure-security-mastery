@@ -321,15 +321,15 @@ graph TB
     A[GitHub Actions] -->|Service Principal Auth| B[Azure Key Vault]
     B -->|Secure Secret Retrieval| C[App Service Deployment]
     
-    subgraph "Security Layers"
+    subgraph "Security Layers Protecting Key Vault"
         D[RBAC Permissions]
         E[Network Access Policies]
         F[Audit Logging]
     end
     
-    B --> D
-    B --> E
-    B --> F
+    D --> B
+    E --> B
+    F --> B
 ```
 
 ### **Key Vault Security Best Practices**
