@@ -378,6 +378,8 @@ bicep build template.bicep --outfile template.json
 
 ### Service Principal DevSecOps (Attempted)
 ```bash
+### Service Principal DevSecOps (Attempted)
+```bash
 # Create scoped service principal for CI/CD
 az ad sp create-for-rbac \
   --name "sp-github-actions-day23" \
@@ -385,5 +387,123 @@ az ad sp create-for-rbac \
   --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/rg-learning-day1"
 
 # Note: CLI v2.45.0 has role assignment bug - worked around with user auth
+```
+
+---
+
+## Day 25: PowerShell Security Scripts
+
+### PowerShell Az Module Setup
+```bash
+# Check PowerShell version
+pwsh --version  # 7.5.3 confirmed
+
+# Install/Update Az module
+pwsh -Command "Install-Module -Name Az -Repository PSGallery -Force -AllowClobber"
+
+# Verify installation
+pwsh -Command "Get-Module -ListAvailable Az.*"
+```
+
+### Azure Authentication in PowerShell
+```powershell
+# Connect to Azure
+Connect-AzAccount
+
+# Verify connection
+Get-AzContext
+
+# Set subscription
+Set-AzContext -SubscriptionId "a174b81f-93c2-4089-afa0-6f82a5165c86"
+```
+
+### Security Automation Scripts (Day 25)
+```bash
+# Execute security audit
+pwsh -File ./security-audit.ps1 -ResourceGroupName "rg-learning-day1"
+
+# Run compliance check
+pwsh -File ./compliance-check.ps1 -ResourceGroupName "rg-learning-day1"
+
+# Test auto-remediation (simulation mode)
+pwsh -File ./auto-remediate.ps1 -ResourceGroupName "rg-learning-day1" -WhatIf
+
+# Apply auto-remediation (live)
+pwsh -File ./auto-remediate.ps1 -ResourceGroupName "rg-learning-day1"
+
+# Generate security report
+pwsh -File ./generate-report.ps1 -ResourceGroupName "rg-learning-day1"
+```
+
+### Security Audit Results (October 1, 2025)
+```
+Security Score: 80%
+Compliance Rate: 57.14%
+Resources Scanned: 11 (4 storage, 1 Key Vault, 2 NSGs, 3 VNets, 1 Container Registry)
+Issues Found: Key Vault missing soft delete/purge protection, NSGs with permissive rules
+Cost: €0 (PowerShell execution = free)
+```
+
+---
+
+## Day 27: Logic Apps & Security Orchestration
+
+### Resource Group for Automation
+```bash
+# Create resource group for Logic Apps
+az group create --name rg-security-automation --location westeurope
+
+# List resource groups
+az group list --query "[].{Name:name, Location:location}" -o table
+```
+
+### Logic Apps Management
+```bash
+# List Logic Apps
+az logic workflow list --resource-group rg-learning-day1 -o table
+
+# Show workflow details
+az logic workflow show \
+  --name 1 \
+  --resource-group rg-learning-day1 \
+  --query "{Name:name, State:state, Location:location}"
+
+# Get workflow run history (after creating workflows)
+az logic workflow run list \
+  --name workflow-name \
+  --resource-group rg-learning-day1
+
+# Manual trigger test
+az logic workflow run trigger \
+  --name workflow-name \
+  --resource-group rg-learning-day1 \
+  --trigger-name manual
+```
+
+### Portal Access for Visual Designer
+```bash
+# Direct portal link for Logic Apps
+echo "https://portal.azure.com/#view/HubsExtension/BrowseResource/resourceType/Microsoft.Logic%2Fworkflows"
+
+# Access designer: Portal → Logic App → Development Tools → Logic app designer
+```
+
+### Logic App Cost Check
+```
+Pricing Tier: Consumption
+Free Tier: 4,000 actions/month
+Current Usage: 0 executions
+Cost: €0
+Note: Pay-per-execution model, no standing charges
+```
+
+### Browser Compatibility Note
+```
+Issue: Gmail connector OAuth popups fail in Firefox
+Solution: Use Edge/Chrome for Azure Portal OAuth flows
+Alternative: Use Outlook.com connector or HTTP actions for testing
+```
+
+---
 ```
 
