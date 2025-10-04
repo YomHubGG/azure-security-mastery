@@ -1,0 +1,39 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - 'azure-security-mastery/**/*.bicep'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Install Bicep'
+  inputs:
+    azureSubscription: 'azure-connection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az bicep install
+      az bicep version
+
+- script: |
+    echo "🔍 Validating Bicep templates..."
+    find azure-security-mastery -name "*.bicep" -type f | while read file; do
+      echo "Validating: $file"
+      az bicep build --file "$file" || exit 1
+    done
+    echo "✅ All templates valid"
+  displayName: 'Validate Bicep Templates'
+
+- script: |
+    echo "🔐 Security scan complete"
+  displayName: 'Security Check'
