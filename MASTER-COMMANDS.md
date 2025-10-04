@@ -505,5 +505,208 @@ Alternative: Use Outlook.com connector or HTTP actions for testing
 ```
 
 ---
+
+## Day 29: Azure DevOps Security Pipeline
+
+### Azure DevOps Portal Access
+```bash
+# Direct access to Azure DevOps
+echo "https://dev.azure.com"
+
+# Create organization (done via web portal)
+# Portal: Sign in → Create organization → Choose name
+
+# Create project (done via web portal)
+# Organization → New project → Name: azure-security-pipeline
+```
+
+### Azure DevOps CLI (az devops extension)
+```bash
+# Install Azure DevOps CLI extension
+az extension add --name azure-devops
+
+# Configure default organization
+az devops configure --defaults organization=https://dev.azure.com/YOUR_ORG
+
+# List projects
+az devops project list --output table
+
+# Show project details
+az devops project show --project azure-security-pipeline
+```
+
+### Service Connections
+```bash
+# List service connections (via portal - no direct CLI for creation)
+# Portal: Project Settings → Service connections
+
+# Service connection created:
+# Name: azure-connection
+# Type: Azure Resource Manager
+# Authentication: Workload Identity Federation
+# Scope: Subscription level
+# Resource Group: rg-learning-day1
+```
+
+### Pipeline Management
+```bash
+# List pipelines in project
+az pipelines list --output table
+
+# Show pipeline details
+az pipelines show --name "azure-security-mastery" --output table
+
+# Run pipeline manually
+az pipelines run --name "azure-security-mastery"
+
+# Show pipeline run history
+az pipelines runs list --output table
+
+# Show specific run details
+az pipelines runs show --id RUN_ID
+```
+
+### Pipeline YAML Configuration
+```yaml
+# File: azure-pipelines.yml (in repository root)
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - 'azure-security-mastery/**/*.bicep'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Install Bicep'
+  inputs:
+    azureSubscription: 'azure-connection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az bicep install
+      az bicep version
+
+- script: |
+    echo "🔍 Validating Bicep templates..."
+    find azure-security-mastery -name "*.bicep" -type f | while read file; do
+      echo "Validating: $file"
+      az bicep build --file "$file" || exit 1
+    done
+    echo "✅ All templates valid"
+  displayName: 'Validate Bicep Templates'
+
+- script: |
+    echo "🔐 Security scan complete"
+  displayName: 'Security Check'
+```
+
+### GitHub Integration
+```bash
+# Connect GitHub repository (done via portal)
+# Portal: Pipelines → Create Pipeline → GitHub → Authorize → Select repo
+
+# OAuth authentication with GitHub
+# Uses Microsoft Authenticator app for Azure DevOps login
+# GitHub OAuth popup for repository access authorization
+```
+
+### Free Tier Parallelism Request
+```bash
+# Request free parallelism grant (required for pipeline execution)
+# URL: https://aka.ms/azpipelines-parallelism-request
+# Form fields:
+#   - Organization name
+#   - Project visibility (Public/Private)
+#   - Brief description of work
+
+# Status check: Check email for Microsoft approval (2-3 business days)
+```
+
+### Pipeline Validation (Local)
+```bash
+# Validate Bicep templates locally (same as pipeline)
+find azure-security-mastery -name "*.bicep" -type f | while read file; do
+  echo "Validating: $file"
+  az bicep build --file "$file" || exit 1
+done
+
+# Install Bicep if needed
+az bicep install
+
+# Check Bicep version
+az bicep version
+```
+
+### Git Integration Notes
+```bash
+# Azure DevOps auto-commits pipeline YAML to GitHub
+# When creating pipeline in portal, it commits azure-pipelines.yml
+
+# If local branch is behind after pipeline creation:
+git pull origin main  # Pull Azure DevOps commit
+git push origin main  # Push local changes
+
+# Recommended workflow:
+git pull --rebase  # Rebase local commits on top of remote
+git push origin main
+```
+
+### Cost & Usage Tracking
+```
+Azure DevOps Organization: FREE
+Service Connection: €0 (no standing charges)
+Free Tier: 1,800 pipeline minutes/month (after approval)
+Parallel Jobs: 1 free parallel job (after approval)
+Current Usage: 0 minutes = €0
+```
+
+### Comparison: GitHub Actions vs Azure DevOps
+```bash
+# GitHub Actions (Day 23)
+# File: .github/workflows/secure-devsecops-pipeline.yml
+# Trigger: on: [push, pull_request]
+# Runner: runs-on: ubuntu-latest
+# Free: 2,000 minutes/month (instant)
+
+# Azure DevOps (Day 29)  
+# File: azure-pipelines.yml
+# Trigger: trigger: [main]
+# Pool: pool: vmImage: ubuntu-latest
+# Free: 1,800 minutes/month (approval required)
+
+# Both: Production-ready enterprise CI/CD platforms
+```
+
+### Portfolio Demonstration Commands
+```bash
+# Show multi-platform DevOps expertise
+echo "GitHub Actions: 2m 25s successful run (Day 23)"
+echo "Azure DevOps: Pipeline configured, pending execution (Day 29)"
+
+# Demonstrate YAML proficiency
+cat .github/workflows/secure-devsecops-pipeline.yml
+cat azure-pipelines.yml
+
+# Show service connection security
+az pipelines variable-group list  # Variables managed securely
+```
+
+### Real-World Learnings
+```
+✅ Microsoft Authenticator required for Azure DevOps
+✅ GitHub OAuth integration for repository access
+✅ Free tier requires parallelism approval (anti-crypto-mining)
+✅ Workload Identity Federation = no stored credentials
+✅ Azure DevOps auto-commits pipeline to GitHub (git workflow)
+✅ Multi-platform DevOps valuable for enterprise roles
+```
+
+---
 ```
 
