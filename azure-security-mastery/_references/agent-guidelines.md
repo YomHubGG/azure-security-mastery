@@ -6,7 +6,10 @@
 - ❌ **NEVER start any Azure trials** (Defender, Sentinel, etc.)
 - ❌ **NEVER enable paid tiers** (Standard storage, Premium anything)
 - ❌ **NEVER deploy expensive resources** (VMs, databases, etc.)
+- ❌ **NEVER deploy Container Registry** (Basic SKU = €4/month, NO FREE TIER!)
+- ⚠️ **CRITICAL**: Azure $200 credit expires after 30 days (not when depleted!)
 - ✅ **ALWAYS ask first**: "This will start a trial/cost money. Proceed?"
+- ✅ **ALWAYS verify free tier** before ANY resource creation
 
 ### **Resource Creation**
 - ❌ **NEVER deploy without user confirmation** 
@@ -156,9 +159,58 @@ Check guidelines before proceeding."
 
 **Remember**: Better to ask too many questions than create unexpected costs or complexity!
 
-*Last updated: September 22, 2025*
+*Last updated: October 6, 2025*
 
-## 📚 **Strategic Learning Context (NEW)**
+## 💰 **CRITICAL COST LESSONS (October 6, 2025)**
+
+### **Azure Free Trial Reality**
+- ⚠️ **$200 credit expires after 30 DAYS** (not when fully used!)
+- Account transitions to "Free Services Only" after credit expires
+- Free tier resources continue working indefinitely
+- Paid resources start charging immediately after credit expires
+
+### **Container Registry Trap**
+- 🚨 **Azure Container Registry has NO FREE TIER**
+- Basic SKU = €4.23/month minimum
+- Always costs money from deployment
+- Must be explicitly deleted to stop charges
+- Use Docker Hub or GitHub Container Registry for free alternatives
+
+### **Cost Protection Strategy**
+- ✅ Budget alerts MORE effective than removing payment method
+- ✅ Set €0.01 monthly budget for maximum sensitivity  
+- ✅ Weekly resource audits (`az resource list`)
+- ✅ Verify free tier before ANY deployment
+- ✅ Check SKU pricing: Portal → Pricing Calculator
+
+### **Free Tier Services (Safe to Deploy)**
+```
+✅ Storage Accounts (Standard_LRS, 5GB free)
+✅ Key Vaults (Standard, 10K ops free)
+✅ Virtual Networks (always free)
+✅ Network Security Groups (always free)
+✅ App Service (F1 tier, free)
+✅ Functions (Consumption, 1M free)
+✅ Logic Apps (Consumption, 4K free)
+```
+
+### **NEVER Deploy Without Confirmation**
+```
+❌ Container Registry (ANY SKU costs money)
+❌ Virtual Machines (€8+/month minimum)
+❌ Application Gateway (€200+/month)
+❌ VPN Gateway (€25+/month)
+❌ Azure Firewall (€700+/month)
+```
+
+### **Reference Documents**
+- `cost-safety-check-oct6.md` - Complete cost audit and protection guide
+- `cost-management-guide.md` - Original cost guidelines
+- Weekly audits documented in `_references/`
+
+---
+
+## 📚 **Strategic Learning Context**
 
 ### **Microsoft Learn Navigation Strategy**
 - ✅ **Focus on certification-specific paths** (AZ-900, AZ-500)
