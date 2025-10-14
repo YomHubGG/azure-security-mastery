@@ -73,6 +73,182 @@ az acr repository show-tags --name REGISTRY_NAME --repository app-name --output 
 az acr update --name REGISTRY_NAME --admin-enabled true
 ```
 
+### GitHub Container Registry (ghcr.io) - FREE Alternative
+```bash
+# Create Personal Access Token at: https://github.com/settings/tokens
+# Scopes needed: write:packages, read:packages, delete:packages
+
+# Login to GitHub Container Registry
+echo $GITHUB_TOKEN | podman login ghcr.io -u YOUR_USERNAME --password-stdin
+
+# Tag image for GitHub
+podman tag app-name:version ghcr.io/username/app-name:version
+podman tag app-name:version ghcr.io/username/app-name:latest
+
+# Push to GitHub Container Registry
+podman push ghcr.io/username/app-name:version
+podman push ghcr.io/username/app-name:latest
+
+# Pull from GitHub (public images)
+podman pull ghcr.io/username/app-name:version
+
+# Pull private images (authenticate first)
+echo $GITHUB_TOKEN | podman login ghcr.io -u username --password-stdin
+podman pull ghcr.io/username/app-name:version
+
+# List your packages: https://github.com/username?tab=packages
+
+# Logout
+podman logout ghcr.io
+```
+
+## Day 37: Container Registry Security
+
+### ACR Security Assessment
+```bash
+# Check ACR name availability
+az acr check-name --name yourdesiredname
+
+# List existing ACRs
+az acr list --output table
+
+# ACR pricing tiers (2025):
+# Basic: €4.60/month, 10GB, 2 webhooks
+# Standard: €18.40/month, 100GB, 10 webhooks
+# Premium: €92/month, 500GB, 500 webhooks, geo-replication, content trust
+```
+
+### ACR Authentication Methods (Ranked by Security)
+```bash
+# 1. MANAGED IDENTITY (Best - no credentials!)
+az aks create --attach-acr ACR_NAME --enable-managed-identity
+
+# 2. AZURE AD USER (Good - personal MFA)
+az acr login --name ACR_NAME
+
+# 3. SERVICE PRINCIPAL (Good - scoped for CI/CD)
+az ad sp create-for-rbac \
+  --name "ci-cd-acr" \
+  --role acrpush \
+  --scopes /subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.ContainerRegistry/registries/{acr}
+
+# 4. ADMIN USER (⚠️ Emergency only - shared password)
+az acr update --name ACR_NAME --admin-enabled true
+az acr credential show --name ACR_NAME
+```
+
+### ACR Network Security
+```bash
+# Add IP allowlist rule
+az acr network-rule add \
+  --name ACR_NAME \
+  --ip-address YOUR_IP/32
+
+# List network rules
+az acr network-rule list --name ACR_NAME --output table
+
+# Remove network rule
+az acr network-rule remove \
+  --name ACR_NAME \
+  --ip-address YOUR_IP/32
+
+# Create private endpoint (Premium tier only)
+az network private-endpoint create \
+  --name acr-private-endpoint \
+  --resource-group RG_NAME \
+  --vnet-name VNET_NAME \
+  --subnet SUBNET_NAME \
+  --private-connection-resource-id /subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.ContainerRegistry/registries/{acr} \
+  --group-id registry \
+  --connection-name acr-connection
+```
+
+### ACR Content Trust (Image Signing)
+```bash
+# Enable content trust (Premium tier only)
+az acr config content-trust update \
+  --name ACR_NAME \
+  --status enabled
+
+# Check content trust status
+az acr config content-trust show --name ACR_NAME
+
+# Sign and push with Docker
+export DOCKER_CONTENT_TRUST=1
+docker push myacr.azurecr.io/app:v1.0.0
+
+# Sign and push with Podman (requires skopeo)
+skopeo copy \
+  --sign-by GPG_KEY_ID \
+  containers-storage:app:v1.0.0 \
+  docker://myacr.azurecr.io/app:v1.0.0
+```
+
+### ACR Vulnerability Scanning
+```bash
+# Enable Microsoft Defender for Containers
+az security pricing create \
+  --name ContainerRegistry \
+  --tier Standard
+
+# View vulnerability scan results
+az security assessment list \
+  --resource-group RG_NAME \
+  --resource ACR_NAME \
+  --resource-type Microsoft.ContainerRegistry/registries
+
+# List quarantined images
+az acr repository show-tags \
+  --name ACR_NAME \
+  --repository REPO_NAME \
+  --query "[?quarantine=='true']"
+```
+
+### ACR Lifecycle Management
+```bash
+# Enable retention policy (Premium tier - delete untagged manifests)
+az acr config retention update \
+  --name ACR_NAME \
+  --status enabled \
+  --days 7 \
+  --type UntaggedManifests
+
+# Lock production image (prevent deletion/overwrite)
+az acr repository update \
+  --name ACR_NAME \
+  --image app:v1.0.0 \
+  --write-enabled false \
+  --delete-enabled false
+
+# Unlock image
+az acr repository update \
+  --name ACR_NAME \
+  --image app:v1.0.0 \
+  --write-enabled true \
+  --delete-enabled true
+
+# Check storage usage
+az acr show-usage --name ACR_NAME --output table
+```
+
+### ACR Geo-Replication (Premium Only)
+```bash
+# Create replica in another region
+az acr replication create \
+  --registry ACR_NAME \
+  --location northeurope
+
+# List replicas
+az acr replication list \
+  --registry ACR_NAME \
+  --output table
+
+# Delete replica
+az acr replication delete \
+  --registry ACR_NAME \
+  --location northeurope
+```
+
 ### Azure Container Instances (ACI)
 ```bash
 # ⚠️  COST WARNING: Container Instances charge ~€0.32/day while running!
