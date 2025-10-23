@@ -1,121 +1,285 @@
-# 🐳 Day 39: Azure Container Instances + Minishell Demo
+# 🐳 Day 39: Azure Container Instances Security
 
-**Date**: October 9, 2025 (Scheduled)  
-**Focus**: Serverless container security with practical minishell deployment  
+**Date**: October 23, 2025  
+**Session**: #20  
+**Focus**: Deploy YOUR published container to Azure with security best practices  
 **Duration**: 1-2 hours  
-**Session**: #20 (according to every-other-day schedule)
 
 ## 🎯 **Today's Learning Goals** 
 
-- ✅ Deploy secure container groups with ACI
-- ✅ **PRACTICAL PROJECT: Deploy minishell container securely**
-- ✅ Implement virtual network integration
-- ✅ Set up managed identity for container access
-- ✅ Configure monitoring and logging
-- ✅ Create cost-management scripts (start/stop)
-- ✅ Commit: "Serverless container security + minishell demo"
+- ✅ Understand Azure Container Instances (ACI) architecture
+- ✅ **Deploy YOUR container** (`ghcr.io/yomhubgg/secure-app:1.0.0`) to Azure
+- ✅ Configure ACI security features
+- ✅ Manage secrets and environment variables securely
+- ✅ Implement networking and access controls
+- ✅ Set up monitoring and logging
+- ✅ Optimize for €0 cost using free tier
 
-## 🚀 **The Minishell Container Project**
+## 🚀 **Complete Container Workflow**
 
-Your **42 minishell** project will serve as the perfect practical demonstration of:
-- **Container security best practices**
-- **Azure Container Instances deployment**
-- **Network security integration**
-- **Cost-effective cloud hosting**
-- **Monitoring and logging**
+This session completes your end-to-end container journey:
+- **Day 35**: Built secure Docker image with 10+ hardening measures
+- **Day 37**: Pushed to GitHub Container Registry
+- **Day 39**: **Deploy to Azure cloud** ← YOU ARE HERE!
 
-## 🏗️ **Implementation Plan**
+Perfect progression showing:
+- ✅ Container security expertise
+- ✅ Registry management
+- ✅ Cloud deployment skills
+- ✅ Cost-conscious engineering
 
-### **Phase 1: Container Preparation**
+## 📚 What is Azure Container Instances (ACI)?
+
+### **The Basics**
+
+**Azure Container Instances** = **Serverless containers** in Azure
+
+- Upload your container → Azure runs it → You get a URL
+- No VMs, no clusters, no infrastructure management
+- Pay only for what you use (per second!)
+- Perfect for simple workloads, testing, demos
+
+### **Why ACI for Day 39?**
+
+✅ **Simplest Azure container service** (great for learning)  
+✅ **FREE seconds available** (no credit card charges!)  
+✅ **Deploy in minutes** (vs hours for AKS)  
+✅ **You already have a container ready!** (`secure-app:1.0.0`)  
+✅ **Natural progression** after registry learning (Day 37)
+
+---
+
+## 🏗️ **Quick Start: Deploy YOUR Container**
+
+### **Prerequisites**
+### **Prerequisites**
+
 ```bash
-# Build secure container image
-docker build -t minishell:secure .
-docker tag minishell:secure devacr4uybw3c2lbkwm.azurecr.io/minishell:v1.0
+# 1. Azure CLI logged in
+az account show
 
-# Push to Azure Container Registry (from Day 37)
-az acr login --name devacr4uybw3c2lbkwm
-docker push devacr4uybw3c2lbkwm.azurecr.io/minishell:v1.0
+# 2. Your container is published
+# Verify at: https://github.com/YomHubGG?tab=packages
+
+# 3. GitHub PAT ready (if container is private)
+export GITHUB_TOKEN="your_personal_access_token_here"
 ```
 
-### **Phase 2: Secure ACI Deployment**
-```bicep
-// minishell-aci.bicep
-resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
-  name: 'cg-minishell-secure'
-  location: location
-  identity: {
-    type: 'SystemAssigned'
-  }
-  properties: {
-    containers: [
-      {
-        name: 'minishell'
-        properties: {
-          image: 'devacr4uybw3c2lbkwm.azurecr.io/minishell:v1.0'
-          ports: [
-            {
-              port: 80
-              protocol: 'TCP'
-            }
-          ]
-          resources: {
-            requests: {
-              cpu: 1
-              memoryInGB: 2
-            }
-          }
-          environmentVariables: [
-            {
-              name: 'ENVIRONMENT'
-              value: 'production'
-            }
-          ]
-        }
-      }
-    ]
-    osType: 'Linux'
-    restartPolicy: 'OnFailure'
-    ipAddress: {
-      type: 'Public'
-      ports: [
-        {
-          port: 80
-          protocol: 'TCP'
-        }
-      ]
-    }
-  }
-}
+---
+
+### **Method 1: Quick Deploy (Public Container)**
+
+If you made your container public on GitHub:
+
+```bash
+# Create resource group
+az group create \
+  --name rg-containers-learning \
+  --location westeurope
+
+# Deploy container
+az container create \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo \
+  --image ghcr.io/yomhubgg/secure-app:1.0.0 \
+  --cpu 0.5 \
+  --memory 0.5 \
+  --dns-name-label yom-secure-app \
+  --ports 3000 \
+  --restart-policy OnFailure
+
+# Get your URL
+az container show \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo \
+  --query ipAddress.fqdn \
+  --output tsv
+# Output: yom-secure-app.westeurope.azurecontainer.io
+
+# Test it!
+curl http://yom-secure-app.westeurope.azurecontainer.io:3000
 ```
 
-### **Phase 3: Cost Management Integration**
-- **start-minishell.sh** - Deploy container when needed
-- **stop-minishell.sh** - Remove container to save costs
-- **monitor-minishell.sh** - Check logs and metrics
+---
 
-### **Phase 4: Security Features**
-- **Virtual Network integration** for private access
-- **Managed Identity** for secure resource access
-- **Azure Monitor** integration for logging
-- **Container Registry** authentication
+### **Method 2: Secure Deploy (Private Container)**
 
-## 🎯 **Success Criteria**
+If your container is private (recommended):
 
-By Day 39, you'll have:
-- ✅ **Production-ready minishell container** in Azure
-- ✅ **Secure deployment patterns** demonstrated
-- ✅ **Cost-effective hosting** with start/stop automation
-- ✅ **Enterprise security** features integrated
-- ✅ **Portfolio project** showcasing cloud + security skills
+```bash
+# Deploy with GitHub Container Registry credentials
+az container create \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo \
+  --image ghcr.io/yomhubgg/secure-app:1.0.0 \
+  --registry-login-server ghcr.io \
+  --registry-username yomhubgg \
+  --registry-password $GITHUB_TOKEN \
+  --cpu 0.5 \
+  --memory 0.5 \
+  --dns-name-label yom-secure-app \
+  --ports 3000 \
+  --restart-policy OnFailure \
+  --secure-environment-variables \
+    NODE_ENV=production \
+    PORT=3000
+```
 
-## 💡 **Why This Approach Works**
+---
 
-1. **Educational Value**: Combines your 42 project with Azure skills
-2. **Portfolio Impact**: Shows practical cloud deployment experience  
-3. **Security Focus**: Demonstrates enterprise security patterns
-4. **Cost Conscious**: Automated start/stop for budget management
-5. **Resume Ready**: Real-world Azure container experience
+## 🔒 Security Best Practices for ACI
 
-**Estimated Timeline**: We're currently on Day 17, so this is 11 sessions (21 days) away!
+### **1. Registry Authentication**
 
-This will be an awesome capstone for your container security learning! 🚀
+```bash
+# ❌ DON'T: Hardcode passwords
+--registry-password "my-secret-token"
+
+# ✅ DO: Use environment variables
+--registry-password $GITHUB_TOKEN
+
+# ✅ BEST: Use Azure Key Vault
+--registry-password $(az keyvault secret show ...)
+```
+
+### **2. Resource Limits** (Prevent resource exhaustion)
+
+```bash
+# Always set CPU and memory limits
+--cpu 0.5      # Half a core (enough for testing)
+--memory 0.5   # 500 MB (your container is 354 MB)
+
+# Don't over-provision!
+# ❌ --cpu 4 --memory 8  (wastes money)
+```
+
+### **3. Network Security**
+
+```bash
+# Public access (for demos)
+--ip-address Public --dns-name-label yom-secure-app --ports 3000
+
+# Private access (production)
+--vnet /subscriptions/.../vnet-name \
+--subnet /subscriptions/.../subnet-name
+```
+
+### **4. Secrets Management**
+
+```bash
+# ❌ DON'T: Plain environment variables
+--environment-variables DB_PASSWORD=secret123
+
+# ✅ DO: Secure environment variables
+--secure-environment-variables DB_PASSWORD=secret123
+
+# ✅ BEST: Azure Key Vault integration
+--secrets $(az keyvault secret show ...)
+```
+
+---
+
+## 📊 Monitoring & Debugging
+
+### **View Logs**
+
+```bash
+# Stream live logs
+az container logs \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo \
+  --follow
+
+# Get all logs
+az container logs \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo
+```
+
+### **Execute Commands**
+
+```bash
+# Get shell access
+az container exec \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo \
+  --exec-command "/bin/sh"
+
+# Run one-off command
+az container exec \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo \
+  --exec-command "ps aux"
+```
+
+### **Check Status**
+
+```bash
+# Get container state
+az container show \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo \
+  --query "{FQDN:ipAddress.fqdn, State:instanceView.state, IP:ipAddress.ip}" \
+  --output table
+```
+
+---
+
+## 💰 Cost Management
+
+### **Free Tier Usage**
+
+```
+FREE: First 50,000 vCPU-seconds per month
+
+Your demo (0.5 CPU for 10 minutes):
+= 0.5 × 600 seconds = 300 vCPU-seconds
+= Still 49,700 seconds remaining!
+
+Cost: €0.00 ✅
+```
+
+### **Always Clean Up!**
+
+```bash
+# Delete container when done
+az container delete \
+  --resource-group rg-containers-learning \
+  --name secure-app-demo \
+  --yes
+
+# Or delete entire resource group
+az group delete \
+  --name rg-containers-learning \
+  --yes \
+  --no-wait
+```
+
+---
+
+## 🎯 What You'll Achieve Today
+
+By the end of Day 39:
+
+✅ **Deployed YOUR container to Azure cloud**  
+✅ **Configured secure authentication** (GitHub CR → ACI)  
+✅ **Managed secrets properly** (secure environment variables)  
+✅ **Monitored logs and metrics**  
+✅ **Executed debugging commands**  
+✅ **Cost: €0** (within free tier!)  
+
+**Portfolio Impact**:
+- End-to-end container workflow demonstrated
+- Cloud deployment experience
+- Security-first mindset
+- Cost-conscious engineering
+
+---
+
+## 🚀 Ready to Deploy?
+
+Let's start with the hands-on deployment! Choose your method:
+1. Public container (simpler, good for demos)
+2. Private container (more secure, production-like)
+
+**Which would you like to try first?** �☁️
