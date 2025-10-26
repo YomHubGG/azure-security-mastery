@@ -1506,8 +1506,10 @@ kubeadm init --apiserver-advertise-address $(hostname -i) --pod-network-cidr 10.
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
-# Install a network plugin (Weave Net)
-kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+# Install a network plugin
+# Note: Tried Weave Net (failed), switched to Flannel (worked)
+# PWK officially recommends kube-router - discovered after the fact
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 # Wait for network plugin to be ready
 kubectl get pods -n kube-system -w  # Watch until all pods are Running
