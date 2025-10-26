@@ -2,13 +2,13 @@
 
 *Based on session logs and actual files created*
 
-## 🎯 **Current Status: Day 39** (October 23, 2025)
+## 🎯 **Current Status: Day 41** (October 26, 2025)
 
-**Real Progress**: Successfully completed Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, and now Day 39 Container Instances  
-**Timeline**: Started September 1st → October 23rd = **52 calendar days** → Every other day schedule = **26 possible sessions**  
-**Completed**: **18 sessions** (69% hit rate) - accounting for 9-day hackathon break + catch-up sessions  
-**Actual Pace**: ~2.9 days per session (good pace with break)  
-**Major Achievement**: ✅ **Container Trilogy Complete** - Build (Day 35) → Registry (Day 37) → Deploy (Day 39) - Production cloud deployment achieved!  
+**Real Progress**: Successfully completed Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, and now Day 41 AKS/Kubernetes  
+**Timeline**: Started September 1st → October 26th = **55 calendar days** → Every other day schedule = **27 possible sessions**  
+**Completed**: **21 sessions** (78% hit rate) - accounting for 9-day hackathon break + catch-up sessions  
+**Actual Pace**: ~2.6 days per session (excellent pace!)  
+**Major Achievement**: ✅ **Container Security Path Complete** - Build (Day 35) → Registry (Day 37) → Deploy (Day 39) → Orchestration Theory (Day 41) - Next: Local K8s practice!  
 **Recent**: 
 **Day 33**: ✅ **COMPLETED** (October 10-12, 2025 - Session #16-17) - **Q1 CAPSTONE PROJECT** - Security Integration (5,500+ lines, €0 cost)
 **Git Commit**:
@@ -166,18 +166,74 @@
 - Oct 23: `6507768` - "Day 39: Azure Container Instances - Deploy secure-app to cloud ✅"
 
 ---
+
+### **Day 41: Azure Kubernetes Service (AKS) - Theory & Fundamentals** ✅ COMPLETED (October 26, 2025)
+**Evidence**:
+- `02-security-services/day41-aks-kubernetes-theory/` - Complete AKS/K8s comprehensive guide (1,900+ lines)
+- `README.md` - Kubernetes theory, AKS architecture, security features, cost analysis, interview prep
+- Play with Kubernetes exploration completed
+- System reconnaissance documented (CentOS, RPM, network analysis)
+- Security discoveries: Service account token injection, Docker API exposure, IPv6 notation
+- Network plugin troubleshooting (Weave Net → Flannel)
+
+**Skills Acquired**:
+- **📚 LEARNED (Interview-Ready)**:
+  - ✅ Kubernetes fundamentals - container orchestration concepts
+  - ✅ AKS architecture - control plane (free) vs worker nodes (paid)
+  - ✅ Core K8s concepts - Pod, Deployment, Service, Namespace, ConfigMap, Secret
+  - ✅ Security layers - Cluster (RBAC, Network Policies), Pod (Security Context), Azure integration
+  - ✅ Azure Key Vault integration - CSI Secrets Store driver
+  - ✅ Managed Identity - pods get Azure AD identity (no passwords)
+  - ✅ Cost analysis - minimum €238/month for AKS 3-node cluster
+  - ✅ When to use: AKS vs ACI vs VMs vs Functions (decision matrix)
+
+- **🔧 PRACTICED (Play with Kubernetes)**:
+  - ✅ CentOS/RPM system administration
+  - ✅ Network reconnaissance with `ss -tulnp`
+  - ✅ Kubernetes cluster initialization with kubeadm
+  - ✅ Network plugin troubleshooting (Weave Net → Flannel)
+  - ✅ Security analysis - service account tokens, Docker API exposure
+
+- **⚡ REAL-WORLD UNDERSTANDING**:
+  - ✅ AKS costs €238/month minimum - not viable for single-container learning
+  - ✅ AKS makes sense at 20+ containers scale
+  - ✅ Theory + local practice = full knowledge without Azure bills
+  - ✅ Service account tokens auto-injected = security risk if pod compromised
+
+**Interview Preparation**:
+- ✅ 8 comprehensive Q&A scenarios documented
+- ✅ Cost breakdowns and decision matrices
+- ✅ Real-world attack scenarios and mitigations
+
+**Learning Approach Optimized**:
+- ✅ **Today (Day 41)**: Comprehensive theory (€0)
+- ✅ **Play with Kubernetes**: Hands-on exploration (€0)
+- 📅 **Next (Day 43)**: Local k3s practice on Parrot (€0)
+- ⏭️ **Skip**: AKS deployment (save €238/month)
+
+**Personal Reflection**:
+> "Feeling empowered by exploration sessions! Theory provides foundation, hands-on reveals reality."
+
+**Git Commit**:
+- Oct 26: "Day 41: AKS/Kubernetes theory complete - 1900+ lines, PWK exploration, interview-ready"
+
+---
+
+**Day 41**: ✅ **COMPLETED** (October 26, 2025 - Session #21) - **AKS/KUBERNETES THEORY** - Comprehensive theory + PWK exploration (€0 cost)
+
+**Velocity Analysis**: 21 sessions in 55 calendar days = **2.6 days/session** (Target: 2.0) ✅ **EXCELLENT PACE!**  
+**1-Year Progress**: 41/365 days completed = **11.2%** of curriculum in first 55 days  
+**Cost Management**: **€0 spent** - 100% free tier optimization maintained 💰
+
+**Assessment**: ✅ **Container + Orchestration Path Complete** - Ready for Day 43 local K8s practice! 🎯
+
+---
 **Day 37**: ✅ **COMPLETED** (October 14, 2025 - Session #19) - **CONTAINER REGISTRY** - Published to GitHub CR (ghcr.io/yomhubgg/secure-app:1.0.0, €0 cost)
 **Day 39**: ✅ **COMPLETED** (October 23, 2025 - Session #20) - **AZURE CONTAINER INSTANCES** - Deployed to cloud (7 min runtime, €0 cost)
 
-**Velocity Analysis**: 18 sessions in 52 calendar days = **2.9 days/session** (Target: 2.0) ✅ **GOOD PACE with hackathon break!**  
-**1-Year Progress**: 39/365 days completed = **10.7%** of curriculum in first 52 days  
-**Cost Management**: **€0 spent** - 100% free tier optimization maintained 💰
-
-**Assessment**: ✅ **Month 4 Container Security Mastered** - End-to-end container deployment pipeline complete! 🎯
-
 ### 📊 Velocity Analysis: EXCELLENT PACE! ✅
 - **Start Date**: September 1, 2025
-- **Current Date**: October 12, 2025 (42 days elapsed)
+- **Current Date**: October 26, 2025 (55 days elapsed)
 - **Target Schedule**: Every other day = 21 possible sessions
 - **Actual Completion**: 16 sessions (Days 1, 3, 5, 7-15 experience, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35)
 - **Hit Rate**: 76% (16/21) - excellent pace accounting for real-world flexibility

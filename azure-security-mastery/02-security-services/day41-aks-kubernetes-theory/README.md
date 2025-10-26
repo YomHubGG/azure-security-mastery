@@ -1310,7 +1310,611 @@ Some Azure enterprise agreements offer:
 
 ---
 
+## 🎮 Hands-On: Play with Kubernetes Exploration
+
+**Date:** October 26, 2025  
+**Environment:** [Play with Kubernetes](https://labs.play-with-k8s.com/)  
+**Discovery:** Running as root on CentOS with RPM package manager!
+
+### 🔍 What I Discovered
+
+**System Details:**
+```bash
+# I found out I'm running on CentOS!
+cat /etc/os-release
+# Package manager: RPM (Red Hat Package Manager)
+# Kernel warning: "kernel needs to be removed by rpm, because of grubby"
+
+# Security finding: I'm root! 😱
+whoami
+# Output: root
+```
+
+**Security Implications:**
+- ✅ **Good for learning:** No permission issues blocking experimentation
+- ✅ **Realistic:** K8s cluster setup requires root/elevated privileges
+- ⚠️ **In production:** NEVER run as root - use RBAC and least privilege
+- 🛡️ **Playground safety:** Isolated environment, sessions expire after 4 hours
+
+---
+
+### 🚀 Fun Commands to Try
+
+#### **1. System Reconnaissance** 🕵️
+
+```bash
+# Detailed OS information
+cat /etc/os-release
+uname -a                          # Kernel version (important for container runtime)
+cat /proc/version                 # More detailed kernel info
+hostname                          # Your node name
+uptime                            # How long the system has been running
+
+# Package manager exploration
+rpm -qa | wc -l                   # Count installed packages
+rpm -qa | grep -i kube            # Find Kubernetes-related packages
+rpm -qa | grep -i docker          # Find Docker-related packages
+rpm -qi kubeadm                   # Detailed info about kubeadm package
+
+# Hardware info (it's virtual, but still interesting!)
+cat /proc/cpuinfo | grep "model name" | head -1
+free -h                           # Memory usage
+df -h                             # Disk space
+lsblk                             # Block devices
+```
+
+#### **2. Network Ninja Moves** 🌐
+
+```bash
+# Network configuration
+ip addr show                      # All network interfaces
+ip route show                     # Routing table
+ss -tulnp                         # Open ports and listening services (netstat not on CentOS!)
+cat /etc/hosts                    # Host mappings
+cat /etc/resolv.conf              # DNS configuration
+
+# Check what's listening (before K8s cluster is initialized)
+ss -tulnp | grep LISTEN           # Note: netstat not available on RPM-based systems!
+
+# After initializing K8s cluster, see K8s ports:
+# - 6443: Kubernetes API server
+# - 2379-2380: etcd server client API
+# - 10250: Kubelet API
+# - 10251: kube-scheduler
+# - 10252: kube-controller-manager
+```
+
+**🔍 Real Output Analysis:**
+
+```bash
+# What I found with 'ss -tulnp':
+tcp    LISTEN     0      128    127.0.0.1:42008      *:*       users:(("containerd",pid=314,fd=12))
+tcp    LISTEN     0      128    127.0.0.1:10248      *:*       users:(("kubelet",pid=3640,fd=17))
+tcp    LISTEN     0      128    127.0.0.1:10249      *:*       users:(("kube-proxy",pid=9779,fd=14))
+tcp    LISTEN     0      128    127.0.0.11:33033     *:*                  
+tcp    LISTEN     0      128    172.18.0.18:2379     *:*       users:(("etcd",pid=9201,fd=9))
+tcp    LISTEN     0      128    127.0.0.1:2379       *:*       users:(("etcd",pid=9201,fd=8))
+tcp    LISTEN     0      128    172.18.0.18:2380     *:*       users:(("etcd",pid=9201,fd=7))
+tcp    LISTEN     0      128    127.0.0.1:2381       *:*       users:(("etcd",pid=9201,fd=14))
+tcp    LISTEN     0      128    127.0.0.1:10257      *:*       users:(("kube-controller",pid=9224,fd=3))
+tcp    LISTEN     0      128    127.0.0.1:10259      *:*       users:(("kube-scheduler",pid=8945,fd=3))
+tcp    LISTEN     0      128    [::]:2375            [::]:*    users:(("dockerd",pid=134,fd=3))      # 🚨
+tcp    LISTEN     0      128    [::]:10250           [::]:*    users:(("kubelet",pid=3640,fd=18))
+tcp    LISTEN     0      128    [::]:6443            [::]:*    users:(("kube-apiserver",pid=9354,fd=3))
+tcp    LISTEN     0      128    [::]:10255           [::]:*    users:(("kubelet",pid=3640,fd=14))
+tcp    LISTEN     0      128    [::]:10256           [::]:*    users:(("kube-proxy",pid=9779,fd=12))
+```
+
+**🔐 Security Analysis of Bindings:**
+
+| Binding | Meaning | Security Level | Services |
+|---------|---------|----------------|----------|
+| `127.0.0.1:PORT` | **IPv4 loopback** - Local only | ✅ **SECURE** | containerd, kubelet health, kube-proxy metrics, etcd, controller, scheduler |
+| `172.18.0.18:PORT` | **Specific IPv4** - Container network | 🔐 **INTERNAL** | etcd cluster communication |
+| `[::]:PORT` | **All IPv6 addresses** - Exposed! | ⚠️ **EXPOSED** | Docker API, kubelet, K8s API, kube-proxy |
+
+**💡 IPv6 Notation Explained:**
+
+```bash
+[::]:2375
+│  │  └─ Port number
+│  └──── IPv6 "all zeros" shorthand (0000:0000:0000:0000:0000:0000:0000:0000)
+└─────── Square brackets (required for IPv6 in URLs)
+
+# IPv6 equivalents:
+[::]        = 0.0.0.0        (all interfaces)
+[::1]       = 127.0.0.1      (loopback)
+```
+
+**🚨 Port 2375 Warning:**
+
+```bash
+[::]:2375  →  Docker daemon API WITHOUT TLS encryption!
+
+# This is DANGEROUS in production because:
+# - No authentication required
+# - No encryption
+# - Full access to Docker = full access to host (as root!)
+# - Anyone can: docker -H tcp://your-ip:2375 run --privileged ...
+
+# Production should use:
+[::]:2376  →  Docker daemon WITH TLS (encrypted + client certificates)
+
+# Why it's here:
+✅ Play with Kubernetes = isolated sandbox (safe)
+✅ Session expires in 4 hours (temporary)
+❌ NEVER expose 2375 in production!
+```
+
+**🎯 Key Kubernetes Ports Discovered:**
+
+| Port | Service | Purpose | Security |
+|------|---------|---------|----------|
+| **2375** | Docker daemon | Container management | ⚠️ NO TLS (playground only) |
+| **6443** | kube-apiserver | Main K8s API | ✅ TLS + RBAC required |
+| **2379-2380** | etcd | K8s cluster database | 🔐 Internal + client certs |
+| **10250** | kubelet | Node management | 🔐 Webhook auth |
+| **10255** | kubelet | Read-only metrics | ⚠️ No auth (deprecated) |
+| **10248** | kubelet | Health endpoint | ✅ Local only |
+| **10249** | kube-proxy | Metrics | ✅ Local only |
+| **10256** | kube-proxy | Health endpoint | ℹ️ Exposed but harmless |
+| **10257** | kube-controller | Controller metrics | ✅ Local only |
+| **10259** | kube-scheduler | Scheduler metrics | ✅ Local only |
+
+**🧪 Test Docker Exposure (Playground Only!):**
+
+```bash
+# From another terminal/node in PWK:
+docker -H tcp://node1:2375 ps        # List containers on node1
+docker -H tcp://node1:2375 images    # List images on node1
+
+# This works because 2375 is exposed without auth!
+# In production, this would be a CRITICAL security vulnerability!
+```
+
+#### **3. Docker Deep Dive** 🐳
+
+```bash
+# Check Docker setup
+docker version                    # Docker client and server versions
+docker info                       # Detailed Docker configuration
+docker images                     # List downloaded container images
+docker ps -a                      # List all containers (running and stopped)
+
+# Fun: Run a quick container
+docker run hello-world            # Test Docker is working
+docker run -it alpine sh          # Interactive Alpine Linux shell
+# (type 'exit' to leave the container)
+
+# See Docker's storage
+ls -la /var/lib/docker/           # Docker's data directory
+du -sh /var/lib/docker/           # How much space Docker is using
+```
+
+#### **4. Kubernetes Cluster Play** ☸️
+
+```bash
+# Check K8s tools
+kubectl version --client          # Kubectl version
+kubeadm version                   # Kubeadm version
+kubelet --version                 # Kubelet version
+
+# Initialize a cluster (on master node)
+kubeadm init --apiserver-advertise-address $(hostname -i) --pod-network-cidr 10.5.0.0/16
+
+# After init, set up kubectl access
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+# Install a network plugin (Weave Net)
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
+# Wait for network plugin to be ready
+kubectl get pods -n kube-system -w  # Watch until all pods are Running
+
+# Explore the cluster
+kubectl get nodes                 # List nodes in cluster
+kubectl get pods -A               # All pods in all namespaces
+kubectl get services -A           # All services
+kubectl cluster-info              # Cluster information
+kubectl config view               # View kubeconfig
+
+# Check system pods
+kubectl get pods -n kube-system   # K8s system components
+kubectl describe node node1       # Detailed node information
+```
+
+#### **5. Create Your First Pod** 🎯
+
+```bash
+# Simple nginx pod
+kubectl run mynginx --image=nginx --port=80
+
+# Watch it come up
+kubectl get pods -w               # -w for watch mode (Ctrl+C to exit)
+
+# Get details
+kubectl describe pod mynginx      # Detailed pod information
+kubectl logs mynginx              # Pod logs
+
+# Execute commands in the pod
+kubectl exec mynginx -- nginx -v  # Run command in container
+kubectl exec -it mynginx -- sh    # Interactive shell in container
+# (type 'exit' to leave)
+
+# Expose the pod as a service
+kubectl expose pod mynginx --port=80 --type=NodePort
+
+# Get the service details
+kubectl get svc mynginx           # Note the NodePort (30000-32767)
+
+# Test it (from the node)
+curl localhost:<NodePort>         # Should see nginx welcome page
+```
+
+**🔐 Security Discovery: Service Account Token Injection**
+
+When you run `kubectl describe pod mynginx`, you'll see:
+
+```yaml
+Mounts:
+  /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-h7mzb (ro)
+```
+
+**What is this?** Kubernetes **automatically** injects credentials into EVERY pod!
+
+**Why?** So pods can talk to the Kubernetes API server (for monitoring tools, operators, etc.)
+
+**What's inside that directory?**
+
+```bash
+# Enter the pod and explore
+kubectl exec -it mynginx -- sh
+
+# Inside the pod:
+ls -la /var/run/secrets/kubernetes.io/serviceaccount/
+# ca.crt       → Certificate Authority (verify API server identity)
+# namespace    → Which namespace this pod is in (default)
+# token        → JWT authentication token
+
+# View the token
+cat /var/run/secrets/kubernetes.io/serviceaccount/token
+# Long JWT token: eyJhbGciOiJSUzI1NiIs...
+
+# This token allows the pod to authenticate to Kubernetes API!
+```
+
+**🚨 Security Implication: Every Pod Can Talk to Kubernetes!**
+
+```bash
+# From inside the pod (after installing curl):
+apt-get update && apt-get install -y curl
+
+TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+APISERVER=https://kubernetes.default.svc
+
+# Your nginx pod can query Kubernetes API!
+curl -k $APISERVER/api/v1/namespaces/default/pods \
+  --header "Authorization: Bearer $TOKEN"
+
+# Output: List of all pods in default namespace!
+# 😱 If nginx gets hacked, attacker can explore your cluster!
+```
+
+**🛡️ Best Practice: Disable Token Mounting (If Not Needed)**
+
+```bash
+# Create pod WITHOUT service account token
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-nginx
+spec:
+  automountServiceAccountToken: false  # 🔒 No API access!
+  containers:
+  - name: nginx
+    image: nginx
+EOF
+
+# Verify no token is mounted
+kubectl describe pod secure-nginx | grep -A 5 "Mounts:"
+# Output: No serviceaccount mount! ✅
+
+# Try to access from inside
+kubectl exec -it secure-nginx -- sh
+ls /var/run/secrets/kubernetes.io/
+# Output: Directory doesn't exist! Pod is isolated. 🔒
+```
+
+**📚 When to Disable Service Account Tokens:**
+
+| Pod Type | Token Needed? | Reasoning |
+|----------|---------------|-----------|
+| **Nginx/web server** | ❌ NO | Just serves HTTP, no K8s interaction |
+| **Application backend** | ❌ NO | Talks to database, not K8s API |
+| **Monitoring tool** (Prometheus) | ✅ YES | Needs to query pod metrics |
+| **CI/CD runner** (Jenkins) | ✅ YES | Deploys apps by creating pods |
+| **Service mesh** (Istio) | ✅ YES | Discovers services dynamically |
+
+**🎯 Security Principle: Least Privilege**
+- If pod doesn't need API access → `automountServiceAccountToken: false`
+- If pod needs API access → Create custom ServiceAccount with RBAC (not default SA!)
+
+**Real-World Attack Scenario:**
+```
+1. Attacker exploits nginx CVE → Gains shell inside mynginx pod
+2. Attacker finds token → cat /var/run/secrets/.../token
+3. Attacker queries API → Lists all secrets in namespace
+4. Attacker steals DB password → curl $APISERVER/api/v1/.../secrets
+5. Attacker pivots to database → Full cluster compromise! 💥
+
+Defense: automountServiceAccountToken: false
+→ Attacker stuck inside container, can't explore cluster! 🛡️
+```
+
+#### **6. YAML Adventures** 📝
+
+```bash
+# Create a deployment YAML
+cat <<EOF > my-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+EOF
+
+# Apply it
+kubectl apply -f my-deployment.yaml
+
+# Watch the magic happen
+kubectl get deployments
+kubectl get pods -l app=nginx     # Pods with label app=nginx
+kubectl get pods -o wide          # See which nodes they're on
+
+# Scale it up!
+kubectl scale deployment my-nginx --replicas=5
+
+# Scale it down
+kubectl scale deployment my-nginx --replicas=2
+
+# Rolling update (change image)
+kubectl set image deployment/my-nginx nginx=nginx:alpine
+
+# Watch the rollout
+kubectl rollout status deployment/my-nginx
+
+# Rollback if needed
+kubectl rollout undo deployment/my-nginx
+```
+
+#### **7. Security Exploration** 🔐
+
+```bash
+# Check RBAC (Role-Based Access Control)
+kubectl get clusterroles          # Cluster-wide roles
+kubectl get clusterrolebindings   # Who has which roles
+kubectl auth can-i create pods    # Can I create pods? (as current user)
+kubectl auth can-i --list         # What can I do?
+
+# Service accounts
+kubectl get serviceaccounts -A    # All service accounts
+kubectl get secrets -A            # K8s secrets (tokens, etc.)
+
+# Security contexts
+kubectl explain pod.spec.securityContext
+kubectl explain pod.spec.containers.securityContext
+
+# Create a pod with security context
+cat <<EOF > secure-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: security-test
+spec:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 2000
+  containers:
+  - name: sec-test
+    image: alpine
+    command: ["sleep", "3600"]
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+EOF
+
+kubectl apply -f secure-pod.yaml
+kubectl exec security-test -- id  # Check user ID
+```
+
+#### **8. Troubleshooting & Debugging** 🐛
+
+```bash
+# Pod troubleshooting
+kubectl get events                # Recent cluster events
+kubectl get pods --show-labels    # See pod labels
+kubectl describe pod <pod-name>   # Why is my pod not working?
+
+# Resource usage
+kubectl top nodes                 # Node CPU/memory (needs metrics-server)
+kubectl top pods                  # Pod resource usage
+
+# Logs
+kubectl logs <pod-name>           # Pod logs
+kubectl logs <pod-name> -f        # Follow logs (like tail -f)
+kubectl logs <pod-name> --previous # Logs from previous container instance
+
+# Port forwarding (access pod from your browser)
+kubectl port-forward pod/mynginx 8080:80
+# Then visit localhost:8080 (in PWK, use the port in their UI)
+
+# Copy files to/from pods
+kubectl cp mynginx:/etc/nginx/nginx.conf ./nginx.conf
+kubectl cp ./myfile.txt mynginx:/tmp/
+```
+
+#### **9. Clean Up & Experimenting** 🧹
+
+```bash
+# Delete resources
+kubectl delete pod mynginx
+kubectl delete deployment my-nginx
+kubectl delete -f my-deployment.yaml
+
+# Delete everything with a label
+kubectl delete pods -l app=nginx
+
+# Nuclear option (delete everything in default namespace)
+kubectl delete all --all
+
+# Check what's left
+kubectl get all
+```
+
+#### **10. Advanced: Kubernetes Internals** 🔬
+
+```bash
+# etcd exploration (K8s database)
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  get / --prefix --keys-only
+
+# View cluster certificates
+ls -la /etc/kubernetes/pki/       # All PKI certificates
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+
+# Check kubelet configuration
+systemctl status kubelet          # Is kubelet running?
+journalctl -u kubelet -f          # Kubelet logs
+
+# API server direct access
+curl -k https://localhost:6443/   # Without auth (will fail)
+curl -k https://localhost:6443/healthz  # Health check
+
+# Container runtime (containerd or Docker)
+crictl ps                         # List containers (if using containerd)
+crictl images                     # List images
+docker ps                         # If using Docker
+```
+
+---
+
+### 🎯 Learning Challenges
+
+**Beginner:**
+1. ✅ Create a pod running nginx
+2. ✅ Expose it as a service
+3. ✅ Access the nginx welcome page
+4. ✅ Check the pod logs
+
+**Intermediate:**
+1. 🎯 Create a deployment with 3 replicas
+2. 🎯 Scale it up and down
+3. 🎯 Perform a rolling update
+4. 🎯 Create a pod with security contexts (non-root user)
+
+**Advanced:**
+1. 🚀 Set up a multi-node cluster (add worker nodes)
+2. 🚀 Deploy a stateful application with persistent volumes
+3. 🚀 Create network policies to restrict pod communication
+4. 🚀 Set up ingress controller for HTTP routing
+
+---
+
+### 💡 What I Learned
+
+**Technical Skills:**
+- CentOS/RPM system administration
+- Running as root (privileged operations)
+- Kubernetes cluster initialization
+- Docker container basics
+- K8s networking and services
+- kubectl command mastery
+
+**Security Insights:**
+- 🔴 Root access = powerful but dangerous
+- 🔐 K8s uses RBAC for fine-grained permissions
+- 🌐 Network policies control pod communication
+- 🛡️ Security contexts limit container privileges
+- 📜 Secrets management for sensitive data
+
+**Key Takeaways:**
+1. **Play with Kubernetes is powerful** - Real K8s cluster in browser!
+2. **4-hour time limit** - Sessions expire, so document findings
+3. **No persistence** - Great for learning, not for long-term projects
+4. **Root access teaching moment** - Shows why RBAC matters in production
+5. **Hands-on beats theory** - Even simple explorations teach a lot!
+
+---
+
+## 🎓 Session Outcome: Day 41 Complete! ✅
+
+**Date Completed:** October 26, 2025 (Session #21)  
+**Learning Mode:** Theory + PWK Exploration  
+**Cost Spent:** €0 (Perfect!)  
+
+### What I Accomplished:
+✅ **Comprehensive Kubernetes Theory** - Orchestration, architecture, security layers
+✅ **AKS Understanding** - Managed K8s, cost analysis, when to use vs ACI/VMs
+✅ **Security Deep Dive** - RBAC, Network Policies, Pod Security, Azure integrations
+✅ **PWK Hands-On Exploration** - System reconnaissance, network analysis, security discoveries
+✅ **Service Account Token Injection** - Discovered automatic credential mounting, learned mitigation
+✅ **Network Security Analysis** - IPv6 notation, port 2375 danger, Kubernetes port mapping
+✅ **Interview Preparation** - 8 comprehensive Q&A scenarios ready
+✅ **Documentation** - 1,900+ lines of knowledge captured
+
+### Key Discoveries:
+🔍 **System:** CentOS, RPM package manager, running as root (teaching moment)
+🔐 **Security:** Docker API exposed on 2375 (no TLS), service account tokens auto-injected
+📊 **Architecture:** Control plane components, node structure, pod networking
+💰 **Cost Reality:** AKS minimum €238/month (validated decision to skip deployment)
+🎯 **Network Plugin:** Learned importance of CNI (tried Weave Net, switched to Flannel)
+
+### Next Session Preview:
+📅 **Day 43: Local Kubernetes Hands-On Practice**
+- Install k3s on Parrot machine (lightweight K8s)
+- Deploy secure-app to local cluster
+- Practice kubectl, YAML manifests, security policies
+- Implement Pod Security Standards locally
+- **Cost:** €0 (local only)
+- **Outcome:** Practical K8s experience without Azure bills
+
+### Personal Reflection:
+💪 **Feeling empowered by exploration sessions!**
+- Theory provides foundation, hands-on reveals reality
+- Small discoveries (IPv6 notation, token injection) = big security insights
+- €0 budget constraint drives creative learning approaches
+- Documentation captures knowledge for future reference
+
+---
+
 **Created:** October 25, 2025 (Session #21)  
+**Completed:** October 26, 2025  
 **Author:** YomHub (Azure Security Journey)  
 **Purpose:** Understand AKS and Kubernetes without spending €238/month  
+**Status:** ✅ COMPLETE - Theory mastered, ready for Day 43 practice!  
 **Next:** Day 43 - Local Kubernetes hands-on practice 🚀
