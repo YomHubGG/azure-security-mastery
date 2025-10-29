@@ -2,13 +2,14 @@
 
 *Based on session logs and actual files created*
 
-## 🎯 **Current Status: Day 41** (October 26, 2025)
+## 🎯 **Current Status: Day 43** (October 29, 2025)
 
-**Real Progress**: Successfully completed Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, and now Day 41 AKS/Kubernetes  
-**Timeline**: Started September 1st → October 26th = **55 calendar days** → Every other day schedule = **27 possible sessions**  
-**Completed**: **21 sessions** (78% hit rate) - accounting for 9-day hackathon break + catch-up sessions  
-**Actual Pace**: ~2.6 days per session (excellent pace!)  
-**Major Achievement**: ✅ **Container Security Path Complete** - Build (Day 35) → Registry (Day 37) → Deploy (Day 39) → Orchestration Theory (Day 41) - Next: Local K8s practice!  
+**Real Progress**: Successfully completed Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, and now Day 43 Local Kubernetes  
+**Timeline**: Started September 1st → October 29th = **58 calendar days** → Every other day schedule = **29 possible sessions**  
+**Completed**: **22 sessions** (76% hit rate) - accounting for 9-day hackathon break + catch-up sessions  
+**Actual Pace**: ~2.7 days per session (excellent pace!)  
+**Major Achievement**: ✅ **Container Security Path COMPLETE** - Build (Day 35) → Registry (Day 37) → Deploy (Day 39) → Theory (Day 41) → Orchestration Practice (Day 43) - €0 total cost maintained!  
+**Kubernetes Milestone**: ✅ **Hands-on K8s mastery achieved** - k3s deployed, self-healing tested, scaling practiced, network policies implemented - Next: DevSecOps CI/CD integration!  
 **Recent**: 
 **Day 33**: ✅ **COMPLETED** (October 10-12, 2025 - Session #16-17) - **Q1 CAPSTONE PROJECT** - Security Integration (5,500+ lines, €0 cost)
 **Git Commit**:
@@ -62,6 +63,181 @@
 
 **Git Commit**:
 - Oct 14: Published container to GitHub CR (session #19)
+
+---
+
+### **Day 41: AKS & Kubernetes Theory** ✅ COMPLETED (October 25, 2025 - Session #21)
+**Evidence**:
+- `02-security-services/day41-aks-kubernetes-theory/` - Complete AKS theory guide (14,000+ words)
+- `README.md` - Comprehensive Kubernetes and AKS documentation
+- 8 interview questions documented with detailed answers
+- Cost analysis: AKS €238/month minimum (decided to skip for local practice)
+- Decision matrix: When to use AKS vs ACI vs VMs vs Functions
+- Also created: 6 career reference guides in `_references/` folder
+
+**Skills Acquired**:
+- **📚 LEARNED**:
+  - ✅ Kubernetes fundamentals (container orchestration, why it exists)
+  - ✅ Core concepts: Pods, Deployments, Services, ReplicaSets, Namespaces
+  - ✅ AKS architecture (control plane, worker nodes, networking)
+  - ✅ Kubernetes security: RBAC, Network Policies, Pod Security Standards
+  - ✅ Cost analysis (€238/month minimum for AKS = €2,856/year)
+  - ✅ Self-healing, auto-scaling, load balancing concepts
+  - ✅ kubectl commands and YAML manifests theory
+  - ✅ When to use orchestration vs simple containers (20+ container threshold)
+
+- **🔧 PRACTICED**:
+  - ✅ Architecture decision-making (AKS vs ACI vs VMs)
+  - ✅ Cost-benefit analysis (orchestration value vs cost)
+  - ✅ Interview question preparation (8 scenarios documented)
+  - ✅ Technical writing (14,000 words comprehensive guide)
+
+- **⚡ REAL-WORLD UNDERSTANDING**:
+  - ✅ AKS costs €238/month minimum (3 nodes + load balancer + storage)
+  - ✅ Orchestration provides self-healing, scaling, load balancing automatically
+  - ✅ Kubernetes overkill for 1-10 containers (use ACI instead)
+  - ✅ Break-even point: ~15-20 containers where orchestration worth the cost
+  - ✅ Can practice K8s locally (k3s/minikube) for €0 and learn 95% of concepts
+
+**Career Reference Guides Created** (Session #21):
+1. **ACRONYM-DECODER.md** - Azure terminology explained (ACR, ACI, AKS, etc.)
+2. **DECISION-MATRIX-EN.md** - Service selection guide (AKS vs ACI vs VMs vs Functions)
+3. **DECISION-MATRIX-FR.md** - French version for bilingual portfolio
+4. **STACK-MASTERY.md** - Full-stack architecture explanations (MERN stack)
+5. **INTEGRATION-COOKBOOK.md** - How services connect (APIs, webhooks, queues)
+6. **CRYPTOMINING-THREAT-REPORT.md** - Container security threats (Tesla incident)
+
+**Interview Questions Documented**:
+1. "What is Kubernetes?" (elevator pitch, orchestration explained)
+2. "Kubernetes vs Docker?" (orchestration vs containerization)
+3. "Explain AKS architecture" (control plane, nodes, networking)
+4. "What are Pods?" (smallest unit, ephemeral nature)
+5. "How does RBAC work?" (users, roles, bindings, least privilege)
+6. "What are Network Policies?" (pod firewall, ingress/egress)
+7. "How to secure containers in K8s?" (4 layers of security)
+8. "Why AKS instead of ACI?" (orchestration needs, scale, complexity)
+
+**Cost Analysis Decision**:
+- ✅ AKS minimum: €238/month = €2,856/year (out of budget)
+- ✅ Alternative: Local k3s practice (€0) learns 95% of concepts
+- ✅ Decision: Skip AKS deployment, practice locally, theory + hands-on = interview-ready
+
+**Git Commit**:
+- Oct 25: `6b5c7c1` - "Day 41: AKS & Kubernetes Theory + Journey Reorganization"
+- Oct 25: `81bf497` - "Add career reference guides: Acronym Decoder, Decision Matrix, Stack Mastery, Integration Cookbook, Cryptomining Report"
+
+---
+
+### **Day 43: Local Kubernetes Practice** ✅ COMPLETED (October 29, 2025 - Session #22)
+**Evidence**:
+- `02-security-services/day43-local-kubernetes/` - Complete local K8s deployment (6 files created)
+- `01-namespace.yaml` - Isolated namespace for secure-app
+- `02-deployment.yaml` - 3-replica deployment with comprehensive security
+- `03-service.yaml` - NodePort service exposing app at localhost:30080
+- `04-network-policy.yaml` - Pod firewall blocking internet, allowing DNS + pod-to-pod
+- `README.md` - 630-line comprehensive documentation (architecture, commands, concepts, scenarios)
+- `KUBECTL-CHEATSHEET.md` - 220-line command reference with 5 hands-on exercises
+- k3s v1.33.5 installed successfully (lightweight Kubernetes, 512MB RAM)
+- Secure-app deployed with 3 replicas (scaled to 2 during testing)
+- Self-healing tested: deleted pod, Kubernetes auto-recreated instantly
+- Scaling practiced: 3→5→2→3 replicas via single commands
+
+**Skills Acquired**:
+- **📚 LEARNED**:
+  - ✅ Kubernetes orchestration hands-on (self-healing, scaling, load balancing)
+  - ✅ kubectl commands mastered: get, describe, logs, exec, scale, apply, delete
+  - ✅ YAML manifest creation (Namespace, Deployment, Service, NetworkPolicy)
+  - ✅ Deployment anatomy: replicas, selectors, templates, security contexts
+  - ✅ Service types: ClusterIP, NodePort, LoadBalancer
+  - ✅ Network Policies: ingress/egress rules, pod firewall implementation
+  - ✅ Health checks: liveness probes (restart if unhealthy), readiness probes (remove from service)
+  - ✅ Resource management: requests vs limits (CPU, memory)
+  - ✅ k3s installation and management (systemd service)
+
+- **🔧 PRACTICED**:
+  - ✅ k3s installation on ParrotOS (v1.33.5 installed successfully)
+  - ✅ kubectl apply -f (declarative configuration)
+  - ✅ Pod deletion and self-healing observation (deleted pod mncrd → auto-created l2kjl)
+  - ✅ Scaling operations (kubectl scale --replicas=5, then --replicas=2)
+  - ✅ Pod inspection (kubectl get pods -o wide, describe, logs)
+  - ✅ Container exec (kubectl exec -it <pod> -- sh)
+  - ✅ Pod-to-pod networking (wget between pod IPs)
+  - ✅ Network Policy testing (internet blocked, DNS allowed, pod-to-pod allowed)
+  - ✅ Service exposure (NodePort 30080 → container port 3000)
+  - ✅ Load balancing verification (curl localhost:30080 hits different pods)
+
+- **⚡ REAL-WORLD UNDERSTANDING**:
+  - ✅ Kubernetes maintains desired state (replicas: 3 means always 3 pods)
+  - ✅ Self-healing is automatic (no manual intervention needed)
+  - ✅ Scaling is declarative (change replicas, K8s handles pod creation/deletion)
+  - ✅ Network Policies prevent cryptomining (block egress to mining pools)
+  - ✅ Resource limits prevent abuse (CPU 250m max = can't mine effectively)
+  - ✅ Health probes ensure only healthy pods receive traffic
+  - ✅ k3s provides 95% of AKS capabilities for €0
+  - ✅ Local practice = production-ready skills without €238/month cost
+
+**Technical Details**:
+- **k3s Version**: v1.33.5+k3s1 (latest stable)
+- **Node**: parrot (Ready, control-plane role)
+- **Deployment**: secure-app with 3 replicas (image: ghcr.io/yomhubgg/secure-app:1.0.0)
+- **Security Contexts**:
+  - Pod: runAsNonRoot: true, fsGroup: 1001
+  - Container: runAsUser: 1001, allowPrivilegeEscalation: false, capabilities: drop ALL
+- **Resource Limits**: CPU 250m max, memory 256Mi max (cryptomining prevention)
+- **Health Probes**: Liveness + Readiness on HTTP GET / port 3000
+- **Service**: NodePort (port 80 → 3000, nodePort 30080)
+- **Network Policy**: Blocks all egress except DNS (port 53) + pod-to-pod (port 3000)
+- **Testing Results**:
+  - ✅ Self-healing: Pod deleted → new pod created in 15 seconds
+  - ✅ Scaling: 3→5 (2 pods created), 5→2 (3 pods terminated)
+  - ✅ Pod-to-pod: wget 10.42.0.9:3000 successful (HTML response)
+  - ✅ Service: curl localhost:30080 successful (app HTML)
+  - ✅ Network Policy: Internet blocked (expected behavior)
+
+**Kubernetes Concepts Mastered**:
+1. **Pods** - Smallest deployable unit, ephemeral, 1+ containers
+2. **Deployments** - Manages desired state, creates ReplicaSets
+3. **ReplicaSets** - Ensures desired number of pods running
+4. **Services** - Stable network endpoint, load balances across pods
+5. **Namespaces** - Logical isolation, resource grouping
+6. **Network Policies** - Pod-level firewall, ingress/egress control
+7. **Security Contexts** - Enforce security at pod and container levels
+8. **Resource Requests/Limits** - Prevent resource abuse
+
+**Comparison Learned** (ACI vs Kubernetes):
+| Feature | ACI | Kubernetes (k3s/AKS) |
+|---------|-----|----------------------|
+| Cost | €17/month per container | €0 local, €238/month AKS |
+| Orchestration | Manual | Automatic |
+| Self-Healing | None | Automatic pod recreation |
+| Scaling | Manual API calls | Declarative (replicas: N) |
+| Load Balancing | None (single instance) | Automatic via Service |
+| Use Case | 1-10 simple containers | 20+ containers, microservices |
+
+**Skills Connection** (Days 35→37→39→41→43):
+- **Day 35**: Built secure container with 10+ hardening measures
+- **Day 37**: Published to GitHub Container Registry (ghcr.io)
+- **Day 39**: Deployed to ACI for €0 testing
+- **Day 41**: Learned Kubernetes theory, AKS architecture, cost analysis
+- **Day 43**: Deployed to local K8s, practiced orchestration hands-on
+
+**Interview Readiness**:
+- ✅ Can explain Kubernetes vs Docker (orchestration vs containerization)
+- ✅ Can walk through deployment architecture (Pods → ReplicaSets → Deployments)
+- ✅ Can discuss self-healing (demonstrated by deleting pod)
+- ✅ Can explain scaling (practiced 3→5→2 replicas)
+- ✅ Can articulate Network Policies (cryptomining prevention)
+- ✅ Can justify ACI vs K8s decision (cost, scale, orchestration needs)
+- ✅ Can show kubectl proficiency (10+ commands mastered)
+
+**Cost Achievement**:
+- ✅ €0 local deployment (k3s instead of AKS)
+- ✅ Saved €238/month (AKS minimum cost avoided)
+- ✅ €300+ total savings over 2 months
+- ✅ Production-ready skills without production costs
+
+**Git Commit**:
+- Oct 29: Pending commit with 6 files + INTERVIEW-PREP.md + tracking updates
 
 ---
 

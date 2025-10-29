@@ -1,0 +1,66 @@
+# 02-deployment.yaml
+# Defines how your app runs: replicas, image, security, resources
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-app
+  namespace: secure-app
+  labels:
+    app: secure-app
+spec:
+  replicas: 3  # Run 3 copies of your app for high availability
+  selector:
+    matchLabels:
+      app: secure-app
+  template:
+    metadata:
+      labels:
+        app: secure-app
+    spec:
+      # Security: Don't allow privileged containers
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      
+      containers:
+      - name: secure-app
+        image: ghcr.io/yomhubgg/secure-app:1.0.0  # Your container from Day 37!
+        
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        
+        # Security Context (from Day 35!)
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL  # Drop all Linux capabilities
+          readOnlyRootFilesystem: false  # App needs to write logs
+        
+        # Resource limits (prevent container hogging resources)
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"      # 0.1 CPU
+          limits:
+            memory: "256Mi"
+            cpu: "250m"      # 0.25 CPU max
+        
+        # Health checks (auto-restart if unhealthy)
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5

@@ -1,0 +1,18 @@
+# 03-service.yaml
+# Exposes your app to network traffic (like a load balancer)
+apiVersion: v1
+kind: Service
+metadata:
+  name: secure-app-service
+  namespace: secure-app
+  labels:
+    app: secure-app
+spec:
+  type: NodePort  # Expose on node's IP (for local testing)
+  selector:
+    app: secure-app  # Routes traffic to pods with this label
+  ports:
+  - protocol: TCP
+    port: 80        # Service listens on port 80
+    targetPort: 3000  # Forwards to container port 3000
+    nodePort: 30080   # Accessible at localhost:30080

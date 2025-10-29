@@ -1,0 +1,47 @@
+# 04-network-policy.yaml
+# Network Policy: Block all egress traffic except DNS and pod-to-pod
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: secure-app-network-policy
+  namespace: secure-app
+spec:
+  podSelector:
+    matchLabels:
+      app: secure-app
+  policyTypes:
+  - Ingress
+  - Egress
+  
+  # INGRESS: Allow incoming traffic from anywhere (for testing)
+  ingress:
+  - {}
+  
+  # EGRESS: Only allow DNS and pod-to-pod communication
+  egress:
+  # Allow DNS (so pods can resolve names)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+  
+  # Allow pod-to-pod communication within namespace
+  - to:
+    - podSelector:
+        matchLabels:
+          app: secure-app
+    ports:
+    - protocol: TCP
+      port: 3000
+
+# This blocks:
+# ❌ Outbound internet (no curl to google.com)
+# ❌ Outbound to other namespaces (isolation)
+# ❌ Cryptomining pool connections (remember Day 41!)
+#
+# This allows:
+# ✅ DNS lookups (port 53)
+# ✅ Pod-to-pod communication (port 3000)

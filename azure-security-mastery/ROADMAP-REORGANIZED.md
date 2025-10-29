@@ -1,13 +1,13 @@
 # 🗺️ Azure Security Journey - REORGANIZED ROADMAP
 
-**Last Updated:** October 25, 2025 (Session #21)  
-**Progress:** 39/365 days (10.7%)  
-**Timeline:** Started Sep 1 → 54 days elapsed  
+**Last Updated:** October 29, 2025 (Session #22)  
+**Progress:** 43/365 days (11.8%)  
+**Timeline:** Started Sep 1 → 58 days elapsed  
 **Cost:** €0 total (100% free tier optimization)
 
 ---
 
-## ✅ COMPLETED DAYS (18 sessions, 39 days)
+## ✅ COMPLETED DAYS (22 sessions, 43 days)
 
 ### **Month 1: Foundations** (September 1-30)
 - ✅ **Day 1:** Azure Account Setup & Basic Deployment
@@ -29,6 +29,8 @@
 - ✅ **Day 35:** Docker Security (Podman, 10+ hardening measures)
 - ✅ **Day 37:** Container Registry Security (GitHub CR)
 - ✅ **Day 39:** Azure Container Instances (ACI deployment)
+- ✅ **Day 41:** AKS & Kubernetes Theory (14,000+ words, 8 interview questions)
+- ✅ **Day 43:** Local Kubernetes Practice (k3s, 6 files, hands-on orchestration)
 
 ---
 
@@ -49,18 +51,52 @@
 
 ### **NEW PLAN: Theory → Local Practice → Skip AKS**
 
-### **Session #21 (TODAY - Oct 25):** Day 41 Theory
-**Focus:** Demystifying Kubernetes & AKS (Theory-First Approach)
+## 🎯 NEXT SESSIONS (Days 45-65) - DevSecOps Deep Dive
+
+### **Container Path Complete! ✅**
+- Build (Day 35) → Registry (Day 37) → Deploy (Day 39) → Theory (Day 41) → Practice (Day 43)
+- **Next:** DevSecOps CI/CD integration and security automation
+
+### **Session #23 (Next time):** Day 45 GitHub Actions Deep Dive
+**Focus:** Advanced pipeline security patterns
 ```
-Day 41: AKS & Kubernetes Fundamentals (Theory)
-├── What is Kubernetes? (Container orchestration explained)
-├── AKS Architecture (Control plane, nodes, networking)
-├── Security Concepts (RBAC, Network Policies, Pod Security)
-├── Cost Analysis (Why €80-150/month, why we're skipping)
-├── When to use: AKS vs ACI vs VMs vs Functions
-├── Interview-ready knowledge documentation
-└── Cost: €0 (theory only)
+Day 45: GitHub Actions Security Deep Dive
+├── Advanced pipeline security patterns (secrets, OIDC)
+├── Secret scanning and dependency management (Dependabot)
+├── SAST/DAST integration (SonarCloud, Snyk)
+├── Container scanning in pipelines (Trivy automated)
+├── Deploy to ACI from GitHub Actions (end-to-end automation)
+├── Matrix builds and testing strategies
+└── Cost: €0 (GitHub free tier)
 ```
+
+### **Session #24:** Day 47 Infrastructure Security Scanning
+**Focus:** Policy-as-Code and compliance automation
+```
+Day 47: Infrastructure Security Scanning
+├── Terraform/Bicep security scanning (tfsec, Checkov)
+├── Policy-as-Code (Open Policy Agent)
+├── Automated compliance checks in pipelines
+├── Infrastructure drift detection
+├── Secure IaC patterns documentation
+└── Cost: €0
+```
+
+### **Session #25:** Day 49 Supply Chain Security
+**Focus:** Securing the software supply chain
+```
+Day 49: Supply Chain Security
+├── Software Bill of Materials (SBOM generation)
+├── Signed commits and verified builds (GPG)
+├── Dependency vulnerability tracking (GitHub Dependabot)
+├── Container provenance and attestation
+├── Supply chain attack prevention (SolarWinds lessons)
+└── Cost: €0
+```
+
+---
+
+## 📋 SKIPPED/EMPTY DAYS (to be filled or removed)
 
 ### **Session #22 (Next time):** Day 43 Local K8s Practice
 **Focus:** Hands-on Kubernetes without Azure costs

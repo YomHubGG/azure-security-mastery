@@ -1,0 +1,9 @@
+# 01-namespace.yaml
+# Creates an isolated namespace for your app
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: secure-app
+  labels:
+    name: secure-app
+    environment: local
