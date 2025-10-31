@@ -131,8 +131,8 @@ jobs:
         push: false
         load: true  # Load image into Docker daemon for Trivy scanning
         tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          secure-app:${{ github.sha }}
+          secure-app:latest
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
@@ -140,7 +140,7 @@ jobs:
     - name: '🔍 Scan Image with Trivy (Critical & High)'
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: '${{ env.IMAGE_NAME }}:${{ github.sha }}'
+        image-ref: 'secure-app:${{ github.sha }}'
         format: 'sarif'
         output: 'trivy-results.sarif'
         severity: 'CRITICAL,HIGH'
