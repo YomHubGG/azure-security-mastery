@@ -1,7 +1,23 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Azure DevOps Pipeline - Day 29
+# 
+# PURPOSE: This file demonstrates Azure DevOps integration (alternative to GitHub Actions)
+# Created: Day 29 (Azure DevOps Security Pipeline session)
+# Status: Configured but not actively used (GitHub Actions is primary CI/CD - Day 23, Day 45)
+# 
+# WHY IT EXISTS:
+# - Portfolio demonstration: Multi-platform DevOps expertise
+# - Azure DevOps vs GitHub Actions comparison
+# - Enterprise environments often use Azure DevOps for .NET/Microsoft stacks
+# 
+# CURRENT PRIMARY CI/CD: .github/workflows/day45-secure-pipeline.yml
+# - GitHub Actions with OIDC authentication
+# - 5-layer security scanning (Gitleaks, CodeQL, npm audit, Trivy, SBOM)
+# - Zero stored secrets (OpenID Connect tokens)
+#
+# This file validates Bicep templates on push to main branch.
+# Kept for reference and portfolio completeness.
+#
+# ---
 
 trigger:
   branches:

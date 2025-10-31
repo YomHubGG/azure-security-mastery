@@ -884,5 +884,485 @@ az pipelines variable-group list  # Variables managed securely
 ```
 
 ---
+
+## Day 43: Local Kubernetes Practice
+
+### k3s Installation & Management
+```bash
+# Install k3s (lightweight Kubernetes)
+curl -sfL https://get.k3s.io | sh -
+
+# Check k3s status
+sudo systemctl status k3s
+
+# Check k3s version
+k3s --version  # v1.33.5+k3s1
+
+# Get kubeconfig
+sudo cat /etc/rancher/k3s/k3s.yaml > ~/.kube/config
+sudo chown $USER:$USER ~/.kube/config
+chmod 600 ~/.kube/config
+
+# Verify kubectl access
+kubectl get nodes
+kubectl get pods --all-namespaces
+```
+
+### Essential kubectl Commands
+```bash
+# Get cluster info
+kubectl cluster-info
+kubectl get nodes -o wide
+
+# Work with namespaces
+kubectl get namespaces
+kubectl create namespace secure-app
+
+# Deploy application
+kubectl apply -f 01-namespace.yaml
+kubectl apply -f 02-deployment.yaml
+kubectl apply -f 03-service.yaml
+kubectl apply -f 04-network-policy.yaml
+
+# Check deployments
+kubectl get deployments -n secure-app
+kubectl get pods -n secure-app -o wide
+kubectl get services -n secure-app
+
+# Describe resources (detailed info)
+kubectl describe deployment secure-app -n secure-app
+kubectl describe pod <pod-name> -n secure-app
+kubectl describe service secure-app -n secure-app
+
+# View logs
+kubectl logs <pod-name> -n secure-app
+kubectl logs <pod-name> -n secure-app --tail=50
+kubectl logs -f <pod-name> -n secure-app  # Follow logs
+
+# Execute commands in pod
+kubectl exec -it <pod-name> -n secure-app -- sh
+kubectl exec -it <pod-name> -n secure-app -- env
+kubectl exec -it <pod-name> -n secure-app -- wget -O- http://localhost:3000
+
+# Scaling operations
+kubectl scale deployment secure-app --replicas=5 -n secure-app
+kubectl scale deployment secure-app --replicas=2 -n secure-app
+
+# Test self-healing (delete pod, K8s recreates)
+kubectl delete pod <pod-name> -n secure-app
+kubectl get pods -n secure-app -w  # Watch pods recreate
+
+# Test service load balancing
+curl http://localhost:30080  # Hits different pods
+
+# Cleanup
+kubectl delete namespace secure-app
+```
+
+### Kubernetes Manifest Structure (YAML)
+```yaml
+# 01-namespace.yaml - Logical isolation
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: secure-app
+
+# 02-deployment.yaml - Pod management with replicas
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-app
+  namespace: secure-app
+spec:
+  replicas: 3  # Desired state (self-healing maintains this)
+  selector:
+    matchLabels:
+      app: secure-app
+  template:
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1001
+      containers:
+      - name: secure-app
+        image: ghcr.io/yomhubgg/secure-app:1.0.0
+        securityContext:
+          runAsUser: 1001
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        resources:
+          limits:
+            cpu: "250m"      # Anti-cryptomining
+            memory: "256Mi"
+        livenessProbe:       # Restart if unhealthy
+          httpGet:
+            path: /
+            port: 3000
+        readinessProbe:      # Remove from service if not ready
+          httpGet:
+            path: /
+            port: 3000
+
+# 03-service.yaml - Stable network endpoint + load balancing
+apiVersion: v1
+kind: Service
+metadata:
+  name: secure-app
+  namespace: secure-app
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 3000
+    nodePort: 30080  # Access via localhost:30080
+  selector:
+    app: secure-app  # Routes to pods with this label
+
+# 04-network-policy.yaml - Pod firewall
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: secure-app-netpol
+  namespace: secure-app
+spec:
+  podSelector:
+    matchLabels:
+      app: secure-app
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: UDP
+      port: 53  # Allow DNS
+  - to:
+    - podSelector:
+        matchLabels:
+          app: secure-app
+    ports:
+    - protocol: TCP
+      port: 3000  # Allow pod-to-pod
+```
+
+### Kubernetes Troubleshooting
+```bash
+# Check pod status and events
+kubectl get pods -n secure-app
+kubectl describe pod <pod-name> -n secure-app
+
+# Check logs for errors
+kubectl logs <pod-name> -n secure-app --previous  # Previous crashed container
+
+# Check resource usage
+kubectl top nodes
+kubectl top pods -n secure-app
+
+# Debug network connectivity
+kubectl exec -it <pod-name> -n secure-app -- sh
+# Inside pod:
+ping 10.42.0.1  # Check network
+wget -O- http://10.42.0.9:3000  # Test pod-to-pod
+nslookup kubernetes.default  # Test DNS
+
+# Check service endpoints
+kubectl get endpoints -n secure-app
+
+# Validate YAML before applying
+kubectl apply -f deployment.yaml --dry-run=client
+```
+
+### Real-World Learnings
+```
+✅ Self-healing: Kubernetes maintains desired state (replicas: 3 = always 3 pods)
+✅ Scaling: kubectl scale --replicas=N (declarative, automatic)
+✅ Load balancing: Service distributes traffic across pod IPs
+✅ Network Policies: Pod-level firewall (cryptomining prevention)
+✅ Resource limits: CPU 250m max prevents abuse
+✅ Health probes: liveness (restart) vs readiness (traffic routing)
+✅ k3s = 95% of AKS capabilities for €0
+✅ Local practice = production-ready skills without €238/month
+```
+
+---
+
+## Day 45: GitHub Actions Advanced Security with OIDC
+
+### Azure OIDC App Registration & Federated Credentials
+```bash
+# Create app registration for OIDC
+az ad app create \
+  --display-name "github-oidc-cybersecurity-journey"
+
+# Output: appId: 1eba6d9f-ceb6-4101-adc6-d86d2142fd43
+
+# Create Service Principal
+az ad sp create --id 1eba6d9f-ceb6-4101-adc6-d86d2142fd43
+
+# Output: objectId: 5f37f027-63a7-49f2-958f-50932f4aef38
+
+# Create federated credential for GitHub Actions
+az ad app federated-credential create \
+  --id 1eba6d9f-ceb6-4101-adc6-d86d2142fd43 \
+  --parameters '{
+    "name": "github-actions-main",
+    "issuer": "https://token.actions.githubusercontent.com",
+    "subject": "repo:YomHubGG/azure-security-mastery:ref:refs/heads/main",
+    "audiences": ["api://AzureADTokenExchange"]
+  }'
+
+# Assign Contributor role (use Portal due to CLI bug)
+# Portal → rg-learning-day1 → IAM → Add role assignment → Contributor
+# → Select "github-oidc-cybersecurity-journey"
+
+# Get tenant and subscription IDs
+az account show --query "{tenantId:tenantId, subscriptionId:id}"
+# Tenant: 286ee762-df63-4515-be88-d6a2032dfe6f
+# Subscription: a174b81f-93c2-4089-afa0-6f82a5165c86
+```
+
+### GitHub Secrets Configuration
+```bash
+# Add to: https://github.com/YomHubGG/azure-security-mastery/settings/secrets/actions
+
+AZURE_CLIENT_ID: 1eba6d9f-ceb6-4101-adc6-d86d2142fd43
+AZURE_TENANT_ID: 286ee762-df63-4515-be88-d6a2032dfe6f
+AZURE_SUBSCRIPTION_ID: a174b81f-93c2-4089-afa0-6f82a5165c86
+```
+
+### GitHub CLI - Pipeline Monitoring
+```bash
+# Install gh CLI (if needed)
+sudo apt install gh -y
+
+# Authenticate
+gh auth login
+
+# List workflow runs
+gh run list --limit 10
+gh run list --workflow="day45-secure-pipeline.yml" --limit 5
+
+# Watch run in real-time
+gh run watch <run-id> --interval 5
+gh run watch --interval 5  # Interactive selection
+
+# View run details
+gh run view <run-id>
+gh run view <run-id> --log
+gh run view <run-id> --log-failed
+
+# View specific job logs
+gh run view <run-id> --job <job-id>
+
+# Download artifacts
+gh run download <run-id>
+gh run download <run-id> --name sbom-<sha>
+
+# Rerun failed workflow
+gh run rerun <run-id>
+
+# Cancel running workflow
+gh run cancel <run-id>
+```
+
+### Security Scanning Tools (Integrated in Pipeline)
+```bash
+# Gitleaks - Secret scanning
+docker run --rm -v $(pwd):/src zricethezav/gitleaks:latest detect --source /src
+
+# Trivy - Container vulnerability scanning
+trivy image secure-app:latest
+trivy image --severity CRITICAL,HIGH secure-app:latest
+trivy image --format sarif --output trivy-results.sarif secure-app:latest
+
+# Syft - SBOM generation
+syft packages secure-app:latest -o spdx-json > sbom.spdx.json
+
+# npm audit - Dependency vulnerabilities
+npm audit --audit-level=moderate
+npm audit --json > npm-audit.json
+
+# CodeQL - SAST analysis (automated in GitHub Actions)
+# Analyzes JavaScript code for security vulnerabilities
+```
+
+### Docker Image Building & Scanning
+```bash
+# Build container with embedded app
+docker build -t secure-app:latest -f Dockerfile.day45 .
+
+# Load image for scanning (buildx)
+docker buildx build --load -t secure-app:latest -f Dockerfile.day45 .
+
+# List local images
+docker images
+
+# Scan with Trivy
+trivy image secure-app:latest
+
+# Generate SBOM with Syft
+syft secure-app:latest -o spdx-json > sbom.json
+
+# Run container locally
+docker run -d -p 3000:3000 --name test-app secure-app:latest
+curl http://localhost:3000
+
+# Cleanup
+docker stop test-app && docker rm test-app
+```
+
+### Pipeline Workflow Structure (.github/workflows/day45-secure-pipeline.yml)
+```yaml
+name: Secure DevSecOps Pipeline - Day 45 Advanced
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  id-token: write        # Required for OIDC authentication
+  contents: read         # Required for checkout
+  security-events: write # Required for CodeQL
+  issues: write          # Required for security summary
+
+jobs:
+  security-scanning:
+    name: 🔒 Security Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔐 Scan for Leaked Secrets (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+      
+      - name: 🛡️ Initialize CodeQL Analysis
+        uses: github/codeql-action/init@v3
+      
+      - name: 🔍 Audit Dependencies
+        run: npm audit --audit-level=moderate
+      
+      - name: 🔬 Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  build-and-scan:
+    name: 🐳 Build & Scan Container
+    runs-on: ubuntu-latest
+    needs: security-scanning
+    steps:
+      - name: 🐳 Build Container Image
+        uses: docker/build-push-action@v5
+        with:
+          load: true  # Load into Docker daemon for scanning
+          
+      - name: 🔍 Scan Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        
+      - name: 📋 Generate SBOM
+        uses: anchore/sbom-action@v0
+
+  deploy:
+    name: 🚀 Deploy to Azure
+    runs-on: ubuntu-latest
+    needs: build-and-scan
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: 🔐 Azure Login via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
+      - name: 🚀 Deploy to ACI
+        run: az container create ...
+```
+
+### Debugging Pipeline Issues
+```bash
+# Check recent runs
+gh run list --limit 5
+
+# View failed logs with context
+gh run view <run-id> --log-failed | grep -B 5 -A 5 "ERROR"
+
+# Common issues and fixes:
+# 1. Image not found: Add load: true to docker build
+# 2. Registry name: Must be lowercase (yomhubgg not YomHubGG)
+# 3. Trivy scan failure: Use local image tag (secure-app:sha not ghcr.io/...)
+# 4. SBOM failure: Match image reference (same as Trivy)
+# 5. No subscriptions: Add GitHub secrets (CLIENT_ID, TENANT_ID, SUBSCRIPTION_ID)
+
+# Check artifacts
+gh run view <run-id>
+gh run download <run-id>  # Downloads all artifacts
+```
+
+### View Security Findings
+```bash
+# GitHub Security Tab
+# https://github.com/YomHubGG/azure-security-mastery/security/code-scanning
+
+# Download artifacts locally
+gh run download <run-id> --name gitleaks-results.sarif
+gh run download <run-id> --name npm-audit-results
+gh run download <run-id> --name sbom-<sha>.spdx.json
+
+# View SBOM
+cat sbom-<sha>.spdx.json | jq '.packages[] | {name: .name, version: .versionInfo}'
+
+# View npm audit
+cat npm-audit-results/npm-audit.json | jq '.vulnerabilities'
+```
+
+### Cost Monitoring
+```bash
+# GitHub Actions usage
+# https://github.com/settings/billing/summary
+
+# Pipeline run time
+gh run list --limit 10  # Check "ELAPSED" column
+
+# Average: ~3 minutes per run
+# Free tier: 2,000 minutes/month
+# Capacity: 666 runs per month (more than enough)
+```
+
+### Real-World Learnings
+```
+✅ OIDC tokens expire after 1 hour (vs 2-year client secrets = 87,600 hours)
+✅ No stored secrets = reduced attack surface
+✅ GitHub requests tokens on-demand from Azure
+✅ Federated credentials = modern authentication (AWS, GCP, Azure all support)
+✅ SARIF format enables GitHub Security tab integration
+✅ SBOM = Software Bill of Materials (supply chain security)
+✅ Artifacts survive 90 days (compliance/auditing)
+✅ Docker load: true required for local scanning with buildx
+✅ Registry names must be lowercase in GHCR
+✅ Pipeline debugging: iterative, systematic problem-solving
+✅ Free tier = production-grade learning (2,000 minutes/month)
+```
+
+### Interview Talking Points
+```
+"I built a production-grade DevSecOps pipeline with zero stored secrets using 
+OpenID Connect (OIDC). The pipeline includes 5 security layers:
+
+1. Secret scanning with Gitleaks - catches leaked API keys
+2. SAST with CodeQL - finds code vulnerabilities
+3. Dependency scanning with npm audit - detects vulnerable packages  
+4. Container scanning with Trivy - OS and library CVEs
+5. SBOM generation with Syft - complete software bill of materials
+
+The authentication uses OIDC tokens that expire after 1 hour instead of 
+traditional 2-year client secrets, significantly reducing attack surface. 
+Everything runs on GitHub Actions free tier, deploying to Azure Container 
+Instances for under €0.01 per test. Results are visible in GitHub Security 
+tab for centralized vulnerability management."
+```
+
+---
+
 ```
 

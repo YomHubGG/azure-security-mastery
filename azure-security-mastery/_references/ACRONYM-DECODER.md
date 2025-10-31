@@ -1,6 +1,6 @@
 # 🔤 Tech Acronym Decoder - Complete Reference
 
-**Last Updated:** October 25, 2025  
+**Last Updated:** October 31, 2025  
 **Purpose:** Decode ALL the acronyms you'll encounter in cloud/DevOps/security
 
 ---
@@ -396,7 +396,10 @@ Azure firewall rules for VMs and subnets.
 Standard for login delegation ("Sign in with Google").
 
 ### **OIDC** = OpenID Connect (🔐 Security)
-Authentication layer on top of OAuth.
+Authentication layer on top of OAuth. Enables secure identity federation.  
+**Azure use:** Federated credentials for GitHub Actions (no stored secrets!)  
+**Token lifetime:** 1 hour (vs 2-year client secrets)  
+**Day 45:** Implemented OIDC for Azure deployments from GitHub Actions
 
 ### **OPA** = Open Policy Agent (🔐 Security)
 Tool for policy enforcement (written in Go).  
@@ -501,13 +504,23 @@ Just use the app, provider manages everything.
 ### **SAML** = Security Assertion Markup Language (🔐 Security)
 Enterprise SSO protocol (older than OAuth).
 
+### **SARIF** = Static Analysis Results Interchange Format (🔐 Security)
+Standard JSON format for security scan results.  
+**GitHub:** Uploads to Security tab for centralized viewing  
+**Tools:** CodeQL, Trivy, ESLint produce SARIF output  
+**Day 45:** Used for Gitleaks + Trivy + CodeQL results
+
 ### **SAST** = Static Application Security Testing (🔐 Security)
 Scan code for vulnerabilities without running it.  
-**Tools:** SonarCloud, Checkmarx
+**Tools:** CodeQL (GitHub), SonarCloud, Checkmarx  
+**Day 45:** CodeQL analyzed JavaScript for security issues
 
 ### **SBOM** = Software Bill of Materials (🔐 Security)
-List of all components in your software (libraries, versions).  
-**Why:** Track vulnerable dependencies
+Complete list of all components in your software (libraries, versions, licenses).  
+**Why:** Track vulnerable dependencies, supply chain security, compliance  
+**Formats:** SPDX (Linux Foundation), CycloneDX  
+**Tools:** Syft (Anchore), Trivy  
+**Day 45:** Generated SPDX JSON format with Syft
 
 ### **SCP** = Secure Copy Protocol (🌐 Networking)
 Securely copy files over SSH.
@@ -545,6 +558,13 @@ Web app that loads once, no page refreshes.
 
 ### **SPF** = Sender Policy Framework (🔐 Security)
 Email security (prevent email spoofing).
+
+### **SPDX** = Software Package Data Exchange (🔐 Security)
+Linux Foundation standard format for SBOM (Software Bill of Materials).  
+**Alternative:** CycloneDX (OWASP standard)  
+**Format:** JSON, YAML, or RDF  
+**Day 45:** Generated SPDX 2.2 JSON with Syft tool  
+**Why:** Standardized supply chain security, license compliance
 
 ### **SQL** = Structured Query Language (💾 Database)
 Language for relational databases.  

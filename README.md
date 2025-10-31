@@ -1,33 +1,45 @@
 # 🔒 Azure Security Mastery Journey
 
-[![Days Completed](https://img.shields.io/badge/Days-37%2F365-blue)](https://github.com/YomHubGG/azure-security-mastery)
+[![Days Completed](https://img.shields.io/badge/Days-45%2F365-blue)](https://github.com/YomHubGG/azure-security-mastery)
 [![Cost](https://img.shields.io/badge/Cost-€0-success)](https://github.com/YomHubGG/azure-security-mastery)
 [![Container](https://img.shields.io/badge/Container-ghcr.io-blue)](https://github.com/YomHubGG?tab=packages)
-[![Sessions](https://img.shields.io/badge/Sessions-19-informational)](https://github.com/YomHubGG/azure-security-mastery)
+[![Sessions](https://img.shields.io/badge/Sessions-23-informational)](https://github.com/YomHubGG/azure-security-mastery)
+[![Pipeline](https://img.shields.io/badge/Pipeline-Passing-success)](https://github.com/YomHubGG/azure-security-mastery/actions)
 
-> 365-day comprehensive Azure Security journey with hands-on projects, Infrastructure as Code, container security, and DevSecOps automation. Everything built on FREE tier with €0 spent!
+> 365-day comprehensive Azure Security journey with hands-on projects, Infrastructure as Code, container security, Kubernetes orchestration, and modern DevSecOps with OIDC. Everything built on FREE tier with €0 spent!
 
 ---
 
 ## 🚀 Latest Highlights
 
-### 🐳 **Published Container** (Day 37 - October 2025)
-- **Package**: [`ghcr.io/yomhubgg/secure-app`](https://github.com/YomHubGG?tab=packages)
-- **Security**: 10+ hardening measures, non-root user, read-only filesystem
-- **Size**: 354 MB (62% reduction from baseline)
-- **Pull**: `podman pull ghcr.io/yomhubgg/secure-app:1.0.0`
+### � **Modern DevSecOps with OIDC** (Day 45 - October 31, 2025)
+- **Zero Stored Secrets**: OpenID Connect authentication (tokens expire in 1 hour!)
+- **5-Layer Security Scanning**:
+  - ✅ Gitleaks - Secret detection
+  - ✅ CodeQL - Static Application Security Testing (SAST)
+  - ✅ npm audit - Dependency vulnerabilities
+  - ✅ Trivy - Container image scanning
+  - ✅ SBOM - Software Bill of Materials (SPDX format)
+- **Pipeline**: 3/4 jobs passing, 364-line production-grade workflow
+- **Results**: Visible in GitHub Security tab (SARIF format)
+- **Interview Ready**: "I built a DevSecOps pipeline with zero stored secrets"
 
-### 🔐 **DevSecOps Pipeline** (Day 23)
-- **Automated Security Features**:
-  - ✅ Static Application Security Testing (SAST)
-  - ✅ Dependency Vulnerability Scanning  
-  - ✅ Infrastructure as Code Security Validation
-  - ✅ Secret Detection & Prevention
-  - ✅ Critical Vulnerability Blocking
-  - ✅ Enterprise Security Reporting
-- **Status**: Production-ready security automation
+### ☸️ **Kubernetes Orchestration** (Day 43 - October 29, 2025)
+- **Local k3s Cluster**: Deployed and tested (lightweight Kubernetes)
+- **Self-Healing**: Tested pod deletion → automatic recreation
+- **Scaling**: Practiced 3→5→2 replicas (declarative, instant)
+- **Network Policies**: Pod-level firewall (cryptomining prevention)
+- **Cost Savings**: €238/month AKS avoided (k3s = €0)
 
-### 🏆 **Q1 Capstone Project** (Day 33)
+### 🐳 **Container Security Complete** (Days 35-43)
+- **Day 35**: Built secure container (10+ hardening measures)
+- **Day 37**: Published to GitHub Container Registry
+- **Day 39**: Deployed to Azure Container Instances (€0.01 test)
+- **Day 41**: AKS theory and cost analysis
+- **Day 43**: Kubernetes hands-on practice
+- **Package**: [`ghcr.io/yomhubgg/secure-app:1.0.0`](https://github.com/YomHubGG?tab=packages)
+
+### �️ **Q1 Capstone Project** (Day 33 - October 2025)
 - **Secure Enterprise Web Application**
 - **Security Score**: 88/100
 - **Infrastructure**: 411-line Bicep template, 7 Azure resources
@@ -37,17 +49,20 @@
 
 ## 📊 Journey Progress
 
-**Current Status**: Day 37/365 (10.1%)  
-**Sessions Completed**: 19  
+**Current Status**: Day 45/365 (12.3%)  
+**Sessions Completed**: 23  
 **Total Cost**: €0.00 (Perfect free tier optimization!)  
-**Lines of Documentation**: 28,000+  
-**Lines of Code**: 15,000+
+**Lines of Documentation**: 35,000+  
+**Lines of Code**: 18,000+  
+**Kubernetes**: k3s deployed locally (€238/month AKS avoided)  
+**CI/CD**: GitHub Actions with OIDC (zero stored secrets)
 
 ### **Completed Milestones**
 - ✅ **Month 1**: Azure Foundations (Days 1-15)
-- ✅ **Month 2**: Security Services (Days 17-21)
-- ✅ **Month 3**: Automation & DevSecOps (Days 23-33)
-- 🚧 **Month 4**: Container Security (Days 35, 37 → Day 39 next)
+- ✅ **Month 2**: Security Services (Days 17-21, 33)
+- ✅ **Month 3**: DevSecOps Basics (Day 23, 25, 27, 29, 31)
+- ✅ **Month 4**: Container Security Path (Days 35, 37, 39, 41, 43)
+- 🎯 **Now**: Advanced CI/CD with OIDC (Day 45)
 
 ---
 

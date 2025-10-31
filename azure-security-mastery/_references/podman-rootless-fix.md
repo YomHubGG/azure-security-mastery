@@ -1,7 +1,20 @@
 # Fixing Podman Rootless on Parrot OS
 
+**Created**: Day 37 (Container Registry publishing)  
+**Moved to _references**: Day 45 (better organization)  
+**Use When**: Publishing containers to registries on Parrot OS / security-focused Linux distros
+
 **Issue**: `newuidmap: write to uid_map failed: Operation not permitted`  
 **Root Cause**: Parrot OS security hardening prevents rootless Podman by default
+
+---
+
+## 🎯 When You Need This
+
+- Publishing containers to GitHub Container Registry (GHCR)
+- Publishing containers to Docker Hub
+- Building multi-platform images with buildx
+- Any container operation requiring user namespace mapping on Parrot OS
 
 ---
 
