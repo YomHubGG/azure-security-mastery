@@ -156,7 +156,7 @@ jobs:
     - name: '📋 Generate Software Bill of Materials (SBOM)'
       uses: anchore/sbom-action@v0
       with:
-        image: '${{ env.IMAGE_NAME }}:${{ github.sha }}'
+        image: 'secure-app:${{ github.sha }}'
         format: 'spdx-json'
         output-file: 'sbom.spdx.json'
         
@@ -174,15 +174,15 @@ jobs:
           aquasec/trivy:latest image \
           --severity CRITICAL,HIGH,MEDIUM,LOW \
           --format table \
-          ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          secure-app:${{ github.sha }}
           
     - name: '✅ Image Build Summary'
       run: |
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo "🐳 Container Image Build Complete"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "Image: ${{ env.IMAGE_NAME }}:${{ github.sha }}"
-        echo "Registry: GitHub Container Registry (GHCR)"
+        echo "Image: secure-app:${{ github.sha }}"
+        echo "Registry: Local (for scanning only - not pushed)"
         echo "SBOM Generated: ✅ (SPDX format)"
         echo "Security Scan: ✅ (Trivy)"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
