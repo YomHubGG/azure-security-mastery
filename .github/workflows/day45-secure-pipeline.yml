@@ -123,14 +123,16 @@ jobs:
           type=ref,event=branch
           type=semver,pattern={{version}}
           
-    - name: '🔨 Build Container Image'
+    - name: '🐳 Build Container Image'
       uses: docker/build-push-action@v5
       with:
         context: azure-security-mastery/02-security-services/day35-docker-security
-        file: azure-security-mastery/02-security-services/day35-docker-security/Dockerfile.secure
+        file: azure-security-mastery/02-security-services/day35-docker-security/Dockerfile.day45
         push: false
-        load: true  # Load image for scanning
-        tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
         
