@@ -20,7 +20,7 @@ env:
   AZURE_RESOURCE_GROUP: 'rg-learning-day1'
   CONTAINER_NAME: 'secure-app'
   REGISTRY: 'ghcr.io'
-  IMAGE_NAME: 'ghcr.io/${{ github.repository_owner }}/secure-app'
+  IMAGE_NAME: 'ghcr.io/yomhubgg/secure-app'
 
 jobs:
   # ═══════════════════════════════════════════════════════════
