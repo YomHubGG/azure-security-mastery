@@ -129,6 +129,7 @@ jobs:
         context: azure-security-mastery/02-security-services/day35-docker-security
         file: azure-security-mastery/02-security-services/day35-docker-security/Dockerfile.day45
         push: false
+        load: true  # Load image into Docker daemon for Trivy scanning
         tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
