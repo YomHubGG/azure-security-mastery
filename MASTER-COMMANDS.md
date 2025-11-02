@@ -1364,5 +1364,209 @@ tab for centralized vulnerability management."
 
 ---
 
+## Day 47: Infrastructure Security Scanning (Checkov)
+
+**Date:** November 2, 2025  
+**Tool:** Checkov 3.2.489  
+**Focus:** Policy-as-Code and IaC Security Validation
+
+### Checkov Installation
+```bash
+# Create virtual environment (recommended)
+python3 -m venv ~/.venv/checkov
+source ~/.venv/checkov/bin/activate
+
+# Install Checkov
+pip install checkov
+
+# Verify installation
+checkov --version
+# Output: 3.2.489
+```
+
+### Basic Scanning
+```bash
+# Scan single Bicep file
+checkov -f path/to/file.bicep --framework bicep
+
+# Scan all Bicep files in directory
+checkov -d . --framework bicep
+
+# Compact output (less verbose)
+checkov -d . --framework bicep --compact --quiet
+
+# Scan specific frameworks
+checkov -d . --framework terraform
+checkov -d . --framework kubernetes
+checkov -d . --framework dockerfile
+```
+
+### Output Formats
+```bash
+# JSON output (machine-readable)
+checkov -d . --framework bicep --output json > results.json
+
+# SARIF output (GitHub Security tab)
+checkov -d . --framework bicep --output sarif > results.sarif
+
+# Multiple outputs simultaneously
+checkov -d . \
+  --framework bicep \
+  --output cli \
+  --output json \
+  --output sarif \
+  --output-file-path results/
+```
+
+### Analysis Commands
+```bash
+# View summary statistics
+checkov -d . --framework bicep --output json | jq '.summary'
+
+# List all failed checks
+checkov -d . --framework bicep --output json | \
+  jq '.results.failed_checks[] | {check_id, check_name, file_path}'
+
+# Count failures by check ID
+checkov -d . --framework bicep --output json | \
+  jq '.results.failed_checks | group_by(.check_id) | .[] | {check: .[0].check_id, count: length}'
+
+# Top 10 most common failures
+checkov -d . --framework bicep --output json | \
+  jq '.results.failed_checks | group_by(.check_id) | sort_by(-length) | .[:10] | .[] | {check: .[0].check_id, count: length}'
+```
+
+### Filtering
+```bash
+# Run specific checks only
+checkov -d . --check CKV_AZURE_35,CKV_AZURE_41
+
+# Skip specific checks
+checkov -d . --skip-check CKV_AZURE_206
+
+# Skip pattern
+checkov -d . --skip-check CKV_AZURE_*_206
+```
+
+### Inline Suppression (Bicep)
+```bicep
+// Suppress specific check with justification
+#checkov:skip=CKV_AZURE_35:Dev environment - public access acceptable
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
+  name: 'devstoragetest'
+  properties: {
+    // ... configuration
+  }
+}
+```
+
+### CI/CD Integration
+```bash
+# GitHub Actions workflow step
+- name: Run Checkov
+  run: |
+    pip install checkov
+    checkov -d . \
+      --framework bicep \
+      --output sarif \
+      --output-file-path results/
+
+- name: Upload SARIF
+  uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: results/results_sarif.sarif
+```
+
+### Real Scan Results (Azure Security Journey)
+```bash
+# Full infrastructure scan
+cd /home/yom/cybersecurity-journey/azure-security-mastery
+source ~/.venv/checkov/bin/activate
+checkov -d . --framework bicep --compact --quiet
+
+# Output:
+# bicep scan results:
+# Passed checks: 68, Failed checks: 47, Skipped checks: 0
+# Security Score: 59/100
+```
+
+### Common Azure Issues Found
+```bash
+# 1. Missing secret expiration (CKV_AZURE_41) - 12 occurrences
+# Fix: Add attributes.exp to Key Vault secrets
+
+# 2. Storage public access (CKV_AZURE_35) - 6 occurrences
+# Fix: Add networkAcls: { defaultAction: 'Deny' }
+
+# 3. HTTP traffic allowed (CKV_AZURE_14) - 3 occurrences
+# Fix: Add httpsOnly: true to App Services
+
+# 4. No geo-replication (CKV_AZURE_206) - 6 occurrences
+# Fix: Change SKU from Standard_LRS to Standard_GRS
+
+# 5. SSH from internet (CKV_AZURE_10) - 2 occurrences (CRITICAL)
+# Fix: Restrict sourceAddressPrefix to specific IPs
+```
+
+### Remediation Workflow
+```bash
+# 1. Scan and identify issues
+checkov -d . --framework bicep --compact > scan-results.txt
+
+# 2. Prioritize by severity
+# CRITICAL → HIGH → MEDIUM → LOW
+
+# 3. Fix code (add network restrictions, expirations, etc.)
+
+# 4. Re-scan to verify fixes
+checkov -d . --framework bicep --compact
+
+# 5. Compare before/after
+# Before: 68 passed, 47 failed (59%)
+# After: 115 passed, 0 failed (100%)
+```
+
+### Best Practices
+```bash
+# Start with warnings, not blocking (establish baseline)
+checkov -d . --soft-fail
+
+# After baseline, enforce in CI/CD
+checkov -d . --compact || exit 1
+
+# Scan only changed files in PR
+git diff --name-only origin/main...HEAD | grep '.bicep$' | while read file; do
+  checkov -f "$file" --framework bicep
+done
+
+# Use configuration file for consistent settings
+cat > .checkov.yml << EOF
+skip-check:
+  - CKV_AZURE_206  # Dev environment - LRS acceptable
+framework:
+  - bicep
+output: cli
+compact: true
+EOF
+
+checkov -d . --config-file .checkov.yml
+```
+
+### Portfolio Soundbite
+```
+"I implemented Infrastructure-as-Code security scanning using Checkov, scanning 
+9 Bicep templates across my Azure Security Journey. The scan identified 47 
+security issues with a 59% security score, including critical findings like 
+SSH access from the internet and storage accounts exposed to public access. 
+
+I created comprehensive remediation guidance that would improve the security 
+score from 59% to 100%, covering network restrictions, secret expiration 
+policies, HTTPS enforcement, and geo-replication configuration. The scanning 
+process takes under 10 seconds and integrates into GitHub Actions with SARIF 
+output for the Security tab - true shift-left security in practice."
+```
+
+---
+
 ```
 

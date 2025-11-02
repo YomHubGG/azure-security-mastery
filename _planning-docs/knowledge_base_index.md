@@ -1,7 +1,6 @@
 # 🧠 My Cybersecurity Knowledge Base
 
 ## 📚 **Created Documents**:
-- `picoshell_explanation.md` - Complete picoshell tutorial with factory worker story
 - `database_security_architectures.md` - DB security from PostgreSQL to enterprise systems
 - `cloud_security_career_roadmap.md` - General cloud security career guidance
 - `azure_europe_career_analysis.md` - Why Azure dominates European market
@@ -10,7 +9,6 @@
 ## 🎯 **Key Insights from Our Conversation**:
 
 ### **Technical Learning**:
-- Picoshell pipeline = factory worker assembly line metaphor
 - Process vs thread security implications (PostgreSQL vs MySQL vs SQLite)
 - Fork() in multithreaded environments = dangerous (deadlock scenarios)
 - Database architectures determine security posture

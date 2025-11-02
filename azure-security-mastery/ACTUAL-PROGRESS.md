@@ -2,14 +2,14 @@
 
 *Based on session logs and actual files created*
 
-## 🎯 **Current Status: Day 45** (October 31, 2025)
+## 🎯 **Current Status: Day 47** (November 2, 2025)
 
-**Real Progress**: Successfully completed Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, and now Day 45 GitHub Actions Advanced Security  
-**Timeline**: Started September 1st → October 31st = **60 calendar days** → Every other day schedule = **30 possible sessions**  
-**Completed**: **23 sessions** (77% hit rate) - accounting for 9-day hackathon break + catch-up sessions  
+**Real Progress**: Successfully completed Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, and now Day 47 Infrastructure Security Scanning  
+**Timeline**: Started September 1st → November 2nd = **62 calendar days** → Every other day schedule = **31 possible sessions**  
+**Completed**: **24 sessions** (77% hit rate) - accounting for 9-day hackathon break + catch-up sessions  
 **Actual Pace**: ~2.6 days per session (excellent pace!)  
-**Major Milestone**: ✅ **DEVSECOPS PIPELINE ACHIEVED** - OIDC authentication (no stored secrets!), 5-layer security scanning (Gitleaks + CodeQL + npm audit + Trivy + SBOM), automated deployments - €0 total cost maintained!  
-**Modern Security**: ✅ **Industry best practices implemented** - OpenID Connect tokens (1-hour expiry vs 2-year secrets), SARIF results in GitHub Security tab, SPDX SBOM generation, production-grade CI/CD - Next: Infrastructure security scanning!  
+**Major Milestone**: ✅ **INFRASTRUCTURE SECURITY VALIDATED** - Checkov IaC scanning (1,000+ policies), 47 security issues found across 9 Bicep templates, shift-left security practices - €0 total cost maintained!  
+**Policy-as-Code**: ✅ **Automated compliance checking** - Multi-cloud IaC scanner, SARIF GitHub integration, security score: 59/100 → remediation guidance provided, production-grade DevSecOps - Next: Supply chain security!  
 **Recent**: 
 **Day 33**: ✅ **COMPLETED** (October 10-12, 2025 - Session #16-17) - **Q1 CAPSTONE PROJECT** - Security Integration (5,500+ lines, €0 cost)
 **Git Commit**:
@@ -397,6 +397,120 @@
 - Oct 31: `7b37e57` - "Day 45: Use local image tag for Trivy scan"
 - Oct 31: `74dde6f` - "Day 45: Fix SBOM and Trivy scan image references"
 - Oct 31: `ba52776` - "Day 45: Add NEXT-STEPS guide - 3/4 jobs passing!"
+
+---
+
+### **Day 47: Infrastructure Security Scanning** ✅ COMPLETED (November 2, 2025 - Session #24)
+**Evidence**:
+- `05-devsecops-cicd/day47-infrastructure-scanning/` - Complete IaC security scanning guide (3 files, 1,200+ lines)
+- `README.md` - 600-line comprehensive Checkov + Policy-as-Code guide
+- `CHECKOV-COMMANDS.md` - 220-line command reference with practical examples
+- `SCAN-RESULTS.md` - 300-line detailed analysis of 9 Bicep templates
+- `.github-workflows-iac-scanning.yml` - 250-line GitHub Actions workflow for automated scanning
+- Checkov 3.2.489 installed in virtual environment (~/.venv/checkov)
+- Full infrastructure scan: 115 checks (68 passed, 47 failed) = 59% security score
+- Security issues identified across: Storage accounts (6), Key Vault secrets (12), App Services (19), NSGs (2), VMs (4)
+- Remediation guidance provided for all 47 failures
+
+**Skills Acquired**:
+- **📚 LEARNED**:
+  - ✅ Infrastructure-as-Code (IaC) security scanning principles
+  - ✅ Checkov multi-cloud scanner (Bicep, Terraform, Kubernetes, Dockerfile)
+  - ✅ Policy-as-Code concepts (automated compliance enforcement)
+  - ✅ Shift-left security (find issues in dev, not production)
+  - ✅ Security policy frameworks (CIS benchmarks, GDPR, HIPAA)
+  - ✅ Common IaC misconfigurations (network access, secrets, encryption)
+  - ✅ SARIF format for GitHub Security tab integration
+  - ✅ Risk-based prioritization (CRITICAL → HIGH → MEDIUM → LOW)
+  - ✅ Azure security baseline (CKV_AZURE_* checks)
+  - ✅ False positive handling (suppression with justification)
+
+- **🔧 PRACTICED**:
+  - ✅ Checkov installation in Python virtual environment
+  - ✅ Scanning Bicep templates: `checkov -d . --framework bicep`
+  - ✅ JSON/SARIF output generation for CI/CD integration
+  - ✅ Analyzing scan results (68 passed, 47 failed checks)
+  - ✅ Identifying security issues across 9 Bicep files
+  - ✅ Creating remediation templates (before/after comparisons)
+  - ✅ Suppressing checks with inline comments and justification
+  - ✅ Building GitHub Actions workflow for automated scanning
+  - ✅ Interpreting check IDs (CKV_AZURE_35, CKV_AZURE_41, etc.)
+  - ✅ Security scoring and metrics calculation
+
+- **⚡ REAL-WORLD UNDERSTANDING**:
+  - ✅ Shift-left saves time: 20 minutes dev fixes vs days production incidents
+  - ✅ IaC scanning is measurable: 59% → 100% security score with concrete steps
+  - ✅ Automation is key: Scans 9 files in <10 seconds vs hours manual review
+  - ✅ Not all failures are equal: Prioritize CRITICAL (SSH from internet) over LOW (HTTP/2)
+  - ✅ Policy-as-Code = consistency: Same 1,000+ policies every commit
+  - ✅ Compliance is continuous: Not a one-time audit
+  - ✅ Documentation matters: Every suppression needs business justification
+  - ✅ Balance security vs cost: LRS vs GRS, free tier vs premium features
+
+**Technical Details**:
+- **Tool:** Checkov 3.2.489 (Bridgecrew/Palo Alto Networks)
+- **Installation:** Python venv (~/.venv/checkov) to avoid system package conflicts
+- **Scan Scope:** 9 Bicep templates across Days 1, 9, 15, 17, 33, 39
+- **Scan Time:** <10 seconds for entire codebase
+- **Security Score:** 59/100 (68 passed, 47 failed out of 115 checks)
+
+**Top Security Issues Found:**
+1. **Missing secret expiration (12 occurrences)** - CKV_AZURE_41
+   - Impact: Secrets don't rotate, long-term credential exposure risk
+   - Fix: Add `attributes.exp = dateTimeToEpoch(dateTimeAdd(utcNow(), 'P90D'))`
+
+2. **Storage account public access (6 occurrences)** - CKV_AZURE_35
+   - Impact: Data accessible from internet (data breach risk)
+   - Fix: Add `networkAcls: { defaultAction: 'Deny' }`
+
+3. **App Service HTTP allowed (3 occurrences)** - CKV_AZURE_14
+   - Impact: Man-in-the-middle attacks via unencrypted traffic
+   - Fix: Add `httpsOnly: true` and `minTlsVersion: '1.2'`
+
+4. **No storage replication (6 occurrences)** - CKV_AZURE_206
+   - Impact: Single datacenter failure = data loss
+   - Fix: Change SKU from `Standard_LRS` to `Standard_GRS`
+
+5. **SSH from internet (2 occurrences)** - CKV_AZURE_10
+   - Impact: CRITICAL - Brute force attacks possible worldwide
+   - Fix: Restrict `sourceAddressPrefix` to specific IPs or use Azure Bastion
+
+**Files Analyzed:**
+- Day 1: `storage-account.bicep` (3 failures)
+- Day 9: `storage-only.bicep` (3 failures), `multi-resource.bicep` (4 failures)
+- Day 15: `governance-policies.bicep` (0 failures) ✅
+- Day 17: `secrets-only.bicep` (4 failures), `secrets-setup.bicep` (19 failures), `vm-managed-identity.bicep` (4 failures)
+- Day 33: `main.bicep` (10 failures)
+
+**Remediation Roadmap:**
+- **Quick Wins (20 min):** Fix 21 issues → 77% security score
+  - Add secret expiration (12 fixes)
+  - Add network restrictions (6 fixes)
+  - Enable HTTPS-only (3 fixes)
+- **Full Remediation (~2 hours):** Fix all 47 issues → 100% security score
+
+**Skills Connection** (Days 45→47):
+- **Day 45:** Runtime security (container scanning with Trivy, SBOM generation)
+- **Day 47:** Pre-deployment security (IaC scanning with Checkov, shift-left)
+- **Combined:** Full DevSecOps pipeline (code → build → infrastructure → runtime)
+
+**Interview Readiness:**
+- ✅ Can explain IaC security scanning vs manual reviews
+- ✅ Can demonstrate Checkov usage (scan, analyze, remediate)
+- ✅ Can articulate shift-left security benefits (time, cost, consistency)
+- ✅ Can differentiate Checkov (pre-deployment) vs Azure Policy (runtime)
+- ✅ Can prioritize security findings by risk (CRITICAL → LOW)
+- ✅ Can handle false positives (suppression with documentation)
+- ✅ Portfolio-ready: "I scanned 9 IaC templates, found 47 issues, provided remediation"
+
+**Cost Achievement:**
+- ✅ €0.00 maintained (Checkov is open-source, local scanning only)
+- ✅ No Azure resources deployed (analysis only)
+- ✅ Virtual environment prevents system package pollution
+- ✅ Production-ready skills without production costs
+
+**Git Commit**:
+- Nov 2: Pending commit with 4 files (README, COMMANDS, SCAN-RESULTS, workflow)
 
 ---
 

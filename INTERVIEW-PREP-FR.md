@@ -358,21 +358,235 @@ Cela démontre la conscience des coûts, l'apprentissage progressif et la prépa
 
 ---
 
-## 🎓 Question pour l'Intervieweur
+## Jour 47 : Scan de Sécurité d'Infrastructure (IaC + Policy-as-Code)
 
-**"Je suis curieux de votre setup Kubernetes - utilisez-vous AKS, GKE, ou des clusters auto-gérés ? Et comment gérez-vous l'optimisation des coûts avec les workloads de production ?"**
+### Q1 : "Qu'est-ce que le scan de sécurité Infrastructure-as-Code et pourquoi est-ce important ?"
 
-**Pourquoi ça marche :**
-- Montre un intérêt sincère pour leur stack technique
-- Démontre que vous comprenez que K8s n'est pas juste AKS (conscience des plateformes)
-- L'optimisation des coûts montre une conscience business
-- Ouvre la conversation sur leurs défis (vous pouvez apprendre + relier votre expérience)
+**Réponse :**
+"Le scan de sécurité IaC analyse les templates d'infrastructure—Bicep, Terraform, CloudFormation—pour détecter les erreurs de configuration de sécurité **avant** le déploiement. C'est la philosophie shift-left security : on trouve les problèmes en développement (secondes) plutôt qu'en production (jours ou semaines).
+
+J'utilise Checkov, un scanner open-source qui vérifie 1 000+ politiques de sécurité incluant les benchmarks CIS, GDPR et HIPAA. Quand j'ai scanné mes 9 templates Bicep de mon parcours Azure Security, il a trouvé 47 problèmes de sécurité :
+- 12 secrets Key Vault sans date d'expiration
+- 6 comptes de stockage exposés à l'internet public
+- 3 App Services autorisant le trafic HTTP (pas HTTPS uniquement)
+- 2 NSG avec SSH ouvert à 0.0.0.0/0 (critique !)
+
+Le scan a pris moins de 10 secondes et m'a donné un score de sécurité de 59% avec des recommandations de correction spécifiques. Une revue de sécurité manuelle aurait pris des heures et aurait probablement manqué des problèmes. C'est pourquoi le scan IaC automatisé est essentiel—cohérence, rapidité et posture de sécurité mesurable."
+
+**Points de discussion supplémentaires :**
+- Shift-left : Trouver les bugs tôt (dev) vs tard (production)
+- Policy-as-Code : Application automatique de la conformité
+- Format SARIF : Intégration avec l'onglet Security de GitHub
+- Coût des erreurs : Fuite de données depuis stockage public = 20M€ d'amendes RGPD
 
 ---
 
-**Dernière mise à jour :** 29 octobre 2025  
-**Couverture :** Jours 1-43 (Focus Sécurité Conteneurs + Kubernetes)  
-**Prochaine mise à jour :** Après les sessions DevSecOps (Jours 45-65)  
+### Q2 : "Comment intégrez-vous le scan de sécurité IaC dans les pipelines CI/CD ?"
+
+**Réponse :**
+"J'intègre Checkov dans GitHub Actions avec ce workflow :
+
+1. **Déclencheur :** Sur push ou PR contenant des fichiers Bicep/Terraform
+2. **Scan :** `checkov -d . --framework bicep --output sarif`
+3. **Upload :** Résultats vers l'onglet Security GitHub via SARIF
+4. **Application :** Optionnellement bloquer la PR si problèmes critiques trouvés
+
+Le workflow prend environ 30 secondes et fournit :
+- Feedback de sécurité automatique sur chaque commit
+- Commentaires PR montrant le score de sécurité (59% → 77% après quick wins)
+- Suivi centralisé des vulnérabilités dans l'onglet Security avec CodeQL
+- Piste d'audit pour conformité (chaque scan enregistré)
+
+J'ai combiné ceci avec mon travail Jour 45 (authentification OIDC + scan conteneur), créant un pipeline DevSecOps complet : scan code → build → scan IaC → scan conteneur → deploy. Cinq couches de sécurité automatisée sans secrets stockés."
+
+**Points de discussion supplémentaires :**
+- Format SARIF permet l'agrégation multi-outils
+- Baseline scanning : Premier run établit le benchmark
+- Application progressive : Avertir d'abord, bloquer plus tard
+- Expérience développeur : Corrections self-service avec guidance
+
+---
+
+### Q3 : "Quelle est la différence entre Checkov et Azure Policy ?"
+
+**Réponse :**
+"Ils se complètent mais opèrent à différentes étapes :
+
+**Checkov (Pré-déploiement) :**
+- Scanne les templates IaC en développement
+- Feedback en secondes (local ou CI/CD)
+- Empêche les problèmes d'atteindre Azure
+- Gratuit et open-source
+- Focus développeur (shift-left)
+
+**Azure Policy (Runtime) :**
+- Valide les ressources déployées dans Azure
+- Application au moment du déploiement
+- Gouvernance sur toute la subscription
+- Évaluation gratuite, remédiation payante
+- Focus opérations (conformité)
+
+**Bonne pratique :** Utiliser les deux !
+- Checkov attrape les problèmes en dev (rapide, économique)
+- Azure Policy applique la conformité en production (filet de sécurité)
+
+Exemple : Checkov trouve un compte de stockage sans restrictions réseau dans mon fichier Bicep. Je le corrige avant de commiter. Mais si quelqu'un crée manuellement une ressource non conforme dans le Portail Azure, Azure Policy la bloque ou la signale pour remédiation."
+
+**Points de discussion supplémentaires :**
+- Défense en profondeur : Multiples couches de sécurité
+- Shift-left n'élimine pas les vérifications runtime
+- Azure Policy = garde-fous pour production
+- Coût : Prévention (Checkov) moins cher que remédiation (Azure Policy)
+
+---
+
+### Q4 : "Présentez-moi un vrai problème de sécurité que vous avez trouvé avec Checkov."
+
+**Réponse :**
+"Parfait exemple de mon template Bicep Jour 1 compte de stockage :
+
+**Problème :** CKV_AZURE_35 - Compte de stockage autorise l'accès réseau public
+
+**Code :**
+```bicep
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
+  name: uniqueString(resourceGroup().id)
+  properties: {
+    supportsHttpsTrafficOnly: true
+    // ❌ Manquant : configuration networkAcls
+  }
+}
+```
+
+**Risque :** N'importe qui sur internet peut découvrir et potentiellement accéder aux endpoints de mon compte de stockage. C'est comme ça qu'arrivent les fuites de données—Azure Storage exposé publiquement avec permissions de conteneur laxistes.
+
+**Correction :**
+```bicep
+properties: {
+  supportsHttpsTrafficOnly: true
+  networkAcls: {
+    defaultAction: 'Deny'      // Bloquer tout par défaut
+    bypass: 'AzureServices'    // Autoriser services Azure de confiance
+    ipRules: []                // Whitelist IPs spécifiques si besoin
+  }
+}
+```
+
+**Résultat :** Score de sécurité amélioré de 57% à 86% pour ce fichier. Plus important, j'ai appris qu'Azure par défaut **autorise** l'accès public—vous devez explicitement le refuser. C'est une erreur courante en production, et je l'ai détectée en développement gratuitement."
+
+**Points de discussion supplémentaires :**
+- Défauts Azure : Pas toujours sécurisés !
+- Défense en profondeur : Réseau + RBAC + chiffrement
+- Impact production : Incident Tesla mining (Kubernetes public)
+- Mentalité apprentissage : Chaque scan enseigne bonnes pratiques
+
+---
+
+### Q5 : "Comment priorisez-vous les résultats de sécurité des scans IaC ?"
+
+**Réponse :**
+"J'utilise une priorisation basée sur le risque :
+
+**CRITIQUE (corriger immédiatement, bloquer déploiement) :**
+- SSH/RDP depuis 0.0.0.0/0 (attaques brute force)
+- Accès public aux données sensibles (Key Vault, BDD)
+- Chiffrement manquant pour données au repos
+
+**ÉLEVÉ (corriger avant production) :**
+- Trafic HTTP autorisé (risque man-in-the-middle)
+- Restrictions réseau manquantes (stockage, web apps)
+- Pas de géo-réplication pour données critiques
+
+**MOYEN (corriger dans le même sprint) :**
+- Secrets sans date d'expiration (rotation credentials)
+- Health checks manquants (risque disponibilité)
+- Déploiements instance unique (pas de failover)
+
+**BAS (dette technique) :**
+- HTTP/2 pas activé (performance, pas sécurité)
+- Violations convention nommage (cohérence)
+- Redondance de zone pour environnements dev/test
+
+Dans mon scan, j'ai identifié 47 problèmes. J'ai priorisé :
+1. SSH depuis internet (2 occurrences) - immédiat
+2. Stockage accès public (6 occurrences) - immédiat
+3. Expiration secrets (12 occurrences) - même jour
+4. Support HTTP/2 (3 occurrences) - backlog
+
+**Quick wins :** 20 minutes pour corriger 21 problèmes a amélioré le score de 59% à 77%."
+
+**Points de discussion supplémentaires :**
+- Contexte business important (dev vs prod)
+- Faux positifs : LRS acceptable pour dev, pas prod
+- Exigences conformité : RGPD, HIPAA, PCI-DSS
+- Suppression avec documentation : Chaque exception justifiée
+
+---
+
+### Q6 : "Pouvez-vous expliquer 'Policy-as-Code' et ses bénéfices ?"
+
+**Réponse :**
+"Policy-as-Code signifie écrire les règles de sécurité et conformité comme du code qui applique automatiquement les standards, plutôt que des revues manuelles.
+
+**Approche traditionnelle :**
+```
+Développeur → Soumettre IaC → Revue Sécurité (manuelle) → Feedback → Corriger → Répéter
+Timeline : Jours à semaines
+Erreur humaine : Revues inconsistantes
+```
+
+**Approche Policy-as-Code :**
+```
+Développeur → Commit IaC → Scan Automatisé (Checkov) → Passe/Échoue → Correction self-service
+Timeline : Secondes à minutes
+Cohérence : Mêmes 1 000+ politiques à chaque fois
+```
+
+**Bénéfices que j'ai expérimentés :**
+1. **Vitesse :** Scans 10 secondes vs heures de revue manuelle
+2. **Cohérence :** Ne manque jamais une vérification (ex : expiration secrets)
+3. **Scalabilité :** Revoir 9 fichiers ou 900 fichiers—même effort
+4. **Autonomisation développeur :** Feedback immédiat, pas d'attente
+5. **Piste d'audit :** Chaque scan enregistré pour conformité
+
+**Exemple :** Mon template Day 17 Key Vault avait 4 secrets sans date d'expiration. Une revue traditionnelle pourrait en attraper 2-3, mais Checkov les a tous trouvés instantanément avec numéros de ligne exacts et recommandations de correction.
+
+Résultat ? Je passe de 59% à 100% de score de sécurité en heures, pas semaines. C'est le pouvoir de l'automatisation."
+
+**Points de discussion supplémentaires :**
+- Culture DevSecOps : Sécurité as code, pas réflexion après coup
+- Bibliothèques de politiques : Benchmarks CIS, standards industrie
+- Politiques personnalisées : OPA/Rego pour règles spécifiques organisation
+- Métriques : Score de sécurité = amélioration mesurable
+
+---
+
+## 🎯 Point de Discussion Portfolio : Jour 47
+
+**"J'ai implémenté le scan de sécurité Infrastructure-as-Code avec Checkov sur mon parcours Azure Security. J'ai scanné 9 templates Bicep et identifié 47 problèmes de sécurité, incluant des découvertes critiques comme accès SSH depuis internet et comptes de stockage exposés publiquement.
+
+Le scan a révélé une baseline de sécurité de 59%, et j'ai créé un guide de remédiation complet qui l'améliorerait à 100%. J'ai documenté les quick wins (20 minutes, 21 corrections, score 77%) et la remédiation complète (2 heures, 47 corrections, score 100%).
+
+J'ai intégré Checkov dans un workflow GitHub Actions avec sortie SARIF vers l'onglet Security, le combinant avec mon pipeline de sécurité multi-couches Jour 45. Ceci représente du vrai shift-left security—trouver les problèmes en développement, pas production. Le scan entier prend moins de 10 secondes et coûte 0€, comparé à des heures de revue manuelle ou potentiels incidents production."**
+
+---
+
+## 🎓 Question pour l'Intervieweur (Jour 47)
+
+**"Je suis curieux de vos pratiques de sécurité IaC—utilisez-vous des outils comme Checkov ou tfsec dans votre pipeline CI/CD ? Et comment équilibrez-vous les exigences de sécurité avec la vélocité développeur quand les scans automatisés trouvent des problèmes ?"**
+
+**Pourquoi ça marche :**
+- Montre intérêt sincère pour leur maturité DevSecOps
+- Démontre connaissance des options d'outils (Checkov, tfsec)
+- Reconnaît vrai défi : compromis sécurité vs vélocité
+- Ouvre conversation sur culture sécurité et processus
+- Montre que vous pensez au-delà des outils vers dynamiques organisationnelles
+
+---
+
+**Dernière mise à jour :** 2 novembre 2025  
+**Couverture :** Jours 1-47 (Fondations → Services Sécurité → Conteneurs → DevSecOps → Sécurité IaC)  
+**Prochaine mise à jour :** Après Sécurité Supply Chain (Jour 49)  
 **Objectif :** Points de discussion prêts pour entretiens avec preuves d'expérience pratique
 
 **Rappel :** Vous avez 58 jours d'expérience pratique, 300€+ d'économies de coûts, et des patterns de production appris. Vous n'êtes pas "juste en train d'apprendre" - vous construisez de vraies compétences avec de vraies contraintes (budget, sécurité, architecture). C'est plus que la plupart des candidats juniors ! 🚀

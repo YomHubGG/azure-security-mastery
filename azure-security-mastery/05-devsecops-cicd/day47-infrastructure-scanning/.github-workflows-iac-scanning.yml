@@ -1,0 +1,297 @@
+name: Infrastructure Security Scanning
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**/*.bicep'
+      - '**/*.tf'
+      - '**/*.json'
+      - '.github/workflows/iac-scanning.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**/*.bicep'
+      - '**/*.tf'
+      - '**/*.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+
+jobs:
+  checkov-scan:
+    runs-on: ubuntu-latest
+    name: 🔍 Checkov IaC Security Scan
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: 📦 Install Checkov
+        run: |
+          pip install --upgrade pip
+          pip install checkov
+          checkov --version
+      
+      - name: 🔍 Run Checkov scan on Bicep files
+        id: checkov-bicep
+        continue-on-error: true
+        run: |
+          mkdir -p results
+          checkov -d . \
+            --framework bicep \
+            --output cli \
+            --output json \
+            --output sarif \
+            --output-file-path results/ \
+            --compact \
+            --quiet || true
+          
+          echo "Checkov scan completed"
+          ls -la results/
+      
+      - name: 📊 Parse Checkov results
+        id: parse-results
+        run: |
+          if [ -f results/results_json.json ]; then
+            PASSED=$(jq '.summary.passed' results/results_json.json)
+            FAILED=$(jq '.summary.failed' results/results_json.json)
+            SKIPPED=$(jq '.summary.skipped // 0' results/results_json.json)
+            TOTAL=$((PASSED + FAILED + SKIPPED))
+            
+            echo "passed=$PASSED" >> $GITHUB_OUTPUT
+            echo "failed=$FAILED" >> $GITHUB_OUTPUT
+            echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
+            echo "total=$TOTAL" >> $GITHUB_OUTPUT
+            
+            if [ $FAILED -gt 0 ]; then
+              echo "status=failed" >> $GITHUB_OUTPUT
+            else
+              echo "status=passed" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No results file found"
+            echo "status=unknown" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: 📤 Upload SARIF results to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results/results_sarif.sarif
+          category: infrastructure-security-checkov
+      
+      - name: 📋 Upload scan results as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkov-scan-results
+          path: results/
+          retention-days: 30
+      
+      - name: 💬 Comment PR with results
+        if: github.event_name == 'pull_request' && steps.parse-results.outputs.status != 'unknown'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const passed = '${{ steps.parse-results.outputs.passed }}';
+            const failed = '${{ steps.parse-results.outputs.failed }}';
+            const skipped = '${{ steps.parse-results.outputs.skipped }}';
+            const total = '${{ steps.parse-results.outputs.total }}';
+            
+            const passRate = Math.round((passed / total) * 100);
+            const status = failed > 0 ? '❌' : '✅';
+            
+            const comment = `## ${status} Infrastructure Security Scan Results
+            
+            **Checkov Scan Summary:**
+            
+            | Metric | Count | Percentage |
+            |--------|-------|------------|
+            | ✅ Passed | ${passed} | ${passRate}% |
+            | ❌ Failed | ${failed} | ${Math.round((failed / total) * 100)}% |
+            | ⏭️ Skipped | ${skipped} | ${Math.round((skipped / total) * 100)}% |
+            | **Total** | **${total}** | **100%** |
+            
+            **Security Score:** ${passRate}/100
+            
+            ${failed > 0 ? '⚠️ **Action Required:** Please review and fix the security issues found.' : '🎉 **All checks passed!** Your infrastructure code is secure.'}
+            
+            📊 View detailed results in the [Security tab](https://github.com/${{ github.repository }}/security/code-scanning)
+            📦 Download full scan report from the [workflow artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+      
+      - name: 📊 Generate Security Summary
+        if: always()
+        run: |
+          echo "## 🔍 Infrastructure Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Scan Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**Tool:** Checkov" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository:** ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f results/results_json.json ]; then
+            PASSED=$(jq '.summary.passed' results/results_json.json)
+            FAILED=$(jq '.summary.failed' results/results_json.json)
+            SKIPPED=$(jq '.summary.skipped // 0' results/results_json.json)
+            TOTAL=$((PASSED + FAILED + SKIPPED))
+            PASS_RATE=$(echo "scale=1; ($PASSED * 100) / $TOTAL" | bc)
+            
+            echo "### 📊 Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Metric | Count | Percentage |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|------------|" >> $GITHUB_STEP_SUMMARY
+            echo "| ✅ Passed | $PASSED | $PASS_RATE% |" >> $GITHUB_STEP_SUMMARY
+            echo "| ❌ Failed | $FAILED | $(echo "scale=1; ($FAILED * 100) / $TOTAL" | bc)% |" >> $GITHUB_STEP_SUMMARY
+            echo "| ⏭️ Skipped | $SKIPPED | $(echo "scale=1; ($SKIPPED * 100) / $TOTAL" | bc)% |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Total** | **$TOTAL** | **100%** |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ $FAILED -gt 0 ]; then
+              echo "### ⚠️ Security Issues Found" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "$FAILED security issues detected. Please review the detailed results." >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### ✅ All Checks Passed" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "No security issues found. Your infrastructure code is secure!" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📋 Top Failed Checks" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract top 5 failed checks
+            jq -r '.results.failed_checks[:5] | .[] | "- **\(.check_id)**: \(.check_name) (\(.file_path))"' \
+              results/results_json.json >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "No failed checks to display" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Unable to parse scan results" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: 🚨 Fail on critical security issues
+        if: steps.parse-results.outputs.failed != '0' && github.event_name == 'pull_request'
+        run: |
+          echo "❌ Security issues found: ${{ steps.parse-results.outputs.failed }} failed checks"
+          echo "Please review and fix the security issues before merging."
+          # Uncomment to block merges:
+          # exit 1
+
+  tfsec-scan:
+    runs-on: ubuntu-latest
+    name: 🔒 tfsec Terraform Security Scan
+    if: contains(github.event.head_commit.modified, '.tf') || contains(github.event.head_commit.added, '.tf')
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🔍 Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          soft_fail: true
+          format: sarif
+          out: tfsec-results.sarif
+      
+      - name: 📤 Upload SARIF results
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: tfsec-results.sarif
+          category: infrastructure-security-tfsec
+
+  security-report:
+    runs-on: ubuntu-latest
+    name: 📊 Generate Security Report
+    needs: [checkov-scan]
+    if: always()
+    
+    steps:
+      - name: 📥 Download scan results
+        uses: actions/download-artifact@v4
+        with:
+          name: checkov-scan-results
+          path: results/
+      
+      - name: 📊 Generate HTML report
+        run: |
+          cat > report.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Infrastructure Security Report</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+              .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+              h1 { color: #0078d4; }
+              .metric { display: inline-block; margin: 20px; padding: 20px; background: #f0f0f0; border-radius: 5px; }
+              .passed { color: #107c10; }
+              .failed { color: #d13438; }
+              table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+              th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+              th { background: #0078d4; color: white; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>🔍 Infrastructure Security Scan Report</h1>
+              <p><strong>Date:</strong> $(date -u '+%Y-%m-%d %H:%M:%S UTC')</p>
+              <p><strong>Repository:</strong> ${{ github.repository }}</p>
+              <p><strong>Branch:</strong> ${{ github.ref_name }}</p>
+              <p><strong>Commit:</strong> ${{ github.sha }}</p>
+              
+              <h2>Summary</h2>
+              <div class="metrics">
+                <div class="metric passed">
+                  <h3>✅ Passed</h3>
+                  <p style="font-size: 2em; margin: 0;">$(jq '.summary.passed' results/results_json.json)</p>
+                </div>
+                <div class="metric failed">
+                  <h3>❌ Failed</h3>
+                  <p style="font-size: 2em; margin: 0;">$(jq '.summary.failed' results/results_json.json)</p>
+                </div>
+              </div>
+              
+              <h2>Top Security Issues</h2>
+              <table>
+                <tr>
+                  <th>Check ID</th>
+                  <th>Description</th>
+                  <th>File</th>
+                </tr>
+          EOF
+          
+          jq -r '.results.failed_checks[:10] | .[] | "<tr><td>\(.check_id)</td><td>\(.check_name)</td><td>\(.file_path)</td></tr>"' \
+            results/results_json.json >> report.html
+          
+          cat >> report.html << 'EOF'
+              </table>
+            </div>
+          </body>
+          </html>
+          EOF
+      
+      - name: 📤 Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report-html
+          path: report.html
+          retention-days: 90
