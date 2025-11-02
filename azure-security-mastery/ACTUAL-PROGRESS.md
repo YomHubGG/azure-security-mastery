@@ -400,14 +400,18 @@
 
 ---
 
-### **Day 47: Infrastructure Security Scanning** ✅ COMPLETED (November 2, 2025 - Session #24)
+### **Day 47: Infrastructure Security Scanning + Remediation** ✅ COMPLETED (November 2, 2025 - Session #24)
 **Evidence**:
-- `05-devsecops-cicd/day47-infrastructure-scanning/` - Complete IaC security scanning guide (3 files, 1,200+ lines)
+- `05-devsecops-cicd/day47-infrastructure-scanning/` - Complete IaC security scanning + remediation guide (4 files, 1,670+ lines)
 - `README.md` - 600-line comprehensive Checkov + Policy-as-Code guide
 - `CHECKOV-COMMANDS.md` - 220-line command reference with practical examples
 - `SCAN-RESULTS.md` - 300-line detailed analysis of 9 Bicep templates
+- `DAY47-REMEDIATION-RESULTS.md` - 470-line security improvement documentation (NEW)
 - `.github-workflows-iac-scanning.yml` - 250-line GitHub Actions workflow for automated scanning
 - Checkov 3.2.489 installed in virtual environment (~/.venv/checkov)
+- **Initial scan:** 115 checks (68 passed, 47 failed) = 59% security score
+- **Post-remediation:** 115 checks (84 passed, 31 failed) = 73% security score (+14 percentage points)
+- **16 security fixes implemented** in 6 Bicep templates (13 minutes total time)
 - Full infrastructure scan: 115 checks (68 passed, 47 failed) = 59% security score
 - Security issues identified across: Storage accounts (6), Key Vault secrets (12), App Services (19), NSGs (2), VMs (4)
 - Remediation guidance provided for all 47 failures
@@ -509,8 +513,9 @@
 - ✅ Virtual environment prevents system package pollution
 - ✅ Production-ready skills without production costs
 
-**Git Commit**:
-- Nov 2: Pending commit with 4 files (README, COMMANDS, SCAN-RESULTS, workflow)
+**Git Commits**:
+- Nov 2 (95431f8): Initial Day 47 documentation (4 files, 1,370+ lines)
+- Nov 2 (538bead): Infrastructure security remediation (+14% security score, 6 templates fixed)
 
 ---
 
