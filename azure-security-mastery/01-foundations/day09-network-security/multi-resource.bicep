@@ -45,7 +45,10 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2023-04-0
           destinationPortRange: '22'
           protocol: 'Tcp'
           sourcePortRange: '*'
-          sourceAddressPrefix: '*'
+          // ⚠️ Day 47: CRITICAL SECURITY FIX (CKV_AZURE_10)
+          // Changed from '*' (entire internet) to specific IP range
+          // TODO: Replace with your organization's IP range before production
+          sourceAddressPrefix: '10.0.0.0/8'  // ✅ Restrict to private network only
           destinationAddressPrefix: '*'
         }
       }
@@ -95,7 +98,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: storageAccountName
   location: location
   sku: {
-    name: 'Standard_LRS'
+    name: 'Standard_LRS'  // ✅ Day 47: Accepted for learning (cost optimization)
   }
   kind: 'StorageV2'
   properties: {
@@ -103,6 +106,13 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
     supportsHttpsTrafficOnly: true  // HTTPS only
     minimumTlsVersion: 'TLS1_2'     // Modern TLS
     allowBlobPublicAccess: false    // No public access
+    // ✅ Day 47: Network ACLs (CKV_AZURE_35)
+    networkAcls: {
+      defaultAction: 'Deny'
+      bypass: 'AzureServices'
+      ipRules: []
+      virtualNetworkRules: []
+    }
   }
 }
 

@@ -75,6 +75,10 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01'
               value: tenant().tenantId
             }
           ]
+          // ✅ Day 47: Security context (CKV_AZURE_133)
+          securityContext: {
+            privileged: false  // Don't run as root
+          }
         }
       }
     ]

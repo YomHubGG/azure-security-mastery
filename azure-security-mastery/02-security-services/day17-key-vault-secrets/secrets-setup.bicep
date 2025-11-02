@@ -3,6 +3,10 @@
 param keyVaultName string
 param location string = resourceGroup().location
 
+// 📅 Day 47: Secret expiration variables (Checkov CKV_AZURE_41 fix)
+var secretExpiration = dateTimeToEpoch(dateTimeAdd(utcNow(), 'P90D'))  // 90 days
+var secretNotBefore = dateTimeToEpoch(utcNow())                        // Valid from now
+
 // Existing Key Vault
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyVaultName
@@ -17,6 +21,8 @@ resource databaseSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
     value: 'PLACEHOLDER-DB-CONNECTION-FOR-LEARNING-ONLY'
     attributes: {
       enabled: true
+      exp: secretExpiration  // ✅ Expires in 90 days
+      nbf: secretNotBefore   // ✅ Valid from deployment time
     }
   }
 }
@@ -28,6 +34,8 @@ resource apiKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
     value: 'EXAMPLE-API-KEY-FOR-EDUCATIONAL-PURPOSE'
     attributes: {
       enabled: true
+      exp: secretExpiration  // ✅ Expires in 90 days
+      nbf: secretNotBefore   // ✅ Valid from deployment time
     }
   }
 }
@@ -39,6 +47,8 @@ resource jwtSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
     value: base64('DEMO-JWT-KEY-LEARNING-TEMPLATE-ONLY')
     attributes: {
       enabled: true
+      exp: secretExpiration  // ✅ Expires in 90 days
+      nbf: secretNotBefore   // ✅ Valid from deployment time
     }
   }
 }
@@ -65,8 +75,11 @@ resource appService 'Microsoft.Web/sites@2022-09-01' = {
   }
   properties: {
     serverFarmId: appServicePlan.id
+    httpsOnly: true  // ✅ Day 47: Enforce HTTPS-only (CKV_AZURE_80, CKV_AZURE_222)
     siteConfig: {
       linuxFxVersion: 'NODE|18-lts'
+      minTlsVersion: '1.2'  // ✅ Enforce TLS 1.2+ (CKV_AZURE_88)
+      ftpsState: 'Disabled'  // ✅ Disable insecure FTP (CKV_AZURE_78)
       appSettings: [
         {
           name: 'AZURE_KEY_VAULT_URL'

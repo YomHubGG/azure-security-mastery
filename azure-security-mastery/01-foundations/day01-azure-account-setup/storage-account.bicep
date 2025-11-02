@@ -15,7 +15,9 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   
   // 💰 SKU = Pricing/Performance tier
   sku: {
-    name: 'Standard_LRS'  // Locally Redundant Storage (cheapest, good for learning)
+    name: 'Standard_LRS'  // Locally Redundant Storage (cheapest for learning)
+    // 📝 SECURITY NOTE: In production, use Standard_GRS for geo-replication
+    // Trade-off: Cost (LRS €0.02/GB vs GRS €0.04/GB) vs Resilience
   }
   
   // 📦 Kind = Type of storage account
@@ -34,6 +36,15 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
     
     // 🌡️ Access tier - how often data is accessed
     accessTier: 'Hot'  // Frequently accessed (vs Cool/Archive)
+    
+    // 🛡️ NETWORK SECURITY (Day 47: Checkov CKV_AZURE_35 fix)
+    // Default: DENY all network access, explicitly allow trusted sources
+    networkAcls: {
+      defaultAction: 'Deny'           // Block all by default
+      bypass: 'AzureServices'         // Allow trusted Azure services
+      ipRules: []                     // Add specific IPs if needed
+      virtualNetworkRules: []         // Add VNet integration if needed
+    }
   }
 }
 
@@ -47,3 +58,9 @@ output storageAccountId string = storageAccount.id
 // - resourceGroup() references our container
 // - @ syntax specifies API version (important for consistency)
 // - Security is configured from the start, not added later!
+
+// 📊 Day 47 Security Improvements (Checkov scan):
+// ✅ FIXED: CKV_AZURE_35 - Added networkAcls (deny by default)
+// ⚠️ ACCEPTED: CKV_AZURE_206 - Using LRS for learning (cost optimization)
+//    Production recommendation: Standard_GRS for geo-redundancy
+// ✅ ALREADY COMPLIANT: CKV_AZURE_43 - Naming convention with 'st' prefix

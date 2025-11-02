@@ -2,6 +2,11 @@
 
 param keyVaultName string
 
+// 📅 Day 47: Secret expiration variables (Checkov CKV_AZURE_41 fix)
+// Secrets expire after 90 days to enforce credential rotation
+var secretExpiration = dateTimeToEpoch(dateTimeAdd(utcNow(), 'P90D'))  // 90 days from now
+var secretNotBefore = dateTimeToEpoch(utcNow())                        // Valid from now
+
 // Existing Key Vault
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyVaultName
@@ -15,6 +20,8 @@ resource databaseSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
     value: 'Server=myserver.${environment().suffixes.sqlServerHostname};Database=proddb;User Id=produser;Password=SecurePass123!;'
     attributes: {
       enabled: true
+      exp: secretExpiration  // ✅ Expires in 90 days
+      nbf: secretNotBefore   // ✅ Valid from deployment time
     }
     contentType: 'database connection string'
   }
@@ -27,6 +34,8 @@ resource apiKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
     value: 'sk-prod-1234567890abcdef'
     attributes: {
       enabled: true
+      exp: secretExpiration  // ✅ Expires in 90 days
+      nbf: secretNotBefore   // ✅ Valid from deployment time
     }
     contentType: 'API key'
   }
@@ -39,6 +48,8 @@ resource jwtSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
     value: base64('MyJWTSigningKeyForProductionEnvironment2025')
     attributes: {
       enabled: true
+      exp: secretExpiration  // ✅ Expires in 90 days
+      nbf: secretNotBefore   // ✅ Valid from deployment time
     }
     contentType: 'JWT signing key'
   }
@@ -53,6 +64,8 @@ resource storageSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
     value: 'DefaultEndpointsProtocol=https;AccountName=PLACEHOLDER;AccountKey=EDUCATIONAL-EXAMPLE;EndpointSuffix=${environment().suffixes.storage}'
     attributes: {
       enabled: true
+      exp: secretExpiration  // ✅ Expires in 90 days
+      nbf: secretNotBefore   // ✅ Valid from deployment time
     }
     contentType: 'Storage account connection string - EDUCATIONAL TEMPLATE'
   }
