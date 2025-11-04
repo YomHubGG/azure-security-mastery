@@ -6,11 +6,11 @@
 
 **Real Progress**: Successfully completed Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, and now Day 49 SARIF & GitHub Security Integration  
 **Timeline**: Started September 1st → November 4th = **64 calendar days** → Every other day schedule = **32 possible sessions**  
-**Completed**: **25 sessions** (100% attendance rate! 🎯) - Sessions 7-15 were the 42 Minishell Azure container project (€200 credit sprint) - content redistributed across roadmap  
+**Completed**: **25 sessions** (100% attendance rate! 🎯) - Sessions 7-15 were the 42 Minishell Azure container project (€200 credit = 30 days by Azure student rules) - content redistributed across roadmap  
 **Actual Pace**: ~2.6 days per session (excellent pace!)  
 **Major Milestone**: ✅ **SECURITY CENTRALIZATION ACHIEVED** - SARIF format integration, GitHub Security tab automation, 31 alerts tracked in centralized dashboard, universal security reporting format (ISO/IEC 30301-1:2019) - €0 total cost maintained!  
 **DevSecOps Pipeline**: ✅ **Full CI/CD security automation** - GitHub Actions workflow, automated Checkov scans on every Bicep change, SARIF upload to Security tab, 30-day artifact retention, shift-left + continuous validation - Next: Supply chain security!  
-**Real-World Experience**: ✅ **42 Minishell containerized on Azure** (Sessions 7-15) - Burned through €200 credit in one month deploying production workloads, learned Azure cost management the hard way, then pivoted to free-tier focused learning path!  
+**Real-World Experience**: ✅ **42 Minishell containerized on Azure** (Sessions 7-15) - Deployed production workload using Azure for Students credit (30-day limit), gained practical container orchestration experience, then pivoted to sustainable free-tier approach!  
 **Recent**: 
 **Day 33**: ✅ **COMPLETED** (October 10-12, 2025 - Session #16-17) - **Q1 CAPSTONE PROJECT** - Security Integration (5,500+ lines, €0 cost)
 **Git Commit**:
