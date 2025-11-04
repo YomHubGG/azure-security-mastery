@@ -41,6 +41,8 @@ jobs:
             --directory azure-security-mastery \
             --framework bicep \
             --output sarif \
+            --compact \
+            --quiet \
             --soft-fail > results.sarif
         continue-on-error: true
       
