@@ -41,10 +41,19 @@ jobs:
             --directory azure-security-mastery \
             --framework bicep \
             --output sarif \
-            --compact \
-            --quiet \
-            --soft-fail > results.sarif
+            --output-file-path . \
+            --output-bc-ids \
+            --soft-fail
         continue-on-error: true
+      
+      - name: Rename SARIF file
+        run: |
+          ls -la *.sarif || echo "No SARIF files found"
+          # Checkov creates results_sarif.sarif, rename to results.sarif
+          if [ -f results_sarif.sarif ]; then
+            mv results_sarif.sarif results.sarif
+          fi
+          cat results.sarif | head -50  # Debug: show first 50 lines
       
       - name: Upload SARIF to GitHub Security Tab
         uses: github/codeql-action/upload-sarif@v3
