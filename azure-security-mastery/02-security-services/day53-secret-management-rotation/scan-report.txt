@@ -1,0 +1,9 @@
+[0;34m🔍 Secret Scanning Report[0m
+Repository: /home/yom/cybersecurity-journey/azure-security-mastery
+Date: sam. 08 nov. 2025 18:38:03 CET
+
+[0;32m✅ TruffleHog version:[0m
+
+[0;34m📜 Scanning Git history for verified secrets...[0m
+This scans ALL commits for leaked credentials
+

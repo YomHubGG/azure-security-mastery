@@ -1,7 +1,7 @@
 # 🎯 Parcours Azure Security - Guide de Préparation aux Entretiens
 
-**Dernière mise à jour :** 29 octobre 2025  
-**Progression :** Jour 43/365 (Session #22)  
+**Dernière mise à jour :** 8 novembre 2025  
+**Progression :** Jour 53/365 (Session #27)  
 **Objectif :** Scénarios d'entretien complets couvrant toutes les compétences acquises
 
 ---
@@ -14,8 +14,9 @@
 4. [DevSecOps & CI/CD](#devsecops--cicd)
 5. [Optimisation des Coûts](#optimisation-des-coûts)
 6. [Menaces & Prévention](#menaces--prévention)
-7. [Architecture & Décisions de Design](#architecture--décisions-de-design)
-8. [Pitchs Express](#pitchs-express)
+7. [Gestion des Secrets & Rotation](#gestion-des-secrets--rotation-jour-53) 🆕
+8. [Architecture & Décisions de Design](#architecture--décisions-de-design)
+9. [Pitchs Express](#pitchs-express)
 
 ---
 
@@ -251,6 +252,182 @@ Incidents similaires : Grab (15k€ de facture AWS suite à credentials divulgu�
 - Recherche au-delà des tutoriels (incidents Tesla, Grab)
 - Comprend les vecteurs d'attaque (dashboards exposés, credentials divulgués)
 - Peut articuler des stratégies de prévention
+
+---
+
+## 🔐 Gestion des Secrets & Rotation (Jour 53)
+
+### Q : "Comment implémentez-vous la rotation automatique des secrets dans Azure ?"
+
+**R :** "J'ai créé un template Bicep qui déploie des secrets avec des politiques d'expiration de 90 jours, alignées sur les exigences PCI-DSS 4.0. Le template utilise `dateTimeAdd()` pour calculer automatiquement la date d'expiration dès le déploiement. Voici comment ça fonctionne :
+
+```bicep
+param currentTime string = utcNow()
+var expirationDate = dateTimeAdd(currentTime, 'P90D')
+var expirationEpoch = dateTimeToEpoch(expirationDate)
+
+resource secret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  properties: {
+    value: secretValue
+    attributes: {
+      enabled: true
+      exp: expirationEpoch
+    }
+  }
+}
+```
+
+J'ai aussi créé un script de monitoring (`expiration-monitor.sh`) qui parcourt tous les secrets de Key Vault et génère des alertes 30 jours avant l'expiration avec codes de sortie appropriés (0=OK, 1=Warning <30j, 2=Critical <7j).
+
+En production, je configurerais ce script en job Azure Automation avec des alertes vers Logic Apps ou Teams. Pour une rotation complète, Azure Key Vault supporte les Azure Functions comme gestionnaires de rotation qui peuvent générer de nouveaux secrets et mettre à jour les dépendances."
+
+**Preuves à montrer :**
+- ✅ Script de monitoring avec détection d'expiration (30j warning, 7j critical)
+- ✅ Template Bicep avec calcul automatique d'expiration
+- ✅ Compréhension de PCI-DSS 4.0 (rotation 90 jours)
+- ✅ Déploiement vérifié : secret expire 2026-02-06 (90j depuis 2025-11-08)
+
+---
+
+### Q : "Quelle est la différence entre secrets et certificats dans Key Vault ?"
+
+**R :** "Voici les différences clés :
+
+| Aspect | Secrets | Certificats |
+|--------|---------|-------------|
+| **Type** | Paires clé-valeur (connexions BD, clés API) | Identités PKI avec clés privées |
+| **Lifecycle** | Expiration manuelle, rotation via scripts | Auto-renouvellement Azure (Let's Encrypt, DigiCert) |
+| **Coût** | Gratuit (tier Free) | €3.36/certificat CA public + frais renouvellement |
+| **Use Case** | Credentials d'application, configs sensibles | SSL/TLS, authentification mutuelle, signing de code |
+| **Rotation** | Nécessite automation (Function Apps) | Intégré avec Azure App Service, Application Gateway |
+
+Les secrets sont parfaits pour les credentials d'applications où vous contrôlez la génération (mots de passe BD, tokens API). Les certificats sont pour les scénarios PKI nécessitant une autorité de certification (HTTPS, authentification client, conformité réglementaire).
+
+Dans mon projet, j'utilise des secrets pour les connexions BD avec rotation 90 jours, et j'ai créé un template Bicep pour les certificats auto-signés (tests locaux) avec politique de renouvellement automatique 30 jours avant expiration."
+
+**Preuves portfolio :**
+- ✅ Template `rotation-policy.bicep` (secrets avec expiration)
+- ✅ Template `certificate-lifecycle.bicep` (certificats auto-renouvellement)
+- ✅ Politique JSON pour certificats Let's Encrypt
+- ✅ Comprend la différence coût (gratuit vs €3.36/cert)
+
+---
+
+### Q : "Comment prévenez-vous les fuites de secrets dans Git ?"
+
+**R :** "J'utilise une approche multi-couches :
+
+**1. Scan Pré-Commit (Préventif)**
+- TruffleHog v3 pour détecter les credentials avant le commit
+- Hooks Git avec blocage automatique si secrets détectés
+- Pattern matching : clés API AWS (regex `AKIA[0-9A-Z]{16}`), tokens Azure (regex `azure[a-z0-9_.-]{20,}`)
+
+**2. Scan Historique (Détection)**
+- Mon script `secret-scan-report.sh` analyse tout l'historique Git + système de fichiers
+- Génère un rapport JSON avec `verified: true` pour secrets confirmés
+- Résultat récent : 0 secrets vérifiés sur 66 jours d'historique (202 fichiers scannés)
+
+**3. Alternative Tools**
+- **Gitleaks** : Plus rapide, détection basée regex pure
+- **git-secrets** : Par AWS, patterns AWS intégrés
+- **detect-secrets** : Par Yelp, supporte baseline pour réduire faux positifs
+
+**4. Key Vault Integration**
+- Variables d'environnement chargées depuis Azure Key Vault au runtime
+- Managed Identity pour authentification (pas de credentials codés en dur)
+- `@Microsoft.KeyVault(SecretUri=...)` pour App Service/Function Apps
+
+En production, je configurerais TruffleHog en GitHub Actions avec blocage des PRs contenant des secrets. J'ai aussi créé un `.env.example` avec des valeurs par défaut pour documenter les variables requises sans exposer de vraies valeurs."
+
+**Incidents réels à mentionner :**
+- **Uber 2016** : Credentials AWS dans GitHub privé → 57M utilisateurs compromis → Amende $148M
+- **CircleCI 2023** : Token rotation compromise → 1.7M secrets clients compromis
+- **Toyota 2022** : Clés d'accès dans repository public pendant 5 ans → 300k emails exposés
+
+**Preuves techniques :**
+- ✅ Script `secret-scan-report.sh` avec TruffleHog v3.63.2
+- ✅ Rapport de scan : 0 secrets vérifiés sur 202 fichiers
+- ✅ Comprend les regex patterns (AWS, Azure, GitHub, Slack)
+- ✅ Sait configurer hooks Git et pipelines CI/CD
+
+---
+
+### Q : "Expliquez Managed Identity et comment ça améliore la sécurité"
+
+**R :** "Managed Identity est une identité Azure AD créée automatiquement pour des ressources comme VMs, App Service, ou Functions. Elle élimine le besoin de stocker des credentials dans le code.
+
+**Comment ça marche :**
+1. Vous activez Managed Identity sur votre ressource Azure
+2. Azure crée automatiquement un principal de service dans votre tenant AAD
+3. Votre application demande un token OAuth2 à l'Azure Instance Metadata Service (IMDS)
+4. Le token est utilisé pour s'authentifier à Key Vault, Storage, SQL, etc.
+
+**Avantages sécurité :**
+- ✅ **Zéro credentials en code** : Pas de connection strings, pas de clés API
+- ✅ **Rotation automatique** : Azure rotate les credentials en backend (invisible)
+- ✅ **Principe du moindre privilège** : Attribution RBAC granulaire (Reader, Contributor, Key Vault Secrets User)
+- ✅ **Audit trail** : Tous les accès loggés dans Azure Monitor
+
+**Types :**
+- **System-Assigned** : Lié au lifecycle de la ressource (supprimé avec la ressource)
+- **User-Assigned** : Réutilisable entre plusieurs ressources (VMs, Functions partagent 1 identité)
+
+J'ai créé un script d'audit (`managed-identity-audit.sh`) qui liste toutes les Managed Identities, leurs assignments RBAC, et détecte les rôles overprivilegiés (Owner, Contributor sur la souscription). Lors de mon audit récent : 1 identité trouvée, 0 assignments de rôles (secure baseline)."
+
+**Use case portfolio :**
+```bash
+# Application Function App accède Key Vault sans credentials
+az webapp identity assign --name myapp --resource-group rg
+az keyvault set-policy --name myvault \
+  --object-id <managed-identity-id> \
+  --secret-permissions get list
+```
+
+**Preuves techniques :**
+- ✅ Script `managed-identity-audit.sh` (200 lignes, détection overprivilege)
+- ✅ Résultat audit : 1 identité, 0 rôles (secure)
+- ✅ Comprend System vs User-Assigned
+- ✅ Connaît les permissions RBAC granulaires
+
+---
+
+### Q : "Donnez-moi un exemple de violation majeure causée par mauvaise gestion des secrets"
+
+**R :** "**Uber 2016 - Coût $148M** :
+
+Des ingénieurs Uber ont stocké des credentials AWS dans un repository GitHub privé. Des attaquants ont obtenu accès au repo et utilisé les credentials pour accéder à un bucket S3 contenant 57 millions de profils d'utilisateurs et 600k de drivers.
+
+**Ce qui a mal tourné :**
+1. Credentials AWS codés en dur dans le code (clés AKIA...)
+2. Repository GitHub privé compromis (pas de 2FA sur les comptes)
+3. Bucket S3 sans MFA pour suppression
+4. Pas de détection pendant 1 an
+
+**Impact :**
+- $148M d'amende FTC
+- €460k d'amende UK ICO
+- $100k payés aux hackers (au lieu de disclosure responsable)
+- CTO démissionné
+
+**Comment je l'aurais prévenu :**
+1. **TruffleHog pré-commit** : Détecte les patterns `AKIA[0-9A-Z]{16}` avant Git push
+2. **Key Vault + Managed Identity** : Zero credentials en code
+3. **Scan réguliers** : Mon script `secret-scan-report.sh` en CI/CD
+4. **2FA obligatoire** : GitHub + Azure + AWS
+5. **Alertes CloudTrail** : Détection d'accès anormaux S3
+
+**Autres incidents majeurs :**
+- **CircleCI 2023** : Token rotation compromise → 1.7M secrets clients à rotater
+- **Toyota 2022** : 300k emails exposés, clés dans GitHub public pendant 5 ans
+- **Codecov 2021** : Bash Uploader compromis → tokens GitHub/AWS extraits
+
+La leçon : La détection de secrets doit être automatisée (CI/CD), pas manuelle. Un seul credential divulgué peut coûter des millions."
+
+**Montre :**
+- Conscience des incidents réels avec impacts financiers précis
+- Comprend les vecteurs d'attaque (GitHub compromise, S3 misconfiguration)
+- Peut articuler des solutions techniques concrètes
+- Sait utiliser les bons outils (TruffleHog, Key Vault, RBAC)
 
 ---
 

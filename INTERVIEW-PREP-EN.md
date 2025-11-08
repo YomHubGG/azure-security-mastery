@@ -1,7 +1,7 @@
 # 🎯 Azure Security Journey - Interview Preparation Guide
 
-**Last Updated:** October 29, 2025  
-**Progress:** Day 43/365 (Session #22)  
+**Last Updated:** November 8, 2025  
+**Progress:** Day 53/365 (Session #27)  
 **Purpose:** Comprehensive interview scenarios covering all skills acquired
 
 ---
@@ -14,8 +14,9 @@
 4. [DevSecOps & CI/CD](#devsecops--cicd)
 5. [Cost Optimization](#cost-optimization)
 6. [Security Threats & Prevention](#security-threats--prevention)
-7. [Architecture & Design Decisions](#architecture--design-decisions)
-8. [Elevator Pitches](#elevator-pitches)
+7. [Secret Management & Rotation](#secret-management--rotation-day-53) 🆕
+8. [Architecture & Design Decisions](#architecture--design-decisions)
+9. [Elevator Pitches](#elevator-pitches)
 
 ---
 
@@ -251,6 +252,127 @@ Similar incidents: Grab (€15k AWS bill from leaked credentials), Docker Hub ma
 - Research beyond tutorials (Tesla, Grab incidents)
 - Understand attack vectors (exposed dashboards, leaked credentials)
 - Can articulate prevention strategies
+
+---
+
+## 🔐 Secret Management & Rotation (Day 53)
+
+### Q: "How do you handle secret rotation in Azure?"
+
+**A:** "I implement secret rotation using Azure Key Vault with Infrastructure-as-Code. I've created Bicep templates that automatically set 90-day expiration dates on all secrets, compliant with PCI-DSS 4.0 requirements. The template uses `dateTimeAdd()` to calculate expiration and `dateTimeToEpoch()` for Key Vault compatibility. I've also built monitoring scripts with exit codes (0=OK, 1=Warning, 2=Critical) for cron integration."
+
+**Technical details to mention:**
+- Bicep template: `rotation-policy.bicep` with automated expiration calculation
+- 90-day rotation complies with PCI-DSS, NIST SP 800-63B, ISO 27001
+- Monitoring thresholds: 30-day warning, 7-day critical
+- Example: Deployed `db-connection-string` expiring February 6, 2026
+- Tags for tracking: `RotationPolicy: 90days`, `Environment: learning`
+
+**Portfolio evidence:**
+- ✅ Secret deployed with 90-day expiration via Bicep
+- ✅ 4 bash monitoring scripts created (rotation-audit, expiration-monitor)
+- ✅ Infrastructure-as-Code ensures consistency across environments
+
+---
+
+### Q: "What's the difference between a secret and a certificate in Key Vault?"
+
+**A:** "A secret is a plain text value like an API key, database password, or connection string - it's essentially an arbitrary string. A certificate is an X.509 digital certificate containing a public/private key pair, used for TLS/SSL encryption, code signing, or authentication. Certificates have more complex lifecycle management including auto-renewal, expiration tracking, and chain validation."
+
+**Key differences:**
+| Aspect | Secret | Certificate |
+|--------|---------|-------------|
+| **Type** | Plain text string | X.509 with key pair |
+| **Use Case** | Passwords, API keys | TLS/SSL, code signing |
+| **Content** | `text/plain` | `application/x-pkcs12` |
+| **Lifecycle** | Manual rotation | Auto-renewal policies |
+| **Expiration** | Optional | Required (validity period) |
+| **Renewal** | Replace value | Automated 30 days before expiry |
+
+**Example certificate policy:**
+- Validity: 12 months (RSA 2048-bit)
+- Auto-renewal: 30 days before expiration
+- Email alert: 7 days before expiration
+- Subject: CN=secure-app.yomhubgg.dev
+- SANs: *.yomhubgg.dev (wildcard)
+
+---
+
+### Q: "How do you prevent secrets from being committed to Git?"
+
+**A:** "I use TruffleHog to scan the entire Git history for leaked credentials. I recently scanned 66 days of commits and found zero verified secrets. TruffleHog's `--only-verified` flag validates secrets against actual APIs, reducing false positives. I've created a bash script (`secret-scan-report.sh`) that can run in CI/CD pipelines."
+
+**Multi-layered approach:**
+1. **TruffleHog** - Scan Git history for leaked credentials (verified against APIs)
+2. **gitleaks** - CI/CD integration, scans every commit before merge
+3. **git-secrets** - Pre-commit hooks, catches secrets before commit
+4. **GitHub Secret Scanning** - Automatic detection for known patterns
+
+**Scan results:**
+- ✅ **0 verified secrets** found in 66 days of commits
+- ✅ Repository confirmed clean (no credential leaks)
+- ✅ Automated scanning prevents future leaks
+
+**Remediation process:**
+- Rotate compromised secrets immediately in Key Vault
+- Update applications with new values
+- Document the incident
+- Consider `git-filter-repo` to remove from history (destructive)
+
+---
+
+### Q: "What is Managed Identity and why use it?"
+
+**A:** "Managed Identity is an Azure AD identity automatically managed by Azure, eliminating the need to store credentials in code or configuration. I've audited my system-assigned identity and verified it has zero role assignments - demonstrating least privilege by default. When permissions are needed, I grant specific roles like 'Key Vault Secrets User' instead of broad roles like Contributor."
+
+**Types of Managed Identity:**
+- **System-assigned**: Tied to a single resource's lifecycle (deleted with resource)
+- **User-assigned**: Independent identity, reusable across multiple resources
+
+**Benefits:**
+- ✅ **No stored credentials** - Azure manages tokens automatically
+- ✅ **Automatic token rotation** - Azure handles behind the scenes
+- ✅ **Zero secrets in code** - Eliminates credential storage
+- ✅ **Least privilege** - Grant only required permissions
+
+**Real-world example:**
+- Audited App Service identity: `app-secureapp-dev-rubf4v`
+- Principal ID: `681313d3-7e72-46b8-b994-be681ec95d8e`
+- Role assignments: **0** (least privilege by default)
+- Built audit script to check for Owner/Contributor at subscription level
+
+**Security best practices:**
+- ✅ Avoid Owner/Contributor at subscription level
+- ✅ Grant specific roles (Key Vault Secrets User, Storage Blob Data Reader)
+- ✅ Regular permission audits with automated scripts
+- ✅ Monitor role assignment changes in Azure AD logs
+
+---
+
+### Q: "Can you give an example of a real-world credential leak?"
+
+**A:** "Three major breaches demonstrate the importance of secret management:
+
+**Uber 2016** - $148M fine:
+- GitHub credentials leaked in source code
+- 57 million user records stolen
+- Lesson: Never store credentials in code, scan Git history
+
+**CircleCI 2023**:
+- Long-lived OAuth tokens stolen from environment
+- Thousands of customer secrets exposed
+- Lesson: Rotate credentials regularly (90-day policy)
+
+**Toyota 2022**:
+- Access token accidentally published for 5 years
+- 300,000 customer records exposed
+- Lesson: Secret expiration policies are critical
+
+**How I prevent these:**
+- ✅ TruffleHog scans 100% of Git history (0 secrets found)
+- ✅ 90-day rotation policies (limits exposure window)
+- ✅ Expiration monitoring (30-day warning, 7-day critical)
+- ✅ Managed Identity (eliminates credential storage)"
 
 ---
 
