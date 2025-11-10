@@ -1,0 +1,534 @@
+
+       _               _
+   ___| |__   ___  ___| | _______   __
+  / __| '_ \ / _ \/ __| |/ / _ \ \ / /
+ | (__| | | |  __/ (__|   < (_) \ V /
+  \___|_| |_|\___|\___|_|\_\___/ \_/
+
+By Prisma Cloud | version: 3.2.491 
+
+bicep scan results:
+
+Passed checks: 97, Failed checks: 33, Skipped checks: 0
+
+Check: CKV_AZURE_36: "Ensure 'Trusted Microsoft Services' is enabled for Storage Account access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day01-azure-account-setup/storage-account.bicep:12-49
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/enable-trusted-microsoft-services-for-storage-account-access
+Check: CKV_AZURE_35: "Ensure default network access rule for Storage Accounts is set to deny"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day01-azure-account-setup/storage-account.bicep:12-49
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/set-default-network-access-rule-for-storage-accounts-to-deny
+Check: CKV_AZURE_3: "Ensure that 'supportsHttpsTrafficOnly' is set to 'true'"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day01-azure-account-setup/storage-account.bicep:12-49
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-3
+Check: CKV_AZURE_59: "Ensure that Storage accounts disallow public access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day01-azure-account-setup/storage-account.bicep:12-49
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-storage-accounts-disallow-public-access
+Check: CKV_AZURE_44: "Ensure Storage Account is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day01-azure-account-setup/storage-account.bicep:12-49
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/bc-azr-storage-2
+Check: CKV_AZURE_183: "Ensure that VNET uses local DNS addresses"
+	PASSED for resource: Microsoft.Network/virtualNetworks.vnet
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/simple.bicep:4-22
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-183
+Check: CKV_AZURE_182: "Ensure that VNET has at least 2 connected DNS Endpoints"
+	PASSED for resource: Microsoft.Network/virtualNetworks.vnet
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/simple.bicep:4-22
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-182
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.databaseSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:17-28
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.apiKeySecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:30-41
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.jwtSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:43-54
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_57: "Ensure that CORS disallows every resource to access app services"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-cors-disallows-every-resource-to-access-app-services
+Check: CKV_AZURE_78: "Ensure FTP deployments are disabled"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-ftp-deployments-are-disabled
+Check: CKV_AZURE_14: "Ensure web app redirects all HTTP traffic to HTTPS in Azure App Service"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-5
+Check: CKV_AZURE_16: "Ensure that Register with Azure Active Directory is enabled on App Service"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-iam-policies/bc-azr-iam-1
+Check: CKV_AZURE_71: "Ensure that Managed identity provider is enabled for web apps"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-managed-identity-provider-is-enabled-for-app-services
+Check: CKV_AZURE_15: "Ensure web app is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-6
+Check: CKV_AZURE_72: "Ensure that remote debugging is not enabled for app services"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-remote-debugging-is-not-enabled-for-app-services
+Check: CKV_AZURE_155: "Ensure debugging is disabled for the App service slot"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-app-service-slot-has-debugging-disabled
+Check: CKV_AZURE_153: "Ensure web app redirects all HTTP traffic to HTTPS in Azure App Service Slot"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-web-app-redirects-all-http-traffic-to-https-in-azure-app-service-slot
+Check: CKV_AZURE_62: "Ensure function apps are not accessible from all regions"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-cors-disallows-every-resource-to-access-function-apps
+Check: CKV_AZURE_145: "Ensure Function app is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-function-app-uses-the-latest-version-of-tls-encryption
+Check: CKV_AZURE_70: "Ensure that Function apps is only accessible over HTTPS"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-function-apps-is-only-accessible-over-https
+Check: CKV_AZURE_9: "Ensure that RDP access is restricted from the internet"
+	PASSED for resource: Microsoft.Network/networkSecurityGroups.nsg
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:70-120
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-2
+Check: CKV_AZURE_10: "Ensure that SSH access is restricted from the internet"
+	PASSED for resource: Microsoft.Network/networkSecurityGroups.nsg
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:70-120
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-3
+Check: CKV_AZURE_183: "Ensure that VNET uses local DNS addresses"
+	PASSED for resource: Microsoft.Network/virtualNetworks.vnet
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:122-152
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-183
+Check: CKV_AZURE_182: "Ensure that VNET has at least 2 connected DNS Endpoints"
+	PASSED for resource: Microsoft.Network/virtualNetworks.vnet
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:122-152
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-182
+Check: CKV_AZURE_36: "Ensure 'Trusted Microsoft Services' is enabled for Storage Account access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:158-186
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/enable-trusted-microsoft-services-for-storage-account-access
+Check: CKV_AZURE_3: "Ensure that 'supportsHttpsTrafficOnly' is set to 'true'"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:158-186
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-3
+Check: CKV_AZURE_59: "Ensure that Storage accounts disallow public access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:158-186
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-storage-accounts-disallow-public-access
+Check: CKV_AZURE_44: "Ensure Storage Account is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:158-186
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/bc-azr-storage-2
+Check: CKV_AZURE_110: "Ensure that key vault enables purge protection"
+	PASSED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:226-249
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-enables-purge-protection
+Check: CKV_AZURE_111: "Ensure that key vault enables soft delete"
+	PASSED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:226-249
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-enables-soft-delete
+Check: CKV_AZURE_42: "Ensure the key vault is recoverable"
+	PASSED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:226-249
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-the-key-vault-is-recoverable
+Check: CKV_AZURE_57: "Ensure that CORS disallows every resource to access app services"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-cors-disallows-every-resource-to-access-app-services
+Check: CKV_AZURE_78: "Ensure FTP deployments are disabled"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-ftp-deployments-are-disabled
+Check: CKV_AZURE_14: "Ensure web app redirects all HTTP traffic to HTTPS in Azure App Service"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-5
+Check: CKV_AZURE_18: "Ensure that 'HTTP Version' is the latest if used to run the web app"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-8
+Check: CKV_AZURE_16: "Ensure that Register with Azure Active Directory is enabled on App Service"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-iam-policies/bc-azr-iam-1
+Check: CKV_AZURE_71: "Ensure that Managed identity provider is enabled for web apps"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-managed-identity-provider-is-enabled-for-app-services
+Check: CKV_AZURE_15: "Ensure web app is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-6
+Check: CKV_AZURE_72: "Ensure that remote debugging is not enabled for app services"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-remote-debugging-is-not-enabled-for-app-services
+Check: CKV_AZURE_213: "Ensure that App Service configures health check"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-213
+Check: CKV_AZURE_155: "Ensure debugging is disabled for the App service slot"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-app-service-slot-has-debugging-disabled
+Check: CKV_AZURE_153: "Ensure web app redirects all HTTP traffic to HTTPS in Azure App Service Slot"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-web-app-redirects-all-http-traffic-to-https-in-azure-app-service-slot
+Check: CKV_AZURE_62: "Ensure function apps are not accessible from all regions"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-cors-disallows-every-resource-to-access-function-apps
+Check: CKV_AZURE_67: "Ensure that 'HTTP Version' is the latest, if used to run the Function app"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-http-version-is-the-latest-if-used-to-run-the-function-app
+Check: CKV_AZURE_145: "Ensure Function app is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-function-app-uses-the-latest-version-of-tls-encryption
+Check: CKV_AZURE_70: "Ensure that Function apps is only accessible over HTTPS"
+	PASSED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-function-apps-is-only-accessible-over-https
+Check: CKV_AZURE_36: "Ensure 'Trusted Microsoft Services' is enabled for Storage Account access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/storage-hardened.bicep:10-71
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/enable-trusted-microsoft-services-for-storage-account-access
+Check: CKV_AZURE_35: "Ensure default network access rule for Storage Accounts is set to deny"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/storage-hardened.bicep:10-71
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/set-default-network-access-rule-for-storage-accounts-to-deny
+Check: CKV_AZURE_3: "Ensure that 'supportsHttpsTrafficOnly' is set to 'true'"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/storage-hardened.bicep:10-71
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-3
+Check: CKV_AZURE_59: "Ensure that Storage accounts disallow public access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/storage-hardened.bicep:10-71
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-storage-accounts-disallow-public-access
+Check: CKV_AZURE_44: "Ensure Storage Account is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/storage-hardened.bicep:10-71
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/bc-azr-storage-2
+Check: CKV_AZURE_36: "Ensure 'Trusted Microsoft Services' is enabled for Storage Account access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/storage-only.bicep:4-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/enable-trusted-microsoft-services-for-storage-account-access
+Check: CKV_AZURE_35: "Ensure default network access rule for Storage Accounts is set to deny"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/storage-only.bicep:4-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/set-default-network-access-rule-for-storage-accounts-to-deny
+Check: CKV_AZURE_3: "Ensure that 'supportsHttpsTrafficOnly' is set to 'true'"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/storage-only.bicep:4-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-3
+Check: CKV_AZURE_59: "Ensure that Storage accounts disallow public access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/storage-only.bicep:4-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-storage-accounts-disallow-public-access
+Check: CKV_AZURE_44: "Ensure Storage Account is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/storage-only.bicep:4-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/bc-azr-storage-2
+Check: CKV_AZURE_160: "Ensure that HTTP (port 80) access is restricted from the internet"
+	PASSED for resource: Microsoft.Network/networkSecurityGroups.networkSecurityGroup
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:21-70
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-http-port-80-access-from-the-internet-is-restricted
+Check: CKV_AZURE_9: "Ensure that RDP access is restricted from the internet"
+	PASSED for resource: Microsoft.Network/networkSecurityGroups.networkSecurityGroup
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:21-70
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-2
+Check: CKV_AZURE_10: "Ensure that SSH access is restricted from the internet"
+	PASSED for resource: Microsoft.Network/networkSecurityGroups.networkSecurityGroup
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:21-70
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-3
+Check: CKV_AZURE_183: "Ensure that VNET uses local DNS addresses"
+	PASSED for resource: Microsoft.Network/virtualNetworks.virtualNetwork
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:73-94
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-183
+Check: CKV_AZURE_182: "Ensure that VNET has at least 2 connected DNS Endpoints"
+	PASSED for resource: Microsoft.Network/virtualNetworks.virtualNetwork
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:73-94
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-182
+Check: CKV_AZURE_36: "Ensure 'Trusted Microsoft Services' is enabled for Storage Account access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:97-117
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/enable-trusted-microsoft-services-for-storage-account-access
+Check: CKV_AZURE_35: "Ensure default network access rule for Storage Accounts is set to deny"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:97-117
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/set-default-network-access-rule-for-storage-accounts-to-deny
+Check: CKV_AZURE_3: "Ensure that 'supportsHttpsTrafficOnly' is set to 'true'"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:97-117
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-3
+Check: CKV_AZURE_59: "Ensure that Storage accounts disallow public access"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:97-117
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-storage-accounts-disallow-public-access
+Check: CKV_AZURE_44: "Ensure Storage Account is using the latest version of TLS encryption"
+	PASSED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:97-117
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/bc-azr-storage-2
+Check: CKV_AZURE_183: "Ensure that VNET uses local DNS addresses"
+	PASSED for resource: Microsoft.Network/virtualNetworks.vnet
+	File: /02-security-services/day55-security-hardening/02-security-services/day39-container-instances/minishell-aci-secure.bicep:13-37
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-183
+Check: CKV_AZURE_182: "Ensure that VNET has at least 2 connected DNS Endpoints"
+	PASSED for resource: Microsoft.Network/virtualNetworks.vnet
+	File: /02-security-services/day55-security-hardening/02-security-services/day39-container-instances/minishell-aci-secure.bicep:13-37
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-182
+Check: CKV_AZURE_131: "SecureString parameter should not have hardcoded default values"
+	PASSED for resource: string.secretValue
+	File: /02-security-services/day55-security-hardening/02-security-services/day53-secret-management-rotation/rotation-policy.bicep:10-12
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-security-contact-emails-is-set
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.secret
+	File: /02-security-services/day55-security-hardening/02-security-services/day53-secret-management-rotation/rotation-policy.bicep:41-59
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.secret
+	File: /02-security-services/day55-security-hardening/02-security-services/day53-secret-management-rotation/rotation-policy.bicep:41-59
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.databaseSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-only.bicep:16-28
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.databaseSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-only.bicep:16-28
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.apiKeySecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-only.bicep:30-42
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.apiKeySecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-only.bicep:30-42
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.jwtSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-only.bicep:44-56
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.jwtSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-only.bicep:44-56
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.storageSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-only.bicep:58-72
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	PASSED for resource: Microsoft.KeyVault/vaults/secrets.storageSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-only.bicep:58-72
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_189: "Ensure that Azure Key Vault disables public network access"
+	PASSED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/keyvault-hardened.bicep:16-72
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-189
+Check: CKV_AZURE_109: "Ensure that key vault allows firewall rules settings"
+	PASSED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/keyvault-hardened.bicep:16-72
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-key-vault-allows-firewall-rules-settings
+Check: CKV_AZURE_110: "Ensure that key vault enables purge protection"
+	PASSED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/keyvault-hardened.bicep:16-72
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-enables-purge-protection
+Check: CKV_AZURE_111: "Ensure that key vault enables soft delete"
+	PASSED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/keyvault-hardened.bicep:16-72
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-enables-soft-delete
+Check: CKV_AZURE_42: "Ensure the key vault is recoverable"
+	PASSED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/keyvault-hardened.bicep:16-72
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-the-key-vault-is-recoverable
+Check: CKV_AZURE_160: "Ensure that HTTP (port 80) access is restricted from the internet"
+	PASSED for resource: Microsoft.Network/networkSecurityGroups.networkSecurityGroup
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:17-37
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-http-port-80-access-from-the-internet-is-restricted
+Check: CKV_AZURE_9: "Ensure that RDP access is restricted from the internet"
+	PASSED for resource: Microsoft.Network/networkSecurityGroups.networkSecurityGroup
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:17-37
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-2
+Check: CKV_AZURE_183: "Ensure that VNET uses local DNS addresses"
+	PASSED for resource: Microsoft.Network/virtualNetworks.virtualNetwork
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:39-60
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-183
+Check: CKV_AZURE_182: "Ensure that VNET has at least 2 connected DNS Endpoints"
+	PASSED for resource: Microsoft.Network/virtualNetworks.virtualNetwork
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:39-60
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-182
+Check: CKV_AZURE_182: "Ensure that VNET has at least 2 connected DNS Endpoints"
+	PASSED for resource: Microsoft.Network/networkInterfaces.networkInterface
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:62-81
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-182
+Check: CKV_AZURE_1: "Ensure Azure Instance does not use basic authentication(Use SSH Key Instead)"
+	PASSED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-1
+Check: CKV_AZURE_178: "Ensure linux VM enables SSH with keys for secure communication"
+	PASSED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-178
+Check: CKV_AZURE_45: "Ensure that no sensitive credentials are exposed in VM custom_data"
+	PASSED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/bc-azr-secrets-2
+Check: CKV_AZURE_149: "Ensure that Virtual machine does not enable password authentication"
+	PASSED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-azure-virtual-machine-does-not-enable-password-authentication
+Check: CKV_AZURE_92: "Ensure that Virtual Machines use managed disks"
+	PASSED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-virtual-machines-use-managed-disks
+Check: CKV_AZURE_177: "Ensure Windows VM enables automatic updates"
+	PASSED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-177
+Check: CKV_AZURE_43: "Ensure Storage Accounts adhere to the naming rules"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day01-azure-account-setup/storage-account.bicep:12-49
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/ensure-storage-accounts-adhere-to-the-naming-rules
+Check: CKV_AZURE_206: "Ensure that Storage Accounts use replication"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day01-azure-account-setup/storage-account.bicep:12-49
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-206
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	FAILED for resource: Microsoft.KeyVault/vaults/secrets.databaseSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:17-28
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	FAILED for resource: Microsoft.KeyVault/vaults/secrets.apiKeySecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:30-41
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	FAILED for resource: Microsoft.KeyVault/vaults/secrets.jwtSecret
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:43-54
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_225: "Ensure the App Service Plan is zone redundant"
+	FAILED for resource: Microsoft.Web/serverfarms.appServicePlan
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:57-67
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/bc-azure-225
+Check: CKV_AZURE_17: "Ensure the web app has 'Client Certificates (Incoming client certificates)' set"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-7
+Check: CKV_AZURE_18: "Ensure that 'HTTP Version' is the latest if used to run the web app"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-8
+Check: CKV_AZURE_212: "Ensure App Service has a minimum number of instances for failover"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-212
+Check: CKV_AZURE_222: "Ensure that Azure Web App public network access is disabled"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-63
+Check: CKV_AZURE_213: "Ensure that App Service configures health check"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-213
+Check: CKV_AZURE_67: "Ensure that 'HTTP Version' is the latest, if used to run the Function app"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/secrets-setup.bicep:70-95
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-http-version-is-the-latest-if-used-to-run-the-function-app
+Check: CKV_AZURE_160: "Ensure that HTTP (port 80) access is restricted from the internet"
+	FAILED for resource: Microsoft.Network/networkSecurityGroups.nsg
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:70-120
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-http-port-80-access-from-the-internet-is-restricted
+Check: CKV_AZURE_35: "Ensure default network access rule for Storage Accounts is set to deny"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:158-186
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/set-default-network-access-rule-for-storage-accounts-to-deny
+Check: CKV_AZURE_206: "Ensure that Storage Accounts use replication"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:158-186
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-206
+Check: CKV_AZURE_189: "Ensure that Azure Key Vault disables public network access"
+	FAILED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:226-249
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-189
+Check: CKV_AZURE_109: "Ensure that key vault allows firewall rules settings"
+	FAILED for resource: Microsoft.KeyVault/vaults.keyVault
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:226-249
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-key-vault-allows-firewall-rules-settings
+Check: CKV_AZURE_225: "Ensure the App Service Plan is zone redundant"
+	FAILED for resource: Microsoft.Web/serverfarms.appServicePlan
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:255-270
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/bc-azure-225
+Check: CKV_AZURE_17: "Ensure the web app has 'Client Certificates (Incoming client certificates)' set"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-7
+Check: CKV_AZURE_212: "Ensure App Service has a minimum number of instances for failover"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-212
+Check: CKV_AZURE_222: "Ensure that Azure Web App public network access is disabled"
+	FAILED for resource: Microsoft.Web/sites.appService
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:276-323
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-63
+Check: CKV_AZURE_114: "Ensure that key vault secrets have "content_type" set"
+	FAILED for resource: Microsoft.KeyVault/vaults/secrets.appInsightsSecret
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:326-332
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-key-vault-secrets-have-content-type-set
+Check: CKV_AZURE_41: "Ensure that the expiration date is set on all secrets"
+	FAILED for resource: Microsoft.KeyVault/vaults/secrets.appInsightsSecret
+	File: /02-security-services/day55-security-hardening/06-architecture-design/day33-q1-capstone-project/infrastructure/main.bicep:326-332
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-secrets-policies/set-an-expiration-date-on-all-secrets
+Check: CKV_AZURE_43: "Ensure Storage Accounts adhere to the naming rules"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/storage-hardened.bicep:10-71
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/ensure-storage-accounts-adhere-to-the-naming-rules
+Check: CKV_AZURE_206: "Ensure that Storage Accounts use replication"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/02-security-services/day55-security-hardening/storage-hardened.bicep:10-71
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-206
+Check: CKV_AZURE_43: "Ensure Storage Accounts adhere to the naming rules"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/storage-only.bicep:4-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/ensure-storage-accounts-adhere-to-the-naming-rules
+Check: CKV_AZURE_206: "Ensure that Storage Accounts use replication"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/storage-only.bicep:4-24
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-206
+Check: CKV_AZURE_43: "Ensure Storage Accounts adhere to the naming rules"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:97-117
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/ensure-storage-accounts-adhere-to-the-naming-rules
+Check: CKV_AZURE_206: "Ensure that Storage Accounts use replication"
+	FAILED for resource: Microsoft.Storage/storageAccounts.storageAccount
+	File: /02-security-services/day55-security-hardening/01-foundations/day09-network-security/multi-resource.bicep:97-117
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-206
+Check: CKV_AZURE_10: "Ensure that SSH access is restricted from the internet"
+	FAILED for resource: Microsoft.Network/networkSecurityGroups.networkSecurityGroup
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:17-37
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-3
+Check: CKV_AZURE_50: "Ensure Virtual Machine Extensions are not Installed"
+	FAILED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azr-general-14
+Check: CKV_AZURE_97: "Ensure that Virtual machine scale sets have encryption at host enabled"
+	FAILED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-virtual-machine-scale-sets-have-encryption-at-host-enabled
+Check: CKV_AZURE_151: "Ensure Windows VM enables encryption"
+	FAILED for resource: Microsoft.Compute/virtualMachines.vm
+	File: /02-security-services/day55-security-hardening/02-security-services/day17-key-vault-secrets/vm-managed-identity.bicep:84-132
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-iam-policies/ensure-azure-windows-vm-enables-encryption
+
