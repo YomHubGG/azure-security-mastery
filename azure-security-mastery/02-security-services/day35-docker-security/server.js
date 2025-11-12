@@ -1,0 +1,71 @@
+const http = require('http');
+const port = process.env.PORT || 3000;
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.end(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Day 45 - Secure Pipeline</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          max-width: 800px;
+          margin: 50px auto;
+          padding: 20px;
+          background: #f5f5f5;
+        }
+        .container {
+          background: white;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #0078d4; }
+        .check { color: #28a745; font-size: 24px; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 8px 0; border-bottom: 1px solid #eee; }
+        .status { float: right; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>🛡️ Day 45: Secure DevSecOps Pipeline</h1>
+        <p><strong>Status:</strong> <span class="check">✅ Running Successfully!</span></p>
+        
+        <h2>Security Scanning Complete</h2>
+        <ul>
+          <li>🔐 Gitleaks - Secret Scanning <span class="status check">✓</span></li>
+          <li>🛡️ CodeQL - SAST Analysis <span class="status check">✓</span></li>
+          <li>📦 npm audit - Dependency Scan <span class="status check">✓</span></li>
+          <li>🐳 Trivy - Container Scan <span class="status check">✓</span></li>
+          <li>📋 SBOM - Generated <span class="status check">✓</span></li>
+        </ul>
+        
+        <h2>Authentication Method</h2>
+        <p><strong>OIDC (OpenID Connect)</strong> - No stored secrets! 🎉</p>
+        
+        <h2>Container Info</h2>
+        <ul>
+          <li>Base: node:18-alpine3.18</li>
+          <li>User: Non-root (UID 1001)</li>
+          <li>Size: ~50MB</li>
+          <li>CVEs: Scanned ✓</li>
+        </ul>
+        
+        <p style="margin-top: 30px; color: #666; font-size: 14px;">
+          <strong>Deployment:</strong> Azure Container Instances<br>
+          <strong>Cost:</strong> ~€0.01 for testing<br>
+          <strong>Session:</strong> #23 - October 31, 2025
+        </p>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
+server.listen(port, '0.0.0.0', () => {
+  console.log(`✅ Secure app running on port ${port}`);
+  console.log(`🔒 Running as user: ${process.getuid()}`);
+});
