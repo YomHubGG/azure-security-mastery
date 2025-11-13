@@ -102,101 +102,101 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    DEVELOPER WORKSTATION                         │
-│  ┌────────────┐    ┌───────────────┐    ┌──────────────────┐  │
-│  │ Podman     │───▶│ TruffleHog    │───▶│ Pre-commit Hooks │  │
-│  │ Rootless   │    │ Secret Scan   │    │ (Git)            │  │
-│  └────────────┘    └───────────────┘    └──────────────────┘  │
+│                    DEVELOPER WORKSTATION                        │
+│  ┌────────────┐    ┌───────────────┐    ┌──────────────────┐    │
+│  │ Podman     │───▶│ TruffleHog    │───▶│ Pre-commit Hooks │    │
+│  │ Rootless   │    │ Secret Scan   │    │ (Git)            │    │
+│  └────────────┘    └───────────────┘    └──────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      GITHUB REPOSITORY                           │
+│                      GITHUB REPOSITORY                          │
 │  ┌────────────────────────────────────────────────────────────┐ │
 │  │                   GITHUB ACTIONS CI/CD                     │ │
 │  │                                                            │ │
-│  │  1. Trigger on push/PR                                    │ │
-│  │  2. OIDC authentication (zero secrets)                    │ │
-│  │  3. Trivy scan (CVEs + secrets)                          │ │
-│  │  4. Semgrep SAST (code quality)                          │ │
-│  │  5. Generate SBOM (CycloneDX)                            │ │
-│  │  6. Build container image                                │ │
-│  │  7. Sign with Cosign                                     │ │
-│  │  8. Push to GitHub CR                                    │ │
-│  │  9. Checkov IaC scan                                     │ │
-│  │ 10. Upload SARIF to GitHub Security                      │ │
+│  │  1. Trigger on push/PR                                     │ │
+│  │  2. OIDC authentication (zero secrets)                     │ │
+│  │  3. Trivy scan (CVEs + secrets)                            │ │
+│  │  4. Semgrep SAST (code quality)                            │ │
+│  │  5. Generate SBOM (CycloneDX)                              │ │
+│  │  6. Build container image                                  │ │
+│  │  7. Sign with Cosign                                       │ │
+│  │  8. Push to GitHub CR                                      │ │
+│  │  9. Checkov IaC scan                                       │ │
+│  │ 10. Upload SARIF to GitHub Security                        │ │
 │  └────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                 GITHUB CONTAINER REGISTRY                        │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │ Signed Images:                                          │  │
-│  │ - ghcr.io/yomhubgg/secure-app:1.0.0-q2 (verified ✓)   │  │
-│  │ - SBOM attached (CycloneDX JSON)                       │  │
-│  │ - Cosign signature (public key verified)              │  │
-│  │ - Trivy scan results (0 HIGH/CRITICAL)                │  │
-│  └─────────────────────────────────────────────────────────┘  │
+│                 GITHUB CONTAINER REGISTRY                       │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │ Signed Images:                                          │    │
+│  │ - ghcr.io/yomhubgg/secure-app:1.0.0-q2 (verified ✓)     │    │
+│  │ - SBOM attached (CycloneDX JSON)                        │    │
+│  │ - Cosign signature (public key verified)                │    │
+│  │ - Trivy scan results (0 HIGH/CRITICAL)                  │    │
+│  └─────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      AZURE INFRASTRUCTURE                        │
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │                 RESOURCE GROUP (West Europe)             │  │
-│  │                                                          │  │
-│  │  ┌─────────────────────────────────────────────────┐   │  │
-│  │  │        AZURE CONTAINER INSTANCES (ACI)          │   │  │
-│  │  │  ┌────────────────────────────────────────┐    │   │  │
-│  │  │  │  Container: secure-app:1.0.0-q2       │    │   │  │
-│  │  │  │  - Image pulled from GitHub CR         │    │   │  │
-│  │  │  │  - Managed Identity authentication     │    │   │  │
-│  │  │  │  - Read-only root filesystem           │    │   │  │
-│  │  │  │  - Resource limits (0.5 CPU, 1GB RAM)  │    │   │  │
-│  │  │  │  - Liveness/Readiness probes           │    │   │  │
-│  │  │  └────────────────────────────────────────┘    │   │  │
-│  │  └─────────────────────────────────────────────────┘   │  │
-│  │                                                          │  │
-│  │  ┌─────────────────────────────────────────────────┐   │  │
-│  │  │           AZURE KEY VAULT (Hardened)            │   │  │
-│  │  │  - Soft delete enabled (90-day retention)       │   │  │
-│  │  │  - Purge protection enabled                     │   │  │
-│  │  │  - Public network access: Disabled              │   │  │
-│  │  │  - RBAC authorization                           │   │  │
-│  │  │  - 90-day secret rotation policy                │   │  │
-│  │  │  - Expiration monitoring (30/7 day alerts)      │   │  │
-│  │  └─────────────────────────────────────────────────┘   │  │
-│  │                                                          │  │
-│  │  ┌─────────────────────────────────────────────────┐   │  │
-│  │  │        STORAGE ACCOUNT (CIS-Compliant)          │   │  │
-│  │  │  - HTTPS-only (TLS 1.2 minimum)                 │   │  │
-│  │  │  - All services encrypted                       │   │  │
-│  │  │  - Public access: Disabled                      │   │  │
-│  │  │  - Network ACLs: Default deny                   │   │  │
-│  │  └─────────────────────────────────────────────────┘   │  │
-│  │                                                          │  │
-│  └──────────────────────────────────────────────────────────┘  │
+│                      AZURE INFRASTRUCTURE                       │
+│                                                                 │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │                 RESOURCE GROUP (West Europe)             │   │
+│  │                                                          │   │
+│  │  ┌─────────────────────────────────────────────────┐     │   │
+│  │  │        AZURE CONTAINER INSTANCES (ACI)          │     │   │
+│  │  │  ┌────────────────────────────────────────┐     │     │   │
+│  │  │  │  Container: secure-app:1.0.0-q2        │     │     │   │
+│  │  │  │  - Image pulled from GitHub CR         │     │     │   │
+│  │  │  │  - Managed Identity authentication     │     │     │   │
+│  │  │  │  - Read-only root filesystem           │     │     │   │
+│  │  │  │  - Resource limits (0.5 CPU, 1GB RAM)  │     │     │   │
+│  │  │  │  - Liveness/Readiness probes           │     │     │   │
+│  │  │  └────────────────────────────────────────┘     │     │   │
+│  │  └─────────────────────────────────────────────────┘     │   │
+│  │                                                          │   │
+│  │  ┌─────────────────────────────────────────────────┐     │   │
+│  │  │           AZURE KEY VAULT (Hardened)            │     │   │
+│  │  │  - Soft delete enabled (90-day retention)       │     │   │
+│  │  │  - Purge protection enabled                     │     │   │
+│  │  │  - Public network access: Disabled              │     │   │
+│  │  │  - RBAC authorization                           │     │   │
+│  │  │  - 90-day secret rotation policy                │     │   │
+│  │  │  - Expiration monitoring (30/7 day alerts)      │     │   │
+│  │  └─────────────────────────────────────────────────┘     │   │
+│  │                                                          │   │
+│  │  ┌─────────────────────────────────────────────────┐     │   │
+│  │  │        STORAGE ACCOUNT (CIS-Compliant)          │     │   │
+│  │  │  - HTTPS-only (TLS 1.2 minimum)                 │     │   │
+│  │  │  - All services encrypted                       │     │   │
+│  │  │  - Public access: Disabled                      │     │   │
+│  │  │  - Network ACLs: Default deny                   │     │   │
+│  │  └─────────────────────────────────────────────────┘     │   │
+│  │                                                          │   │
+│  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    MONITORING & AUDITING                         │
-│  ┌────────────────┐  ┌──────────────────┐  ┌────────────────┐ │
-│  │ azure-         │  │ secret-          │  │ managed-       │ │
-│  │ hardening-     │  │ expiration-      │  │ identity-      │ │
-│  │ audit.sh       │  │ monitor.sh       │  │ audit.sh       │ │
-│  │ (5 checks)     │  │ (30/7 day warn)  │  │ (RBAC check)   │ │
-│  └────────────────┘  └──────────────────┘  └────────────────┘ │
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │              GITHUB SECURITY TAB                          │  │
-│  │  - SARIF reports uploaded (Trivy + Semgrep)             │  │
-│  │  - Dependabot alerts monitored                           │  │
-│  │  - Secret scanning enabled                               │  │
-│  │  - Code scanning results (31 alerts tracked)            │  │
-│  └──────────────────────────────────────────────────────────┘  │
+│                    MONITORING & AUDITING                        │
+│  ┌────────────────┐  ┌──────────────────┐  ┌────────────────┐   │
+│  │ azure-         │  │ secret-          │  │ managed-       │   │
+│  │ hardening-     │  │ expiration-      │  │ identity-      │   │
+│  │ audit.sh       │  │ monitor.sh       │  │ audit.sh       │   │
+│  │ (5 checks)     │  │ (30/7 day warn)  │  │ (RBAC check)   │   │
+│  └────────────────┘  └──────────────────┘  └────────────────┘   │
+│                                                                 │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │              GITHUB SECURITY TAB                         │   │
+│  │  - SARIF reports uploaded (Trivy + Semgrep)              │   │
+│  │  - Dependabot alerts monitored                           │   │
+│  │  - Secret scanning enabled                               │   │
+│  │  - Code scanning results (31 alerts tracked)             │   │
+│  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
