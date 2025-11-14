@@ -120,6 +120,51 @@ The `.gitignore` pattern `*.json` was originally added to ignore Bicep-generated
 
 ---
 
+### Attempted Fix #1 (Attempt #11)
+**Action:** Updated `.gitignore` to use specific patterns and negation:
+```gitignore
+# Bicep build output (exclude package.json and package-lock.json)
+*.bicep.json
+parameters.json
+!**/package.json
+!**/package-lock.json
+```
+
+**Result:** ❌ Failed - File still not in build context!
+
+**Discovery:** `package.json` was NEVER committed to Git in the first place due to the original `*.json` pattern. The negation patterns (`!**/package.json`) don't retroactively add untracked files.
+
+---
+
+### Final Fix (Attempt #12)
+**Action:** Force-added `package.json` to Git tracking:
+```bash
+git add -f azure-security-mastery/06-architecture-design/day59-q2-capstone-execution/app/package.json
+git commit -m "Day 59: Add package.json to Git (was blocked by old .gitignore)"
+git push
+```
+
+**Result:** ✅ **BUILD SUCCESS!** Container image built successfully!
+
+---
+
+### Bonus Issue (Attempt #13)
+**Error:**
+```
+FATAL run error: unable to parse reference: ghcr.io/YomHubGG/securecloud-devsecops:latest
+```
+
+**Cause:** Container registry names must be lowercase, but `IMAGE_NAME` used `${{ github.repository_owner }}` which returned `YomHubGG` (uppercase).
+
+**Fix:** Hardcoded lowercase image name:
+```yaml
+IMAGE_NAME: ghcr.io/yomhubgg/securecloud-devsecops
+```
+
+**Result:** ✅ **COMPLETE SUCCESS!** All pipeline steps passed including SBOM generation, Cosign signing, and registry push!
+
+---
+
 ## 🎓 Key Learnings
 
 ### 1. `.gitignore` Affects Docker Build Context in GitHub Actions
@@ -338,16 +383,53 @@ This debugging journey revealed a critical but poorly documented interaction bet
 1. Git ignore patterns (`.gitignore`)
 2. Docker build context transfer (GitHub Actions)
 3. Docker buildx caching mechanisms
+4. Container registry naming conventions (lowercase requirement)
 
-**Key Takeaway:** In GitHub Actions CI/CD pipelines, `.gitignore` patterns affect Docker build context. Always use specific ignore patterns and verify with `git check-ignore` before assuming file transfer issues.
+**Key Takeaways:** 
+1. In GitHub Actions CI/CD pipelines, `.gitignore` patterns affect Docker build context
+2. Files must be TRACKED by Git to be included in build context - negation patterns don't retroactively add untracked files
+3. Always use specific ignore patterns, not broad wildcards like `*.json`
+4. Container registry names (ghcr.io, Docker Hub, etc.) require lowercase
+5. Verify files with `git ls-files` and `git check-ignore -v` before assuming transfer issues
 
-**Time Invested:** ~10 attempts, ~45 minutes of debugging
-**Root Cause:** Single line in `.gitignore`: `*.json`
-**Lesson:** Overly broad ignore patterns have far-reaching consequences!
+**Final Statistics:**
+- **Total Attempts:** 13 iterations
+- **Time Invested:** ~60 minutes of intensive debugging
+- **Root Causes:** 
+  1. `.gitignore` pattern `*.json` blocking `package.json`
+  2. File never added to Git tracking (required force-add)
+  3. Uppercase characters in IMAGE_NAME env variable
+- **Commits:** 9 debugging commits + 1 documentation commit
+- **Final Status:** ✅ **COMPLETE SUCCESS** - All pipeline steps passed!
+
+**Lesson:** Overly broad ignore patterns have far-reaching consequences across multiple systems (Git, Docker, CI/CD). Always be explicit and document your patterns!
+
+---
+
+## 📈 Final Pipeline Results
+
+**Successful Pipeline Run:** [#19362139258](https://github.com/YomHubGG/azure-security-mastery/actions/runs/19362139258)
+
+**Completed Steps:**
+- ✅ Secret Scanning (TruffleHog) - 0 secrets found
+- ✅ SAST Analysis (Semgrep) - Code quality verified
+- ✅ Container Build (Docker multi-stage) - Image created successfully
+- ✅ Vulnerability Scan (Trivy) - Security assessment complete
+- ✅ SBOM Generation (CycloneDX) - Bill of materials created
+- ✅ SARIF Upload - Security findings published to GitHub Security tab
+- ✅ Keyless Signing (Cosign) - Cryptographic attestation applied
+- ✅ Registry Push (GHCR) - Image published to ghcr.io/yomhubgg/securecloud-devsecops:latest
+
+**Container Image Tags:**
+- `ghcr.io/yomhubgg/securecloud-devsecops:latest`
+- `ghcr.io/yomhubgg/securecloud-devsecops:main`
+- `ghcr.io/yomhubgg/securecloud-devsecops:1.0.0`
+- `ghcr.io/yomhubgg/securecloud-devsecops:main-e435e1c`
 
 ---
 
 **Author:** YomHubGG  
 **Date:** November 14, 2025  
 **Context:** Day 59 Q2 Capstone - SecureCloud DevSecOps Platform  
-**Status:** ✅ Resolved
+**Status:** ✅ **RESOLVED & OPERATIONAL**  
+**Next Steps:** Azure Container Instances deployment and testing
