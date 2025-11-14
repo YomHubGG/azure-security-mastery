@@ -10,6 +10,8 @@
 - **[Cost Safety Guidelines](../cost-safety-guidelines.md)** - Prevent surprise bills
 - **[Cost Management Guide](../cost-management-guide.md)** - Track and optimize spending
 - **[Actual Progress](../ACTUAL-PROGRESS.md)** - Honest skill assessment and progression tracking
+- **[CI/CD Security Tools Explained](CICD-SECURITY-TOOLS-EXPLAINED.md)** - TruffleHog, Semgrep, Trivy, Cosign deep-dive
+- **[Debugging Git + Docker + CI/CD](../06-architecture-design/day59-q2-capstone-execution/DEBUGGING-GITHUB-ACTIONS-DOCKER.md)** - Complete debugging methodology
 
 ### 📖 Learning Phases
 

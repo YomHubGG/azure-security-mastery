@@ -165,6 +165,36 @@ IMAGE_NAME: ghcr.io/yomhubgg/securecloud-devsecops
 
 ---
 
+### Deployment Issue (Post-CI/CD)
+**Error:**
+```
+InvalidRequestContent: Could not find member 'identity' on object of type 'ContainerGroupPropertiesDefinition'
+```
+
+**Cause:** Bicep template had `identity` property nested inside `properties` block instead of at the resource level.
+
+**Fix:** Moved `identity` block to resource level:
+```bicep
+resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
+  name: containerName
+  location: location
+  tags: { ... }
+  
+  // Security: Managed Identity (correct location)
+  identity: {
+    type: 'SystemAssigned'
+  }
+  
+  properties: {
+    containers: [ ... ]
+  }
+}
+```
+
+**Result:** ✅ Deployment succeeded in 43 seconds. Container ran successfully and was tested.
+
+---
+
 ## 🎓 Key Learnings
 
 ### 1. `.gitignore` Affects Docker Build Context in GitHub Actions

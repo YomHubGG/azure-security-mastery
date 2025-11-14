@@ -1,0 +1,61 @@
+{
+  "Resources": [
+    {
+      "PublicAccess": false,
+      "HTTPSOnly": true,
+      "Location": "westeurope",
+      "Status": "Secure",
+      "TLSVersion": "TLS1_2",
+      "Name": "devsec4uybw3c2lbkwm",
+      "Type": "Storage Account"
+    },
+    {
+      "PublicAccess": false,
+      "HTTPSOnly": true,
+      "Location": "westeurope",
+      "Status": "Secure",
+      "TLSVersion": "TLS1_2",
+      "Name": "devsectest4uybw3c2lbkwm",
+      "Type": "Storage Account"
+    },
+    {
+      "PublicAccess": false,
+      "HTTPSOnly": true,
+      "Location": "westeurope",
+      "Status": "Secure",
+      "TLSVersion": "TLS1_2",
+      "Name": "prodsec4uybw3c2lbkwm",
+      "Type": "Storage Account"
+    },
+    {
+      "PublicAccess": false,
+      "HTTPSOnly": true,
+      "Location": "westeurope",
+      "Status": "Secure",
+      "TLSVersion": "TLS1_2",
+      "Name": "stlearning4uybw3c2lbkwm",
+      "Type": "Storage Account"
+    },
+    {
+      "SoftDelete": null,
+      "Status": "Needs Attention",
+      "Location": "westeurope",
+      "PurgeProtection": null,
+      "Name": "kvlearning4uybw3c2lbkwm",
+      "Type": "Key Vault"
+    }
+  ],
+  "GeneratedAt": "2025-10-01 11:03:12",
+  "SecurityFindings": [
+    "Key Vault: kvlearning4uybw3c2lbkwm missing protection features"
+  ],
+  "ResourceGroup": "rg-learning-day1",
+  "Summary": {
+    "StorageAccounts": 4,
+    "VirtualNetworks": 3,
+    "SecurityScore": 80.0,
+    "NetworkSecurityGroups": 2,
+    "TotalResources": 11,
+    "KeyVaults": 1
+  }
+}

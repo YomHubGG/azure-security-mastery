@@ -1,0 +1,56 @@
+[
+  {
+    "PublicAccess": false,
+    "ResourceType": "Storage Account",
+    "Issues": [],
+    "Location": "westeurope",
+    "Status": "PASS",
+    "TLSVersion": "TLS1_2",
+    "ResourceName": "stseclearn73696",
+    "HTTPSOnly": true
+  },
+  {
+    "PublicAccess": false,
+    "ResourceType": "Storage Account",
+    "Issues": [],
+    "Location": "westeurope",
+    "Status": "PASS",
+    "TLSVersion": "TLS1_2",
+    "ResourceName": "stsecureappdevrubf4v",
+    "HTTPSOnly": true
+  },
+  {
+    "PublicAccess": false,
+    "ResourceType": "Storage Account",
+    "Issues": [],
+    "Location": "westeurope",
+    "Status": "PASS",
+    "TLSVersion": "TLS1_2",
+    "ResourceName": "stsecureappdevrubf4vld",
+    "HTTPSOnly": true
+  },
+  {
+    "PurgeProtection": null,
+    "ResourceType": "Key Vault",
+    "Issues": [
+      "Soft delete not enabled",
+      "Purge protection not enabled"
+    ],
+    "Location": "westeurope",
+    "SoftDelete": null,
+    "Status": "WARNING",
+    "ResourceName": "kv-appsec-learning"
+  },
+  {
+    "PurgeProtection": null,
+    "ResourceType": "Key Vault",
+    "Issues": [
+      "Soft delete not enabled",
+      "Purge protection not enabled"
+    ],
+    "Location": "westeurope",
+    "SoftDelete": null,
+    "Status": "WARNING",
+    "ResourceName": "kv-rubf4vld"
+  }
+]

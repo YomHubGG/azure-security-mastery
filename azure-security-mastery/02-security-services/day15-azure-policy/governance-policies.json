@@ -1,0 +1,158 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.37.4.10188",
+      "templateHash": "1916592248140956816"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/policyDefinitions",
+      "apiVersion": "2021-06-01",
+      "name": "custom-require-https-storage",
+      "properties": {
+        "displayName": "Require HTTPS for Storage Accounts",
+        "description": "Ensures all storage accounts only accept HTTPS traffic",
+        "policyType": "Custom",
+        "mode": "All",
+        "parameters": {},
+        "policyRule": {
+          "if": {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Storage/storageAccounts"
+              },
+              {
+                "field": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
+                "notEquals": true
+              }
+            ]
+          },
+          "then": {
+            "effect": "deny"
+          }
+        }
+      },
+      "metadata": {
+        "description": "Custom Azure Policy for enforcing security and governance standards"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyDefinitions",
+      "apiVersion": "2021-06-01",
+      "name": "custom-require-tags",
+      "properties": {
+        "displayName": "Require Specific Tags on Resources",
+        "description": "Ensures resources have required tags for governance",
+        "policyType": "Custom",
+        "mode": "All",
+        "parameters": {
+          "requiredTags": {
+            "type": "Object",
+            "defaultValue": {
+              "Environment": "",
+              "Project": "",
+              "CostCenter": "",
+              "Owner": ""
+            }
+          }
+        },
+        "policyRule": {
+          "if": {
+            "anyOf": [
+              {
+                "field": "tags[Environment]",
+                "exists": false
+              },
+              {
+                "field": "tags[Project]",
+                "exists": false
+              },
+              {
+                "field": "tags[CostCenter]",
+                "exists": false
+              },
+              {
+                "field": "tags[Owner]",
+                "exists": false
+              }
+            ]
+          },
+          "then": {
+            "effect": "deny"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyDefinitions",
+      "apiVersion": "2021-06-01",
+      "name": "custom-allowed-locations",
+      "properties": {
+        "displayName": "Allowed Resource Locations for GDPR",
+        "description": "Restricts resource deployment to EU regions for GDPR compliance",
+        "policyType": "Custom",
+        "mode": "All",
+        "parameters": {
+          "allowedLocations": {
+            "type": "Array",
+            "defaultValue": [
+              "westeurope",
+              "northeurope",
+              "francecentral",
+              "germanywestcentral"
+            ]
+          }
+        },
+        "policyRule": {
+          "if": {
+            "not": {
+              "field": "location",
+              "in": "[[parameters('allowedLocations')]"
+            }
+          },
+          "then": {
+            "effect": "deny"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2022-06-01",
+      "name": "security-governance-policies",
+      "properties": {
+        "displayName": "Security Learning Governance Policies",
+        "description": "Applies security and governance policies to learning environment",
+        "policyDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/policyDefinitions', 'custom-require-https-storage')]",
+        "parameters": {},
+        "enforcementMode": "Default"
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Authorization/policyDefinitions', 'custom-require-https-storage')]"
+      ]
+    }
+  ],
+  "outputs": {
+    "httpsStoragePolicyId": {
+      "type": "string",
+      "value": "[subscriptionResourceId('Microsoft.Authorization/policyDefinitions', 'custom-require-https-storage')]"
+    },
+    "requiredTagsPolicyId": {
+      "type": "string",
+      "value": "[subscriptionResourceId('Microsoft.Authorization/policyDefinitions', 'custom-require-tags')]"
+    },
+    "allowedLocationsPolicyId": {
+      "type": "string",
+      "value": "[subscriptionResourceId('Microsoft.Authorization/policyDefinitions', 'custom-allowed-locations')]"
+    },
+    "policyAssignmentId": {
+      "type": "string",
+      "value": "[subscriptionResourceId('Microsoft.Authorization/policyAssignments', 'security-governance-policies')]"
+    }
+  }
+}

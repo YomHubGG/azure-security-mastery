@@ -5,6 +5,9 @@
 - `cloud_security_career_roadmap.md` - General cloud security career guidance
 - `azure_europe_career_analysis.md` - Why Azure dominates European market
 - `azure_security_1year_plan.md` - Complete 12-month Azure learning plan
+- `docker-npm-fundamentals.md` - Docker & npm for 42 students (Inception prep)
+- `DEBUGGING-GITHUB-ACTIONS-DOCKER.md` - Git + Docker + CI/CD debugging methodology
+- `CICD-SECURITY-TOOLS-EXPLAINED.md` - TruffleHog, Semgrep, Trivy, Cosign deep-dive
 
 ## 🎯 **Key Insights from Our Conversation**:
 

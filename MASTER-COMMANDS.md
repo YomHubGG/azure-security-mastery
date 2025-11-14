@@ -846,6 +846,37 @@ git pull --rebase  # Rebase local commits on top of remote
 git push origin main
 ```
 
+### Git Debugging - .gitignore & File Tracking Issues
+```bash
+# WHY IS MY FILE IGNORED?
+git check-ignore -v <file>
+# Example output: .gitignore:42:*.json    package.json
+# Shows: line 42 of .gitignore is blocking package.json
+
+# IS MY FILE TRACKED IN GIT?
+git ls-files <file>
+# Empty output = file is NOT tracked
+# Shows path = file IS tracked
+
+# FORCE-ADD AN IGNORED FILE (use carefully!)
+git add -f <file>
+# Adds file to Git even if .gitignore blocks it
+# WARNING: Negation patterns (!**/file) don't work retroactively!
+
+# Common .gitignore debugging workflow:
+git check-ignore -v package.json    # Why is it ignored?
+git ls-files package.json           # Is it tracked?
+git add -f package.json             # Force-add if needed
+git status                          # Verify it's staged
+git commit -m "Force-add package.json for Docker build"
+
+# IMPORTANT FOR DOCKER + GITHUB ACTIONS:
+# - .gitignore affects Docker build context in GitHub Actions
+# - Files must be Git-tracked to be available in CI/CD
+# - Local Docker builds ignore .gitignore (uses .dockerignore only)
+# - Always verify with: git ls-files <file>
+```
+
 ### Cost & Usage Tracking
 ```
 Azure DevOps Organization: FREE

@@ -1,0 +1,105 @@
+[
+  {
+    "PublicAccess": false,
+    "Issues": [],
+    "ResourceType": "Storage Account",
+    "TLSVersion": "TLS1_2",
+    "HTTPSOnly": true,
+    "Location": "westeurope",
+    "ResourceName": "devsec4uybw3c2lbkwm",
+    "Status": "PASS"
+  },
+  {
+    "PublicAccess": false,
+    "Issues": [],
+    "ResourceType": "Storage Account",
+    "TLSVersion": "TLS1_2",
+    "HTTPSOnly": true,
+    "Location": "westeurope",
+    "ResourceName": "devsectest4uybw3c2lbkwm",
+    "Status": "PASS"
+  },
+  {
+    "PublicAccess": false,
+    "Issues": [],
+    "ResourceType": "Storage Account",
+    "TLSVersion": "TLS1_2",
+    "HTTPSOnly": true,
+    "Location": "westeurope",
+    "ResourceName": "prodsec4uybw3c2lbkwm",
+    "Status": "PASS"
+  },
+  {
+    "PublicAccess": false,
+    "Issues": [],
+    "ResourceType": "Storage Account",
+    "TLSVersion": "TLS1_2",
+    "HTTPSOnly": true,
+    "Location": "westeurope",
+    "ResourceName": "stlearning4uybw3c2lbkwm",
+    "Status": "PASS"
+  },
+  {
+    "RuleCount": 3,
+    "Status": "WARNING",
+    "ResourceType": "Network Security Group",
+    "Issues": [
+      "Rule 'AllowHTTPS' allows traffic from any source",
+      "Rule 'AllowSSH' allows traffic from any source"
+    ],
+    "ResourceName": "dev-nsg-security",
+    "Location": "westeurope"
+  },
+  {
+    "RuleCount": 3,
+    "Status": "WARNING",
+    "ResourceType": "Network Security Group",
+    "Issues": [
+      "Rule 'AllowHTTPS' allows traffic from any source",
+      "Rule 'AllowSSH' allows traffic from any source"
+    ],
+    "ResourceName": "prod-nsg-security",
+    "Location": "westeurope"
+  },
+  {
+    "Issues": [
+      "Soft delete not enabled",
+      "Purge protection not enabled"
+    ],
+    "ResourceType": "Key Vault",
+    "PurgeProtection": null,
+    "Location": "westeurope",
+    "ResourceName": "kvlearning4uybw3c2lbkwm",
+    "SoftDelete": null,
+    "Status": "WARNING"
+  },
+  {
+    "Status": "PASS",
+    "ResourceType": "Virtual Network",
+    "Issues": [],
+    "ResourceName": "dev-vnet-security",
+    "SubnetCount": 1,
+    "Location": "westeurope",
+    "AddressSpace": "10.0.0.0/16"
+  },
+  {
+    "Issues": [
+      "Subnet 'default' has no NSG attached"
+    ],
+    "ResourceType": "Virtual Network",
+    "ResourceName": "dev-vnet-simple",
+    "Location": "westeurope",
+    "SubnetCount": 1,
+    "AddressSpace": "10.0.0.0/16",
+    "Status": "WARNING"
+  },
+  {
+    "Status": "PASS",
+    "ResourceType": "Virtual Network",
+    "Issues": [],
+    "ResourceName": "prod-vnet-security",
+    "SubnetCount": 1,
+    "Location": "westeurope",
+    "AddressSpace": "10.0.0.0/16"
+  }
+]
