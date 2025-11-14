@@ -4,8 +4,8 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'azure-security-mastery/**'
-      - '.github/workflows/**'
+      - 'azure-security-mastery/02-security-services/day35-docker-security/**'
+      - '.github/workflows/day45-secure-pipeline.yml'
   pull_request:
     branches: [ main ]
   workflow_dispatch:  # Manual trigger for testing

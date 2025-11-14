@@ -12,12 +12,14 @@ FROM docker.io/library/node:18-alpine3.19 AS builder
 WORKDIR /build
 
 # Copy dependency files
-COPY --chown=node:node package*.json ./
+COPY package*.json ./
 
-# Install dependencies as non-root
-USER node
-RUN npm install --only=production && \
+# Install dependencies (as root in builder, then copy as node user)
+RUN npm ci --only=production && \
     npm cache clean --force
+
+# Set ownership for node user
+RUN chown -R node:node /build
 
 # Copy application code
 COPY --chown=node:node server.js ./
