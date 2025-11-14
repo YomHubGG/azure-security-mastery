@@ -44,12 +44,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01'
     security: 'hardened'
   }
   
+  // Security: Managed Identity for Key Vault access
+  identity: {
+    type: 'SystemAssigned'
+  }
+  
   properties: {
-    // Security: Managed Identity for Key Vault access
-    identity: {
-      type: 'SystemAssigned'
-    }
-    
     containers: [
       {
         name: 'securecloud-app'
