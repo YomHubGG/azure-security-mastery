@@ -1,2 +1,0 @@
-# Only ignore node_modules - keep everything else for build
-node_modules/
