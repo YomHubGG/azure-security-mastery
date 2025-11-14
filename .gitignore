@@ -26,5 +26,8 @@ Thumbs.db
 # Azure
 .azure/
 
-# Bicep build output
-*.json
+# Bicep build output (exclude package.json and package-lock.json)
+*.bicep.json
+parameters.json
+!**/package.json
+!**/package-lock.json
