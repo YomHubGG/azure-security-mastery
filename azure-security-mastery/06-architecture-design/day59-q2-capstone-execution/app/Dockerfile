@@ -11,11 +11,8 @@ FROM docker.io/library/node:18-alpine3.19 AS builder
 
 WORKDIR /build
 
-# Copy dependency files
-COPY package*.json ./
-
-# DEBUG: List files to see what was copied
-RUN ls -la /build/
+# Copy dependency files explicitly
+COPY package.json package-lock.json ./
 
 # Install dependencies (as root in builder, then copy as node user)
 RUN npm ci --only=production && \
