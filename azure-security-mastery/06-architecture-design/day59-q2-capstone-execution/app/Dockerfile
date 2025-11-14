@@ -14,6 +14,9 @@ WORKDIR /build
 # Copy dependency files
 COPY package*.json ./
 
+# DEBUG: List files to see what was copied
+RUN ls -la /build/
+
 # Install dependencies (as root in builder, then copy as node user)
 RUN npm ci --only=production && \
     npm cache clean --force
