@@ -115,8 +115,8 @@ jobs:
       id: build
       uses: docker/build-push-action@v5
       with:
-        context: azure-security-mastery/06-architecture-design/day59-q2-capstone-execution/app
-        file: azure-security-mastery/06-architecture-design/day59-q2-capstone-execution/app/Dockerfile
+        context: ./azure-security-mastery/06-architecture-design/day59-q2-capstone-execution/app
+        file: ./azure-security-mastery/06-architecture-design/day59-q2-capstone-execution/app/Dockerfile
         push: false
         load: true
         tags: ${{ steps.meta.outputs.tags }}
