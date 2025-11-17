@@ -32,13 +32,13 @@ Dec 1-31 (31 days, 15 sessions)
 └── €0 cost (all planning/design)
 ```
 
-### **January 2026** - Q3 Capstone + Certification Prep
+### **January 2026** - Q3 Capstone + AZ-500 Prep
 ```
 Jan 1-31 (31 days, 15 sessions)
 ├── Days 91: Q3 Capstone Execution (4 parts)
 ├── Deploy secure multi-tier application
 ├── Configure Sentinel + Defender + WAF
-├── AZ-900 study begins
+├── AZ-500 study begins (skip AZ-900 - you're beyond basics!)
 └── €11-20 cost (Q3 Capstone deployment)
 ```
 
@@ -63,7 +63,7 @@ Feb 1-28 (28 days, 14 sessions)
 | **Dec 1** | Learning Q3 Begins (Day 61) | 📅 Planned |
 | **Dec 31** | Day 89 Complete, Q3 Planned | 📅 Planned |
 | **Jan 8** | Q3 Capstone Complete | 📅 Planned |
-| **Jan 31** | AZ-900 Ready | 📅 Planned |
+| **Jan 31** | AZ-500 50% Complete | 📅 Planned |
 | **Feb 28** | Job Applications Submitted | 📅 Planned |
 | **Mar 2026** | Interviews + Offers | 🎯 Goal |
 
@@ -99,12 +99,12 @@ Feb 1-28 (28 days, 14 sessions)
 - [ ] Q3 Capstone designed
 - [ ] €0 cost maintained
 
-### **By January 31** (Q3 Capstone + Certs)
+### **By January 31** (Q3 Capstone + AZ-500)
 - [ ] 60 total sessions (45 + 15)
 - [ ] Q3 Capstone deployed & documented
 - [ ] 3 major capstones in portfolio
-- [ ] AZ-900 study 50%+ complete
-- [ ] Total cost: €11-20
+- [ ] AZ-500 study 50%+ complete (Identity + Platform Protection)
+- [ ] Total cost: €11-20 (exam €165 - wait for job offer/sponsorship)
 
 ### **By February 28** (Job Ready)
 - [ ] 74 total sessions (60 + 14)
@@ -200,16 +200,19 @@ Feb 1-28 (28 days, 14 sessions)
 - ✅ Portfolio: 2 capstones + Q3 designed
 - ✅ Experience: 4 months
 
-### **After January**: Advanced
+### **After January**: Advanced + AZ-500 Ready
 - ✅ Can explain: Zero trust, CSPM, advanced network security, WAF
 - ✅ Portfolio: 3 capstones (all deployed)
 - ✅ Experience: 5 months
+- ✅ AZ-500 Domains 1-2 studied (50% exam coverage)
 
-### **After February**: Job-Ready
+### **After February**: Job-Ready + AZ-500 Exam-Ready
 - ✅ Can explain: Everything above + practical interview experience
 - ✅ Portfolio: 3 capstones + 42 project + 100 Q&A
 - ✅ Experience: 6 months solid, 74 sessions
+- ✅ AZ-500: All 4 domains studied, exam-ready
 - ✅ **Target**: €60K-80K Junior Azure Security Engineer
+- ✅ **Strategy**: Get job offer first, then take AZ-500 (company may sponsor €165 exam)
 
 ---
 
@@ -260,7 +263,8 @@ Feb 1-28 (28 days, 14 sessions)
 ### **About Budget**
 - Comfortable with €11-20 for Q3 Capstone?
 - Want to minimize even more? (€5-10 possible)
-- Save budget for certification exam? (AZ-900 = ~€85)
+- AZ-500 exam (€165): Wait for job offer (company may sponsor)
+- Strategy: Study AZ-500 for free, take exam after employment
 
 ---
 
