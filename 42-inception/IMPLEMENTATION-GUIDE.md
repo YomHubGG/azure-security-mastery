@@ -20,7 +20,7 @@
 - ✅ Makefile to build everything
 - ✅ Docker network connecting containers
 - ✅ 2 volumes: WordPress DB + WordPress files
-- ✅ Domain: `yom.42.fr` → localhost
+- ✅ Domain: `ggrisole.42.fr` → localhost
 - ✅ Auto-restart containers on crash
 - ✅ Environment variables in `.env`
 - ✅ Secrets management (no passwords in Dockerfiles)
@@ -113,7 +113,7 @@ openssl rand -base64 32 > secrets/wp_admin_password.txt
 # Create .env file
 cat > srcs/.env << 'EOF'
 # Domain Configuration
-DOMAIN_NAME=yom.42.fr
+DOMAIN_NAME=ggrisole.42.fr
 
 # MariaDB Configuration
 MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
@@ -122,28 +122,28 @@ MYSQL_USER=wpuser
 MYSQL_PASSWORD_FILE=/run/secrets/db_password
 
 # WordPress Configuration
-WP_ADMIN_USER=yomadmin
+WP_ADMIN_USER=ggrisoleadmin
 WP_ADMIN_PASSWORD_FILE=/run/secrets/wp_admin_password
 WP_ADMIN_EMAIL=yom@student.42.fr
-WP_USER=yomuser
-WP_USER_EMAIL=yomuser@student.42.fr
+WP_USER=ggrisoleuser
+WP_USER_EMAIL=ggrisoleuser@student.42.fr
 WP_USER_PASSWORD=UserPassword123!
 WP_TITLE="Yom's Inception Project"
-WP_URL=https://yom.42.fr
+WP_URL=https://ggrisole.42.fr
 
 # Network Configuration
 NETWORK_NAME=inception_network
 
 # Volume Configuration
-DB_VOLUME_PATH=/home/yom/data/mariadb
-WP_VOLUME_PATH=/home/yom/data/wordpress
+DB_VOLUME_PATH=/home/ggrisole/data/mariadb
+WP_VOLUME_PATH=/home/ggrisole/data/wordpress
 EOF
 ```
 
 **Afternoon: Domain & SSL Setup**
 ```bash
 # Add domain to /etc/hosts
-echo "127.0.0.1 yom.42.fr" | sudo tee -a /etc/hosts
+echo "127.0.0.1 ggrisole.42.fr" | sudo tee -a /etc/hosts
 
 # Generate self-signed SSL certificate
 mkdir -p srcs/requirements/nginx/tools
@@ -152,7 +152,7 @@ cd srcs/requirements/nginx/tools
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout nginx-selfsigned.key \
   -out nginx-selfsigned.crt \
-  -subj "/C=FR/ST=IDF/L=Paris/O=42/OU=Student/CN=yom.42.fr"
+  -subj "/C=FR/ST=IDF/L=Paris/O=42/OU=Student/CN=ggrisole.42.fr"
 ```
 
 **Evening: Start Makefile**
@@ -161,7 +161,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 cat > Makefile << 'EOF'
 COMPOSE_FILE = srcs/docker-compose.yml
 ENV_FILE = srcs/.env
-DATA_DIR = /home/yom/data
+DATA_DIR = /home/ggrisole/data
 
 all: setup up
 
@@ -489,7 +489,7 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     
-    server_name yom.42.fr;
+    server_name ggrisole.42.fr;
     
     # SSL Configuration
     ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
@@ -608,13 +608,13 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/yom/data/mariadb
+      device: /home/ggrisole/data/mariadb
   wordpress_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/yom/data/wordpress
+      device: /home/ggrisole/data/wordpress
 
 secrets:
   db_root_password:
@@ -765,8 +765,8 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   aquasec/trivy image nginx:inception
 
 # Test TLS configuration
-openssl s_client -connect yom.42.fr:443 -tls1_2
-openssl s_client -connect yom.42.fr:443 -tls1_3
+openssl s_client -connect ggrisole.42.fr:443 -tls1_2
+openssl s_client -connect ggrisole.42.fr:443 -tls1_3
 
 # Verify no passwords in Dockerfiles
 grep -r "PASSWORD" srcs/requirements/*/Dockerfile || echo "✓ No hardcoded passwords"
@@ -790,19 +790,19 @@ make re
 sleep 30
 
 # Test 2: Service accessibility
-curl -k https://yom.42.fr
-curl -k https://yom.42.fr:9443  # Portainer
+curl -k https://ggrisole.42.fr
+curl -k https://ggrisole.42.fr:9443  # Portainer
 
 # Test 3: WordPress functionality
-# - Login with admin user (yomadmin)
-# - Login with regular user (yomuser)
+# - Login with admin user (ggrisoleadmin)
+# - Login with regular user (ggrisoleuser)
 # - Create a post, verify Redis caching
 
 # Test 4: Database access
 docker exec mariadb mysql -u wpuser -p"$(cat secrets/db_password.txt)" -e "SHOW DATABASES;"
 
 # Test 5: FTP connection
-ftp yom.42.fr 21
+ftp ggrisole.42.fr 21
 # Login and test file operations
 
 # Test 6: Container restart
@@ -865,7 +865,7 @@ VBoxManage export "inception-yom" \
 **Campus Testing Checklist**:
 - [ ] Boot VM from external disk on campus PC
 - [ ] Verify Docker services start
-- [ ] Test all URLs (https://yom.42.fr, bonus services)
+- [ ] Test all URLs (https://ggrisole.42.fr, bonus services)
 - [ ] Prepare for live modification during defense
 - [ ] Time full rebuild: `make re` (should be < 5 minutes)
 
@@ -941,8 +941,8 @@ A: Data persistence, backup strategies, different access patterns.
 3. **Secrets Security**: Never commit passwords to git
 4. **Auto-Restart**: All services must have restart policies
 5. **TLS Only**: NGINX must enforce TLS 1.2/1.3
-6. **Domain Setup**: yom.42.fr must work in VM
-7. **Volume Paths**: /home/yom/data (adjust to your VM login)
+6. **Domain Setup**: ggrisole.42.fr must work in VM
+7. **Volume Paths**: /home/ggrisole/data (adjust to your VM login)
 8. **Port 443 Only**: NGINX is sole entry point
 
 ---
@@ -964,8 +964,8 @@ make
 make ps
 
 # Access services
-curl -k https://yom.42.fr
-firefox https://yom.42.fr
+curl -k https://ggrisole.42.fr
+firefox https://ggrisole.42.fr
 
 # View logs
 make logs
@@ -984,7 +984,7 @@ make down
 docker logs mariadb
 
 # Common fix: permissions
-sudo chown -R 999:999 /home/yom/data/mariadb
+sudo chown -R 999:999 /home/ggrisole/data/mariadb
 
 # Reset database
 make fclean && make
@@ -1026,7 +1026,7 @@ make up
 - [ ] VM boots from external disk
 - [ ] All mandatory services running
 - [ ] All 5 bonus services running
-- [ ] Domain yom.42.fr resolves to localhost
+- [ ] Domain ggrisole.42.fr resolves to localhost
 - [ ] HTTPS works (self-signed warning is OK)
 - [ ] WordPress accessible with 2 users
 - [ ] Redis caching verified

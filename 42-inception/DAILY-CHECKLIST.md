@@ -36,19 +36,19 @@
 ## Day 2 - Nov 18
 
 **Morning: Security Foundation**
-- [ ] Generate SSL certificates (self-signed for yom.42.fr)
+- [ ] Generate SSL certificates (self-signed for ggrisole.42.fr)
 - [ ] Generate secrets (DB passwords, WP admin password)
 - [ ] Create secrets/ folder with password files
 - [ ] Verify secrets NOT in git
 
 **Afternoon: Environment Configuration**
 - [ ] Create srcs/.env with all variables
-- [ ] Add domain to /etc/hosts: `127.0.0.1 yom.42.fr`
-- [ ] Test domain resolution: `ping yom.42.fr`
+- [ ] Add domain to /etc/hosts: `127.0.0.1 ggrisole.42.fr`
+- [ ] Test domain resolution: `ping ggrisole.42.fr`
 
 **Evening: Makefile Completion**
 - [ ] Complete Makefile with all targets (all, build, up, down, clean, fclean, re)
-- [ ] Test: `make setup` creates /home/yom/data directories
+- [ ] Test: `make setup` creates /home/ggrisole/data directories
 - [ ] Document Makefile usage
 
 **End of Day**: Secrets ready, environment configured, Makefile working
@@ -103,7 +103,7 @@
   - Networks, volumes, secrets defined
   - Health checks, restart policies
 - [ ] Test: `make` to build and start all services
-- [ ] Verify: `curl -k https://yom.42.fr` shows WordPress
+- [ ] Verify: `curl -k https://ggrisole.42.fr` shows WordPress
 
 **End of Day**: Mandatory part complete and working! 🎉
 
@@ -313,7 +313,7 @@
 **Pre-Defense Checklist** (30 min before)
 - [ ] Arrive early, set up VM on evaluation PC
 - [ ] Boot VM, verify Docker services running
-- [ ] Test: `curl -k https://yom.42.fr` works
+- [ ] Test: `curl -k https://ggrisole.42.fr` works
 - [ ] Have DEFENSE-NOTES.md open in editor
 - [ ] Calm, confident mindset
 
@@ -360,7 +360,7 @@ make                   # Rebuild from scratch
 
 **Testing**
 ```bash
-curl -k https://yom.42.fr                    # Test NGINX
+curl -k https://ggrisole.42.fr                    # Test NGINX
 docker exec mariadb mysqladmin ping          # Test MariaDB
 docker exec wordpress wp --info --allow-root # Test WordPress
 docker logs -f nginx                          # Follow NGINX logs
@@ -387,7 +387,7 @@ docker-compose config                        # Validate docker-compose.yml
 - ✅ 2 WordPress users (admin name != 'admin')
 - ✅ Secrets management (no hardcoded passwords)
 - ✅ Auto-restart on crash
-- ✅ Volumes in /home/yom/data
+- ✅ Volumes in /home/ggrisole/data
 
 **Bonus (up to 25 points)**
 - ✅ Redis cache

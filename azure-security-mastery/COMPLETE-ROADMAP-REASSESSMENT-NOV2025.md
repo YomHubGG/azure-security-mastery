@@ -349,40 +349,46 @@ Total Q3 Capstone: €11-20 (acceptable for major project)
 
 ### **Week 3-4: Certification Preparation** (Jan 15-31)
 
-#### **Sessions #50-52 (Jan 15, 17, 19):** AZ-900 Study Days
+#### **Sessions #50-52 (Jan 15, 17, 19):** AZ-500 Study - Identity & Access
 ```yaml
-Focus: Azure Fundamentals certification preparation
+Focus: Azure Security Engineer certification - Part 1
 Topics:
-  - Cloud concepts review
-  - Azure services overview
-  - Security, compliance, and privacy
-  - Azure pricing and support
+  - Azure AD security (Conditional Access, PIM, Identity Protection)
+  - RBAC and custom roles
+  - Managed identities deep dive
+  - Azure AD Connect and hybrid identity
+  - Multi-factor authentication and passwordless
 Study Materials: Microsoft Learn (free), practice tests
-Cost: €0 (exam later if desired)
+Cost: €0
+Portfolio: "AZ-500 Domain 1 complete (25-30% of exam)"
 ```
 
-#### **Sessions #53-55 (Jan 21, 23, 25):** AZ-500 Introduction
+#### **Sessions #53-55 (Jan 21, 23, 25):** AZ-500 Study - Platform Protection
 ```yaml
-Focus: Begin Azure Security Engineer certification path
+Focus: Azure Security Engineer certification - Part 2
 Topics:
-  - Manage identity and access
-  - Implement platform protection
-  - Manage security operations
-  - Secure data and applications
-Study Materials: Microsoft Learn (free)
+  - Network security (NSG, ASG, Azure Firewall, DDoS)
+  - Perimeter security (Application Gateway, Front Door, WAF)
+  - VM and container security
+  - Azure Key Vault advanced scenarios
+Study Materials: Microsoft Learn (free), practice tests
 Cost: €0
+Portfolio: "AZ-500 Domain 2 complete (20-25% of exam)"
 ```
 
-#### **Sessions #56-57 (Jan 27, 29, 31):** Review & Portfolio Enhancement
+#### **Sessions #56-58 (Jan 27, 29, 31):** AZ-500 Study - Security Operations & Data
 ```yaml
-Focus: Consolidate learning and prepare for job search
+Focus: Azure Security Engineer certification - Part 3 & 4
 Topics:
-  - Update GitHub portfolio
-  - Polish all capstone projects
-  - Create architecture diagrams
-  - Update LinkedIn profile
-  - Prepare interview materials
+  - Azure Monitor and Log Analytics
+  - Microsoft Defender for Cloud
+  - Azure Sentinel (SIEM/SOAR)
+  - Data security (encryption, classification, retention)
+  - Application security (Key Vault integration, secure development)
+Study Materials: Microsoft Learn (free), practice tests
 Cost: €0
+Portfolio: "AZ-500 exam-ready (all 4 domains covered)"
+Note: Exam cost ~€165 - optional, take when ready
 ```
 
 ---
@@ -502,8 +508,9 @@ Target Salary: €60K-80K (Junior Azure Security Engineer)
 ### **Total by End of February 2026**
 - **Total Sessions**: 30 (current) + 50 (planned) = **80 sessions**
 - **Total Days**: 59 (current) + 99 (planned) = **158 days** (43% of 365)
-- **Total Cost**: €0.02 (current) + €11-20 (Q3) = **€11-20 total**
+- **Total Cost**: €0.02 (current) + €11-20 (Q3) = **€11-20 total** (AZ-500 exam €165 optional)
 - **Timeline**: September 1, 2025 → February 28, 2026 = **6 months**
+- **Certification**: AZ-500 study complete, exam-ready (take when job offer received)
 
 ---
 
@@ -579,15 +586,16 @@ Target Salary: €60K-80K (Junior Azure Security Engineer)
 ### **By End of January** (Q3 Capstone)
 - [ ] Q3 Capstone deployed and documented
 - [ ] Total cost: €11-20 (within budget)
-- [ ] AZ-900 study plan 50% complete
+- [ ] AZ-500 study 50% complete (Identity + Platform Protection)
 - [ ] Portfolio updated with 3 capstones
 
 ### **By End of February** (Job Ready)
 - [ ] 80 total sessions complete
 - [ ] 5-10 job applications submitted
 - [ ] Interview invitations received
-- [ ] AZ-900 ready to take (optional)
+- [ ] AZ-500 exam-ready (all 4 domains studied)
 - [ ] LinkedIn profile optimized
+- [ ] Take AZ-500 exam after job offer (company may sponsor €165 cost)
 
 ---
 
