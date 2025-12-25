@@ -1,7 +1,10 @@
 # Inception Bonus Services - Implementation Guide
 
 **Date**: November 30, 2025  
-**Status**: Ready for deployment
+**Last Updated**: December 25, 2025 18:00  
+**Status**: ✅ ALL 8 SERVICES OPERATIONAL
+
+> **🎄 December 25 Final Update**: Fixed Adminer FastCGI and Static Site proxy issues. All bonus services now fully functional!
 
 ---
 
@@ -9,11 +12,16 @@
 
 | Service | Purpose | Port/Access | Status |
 |---------|---------|-------------|--------|
-| **Redis** | WordPress object caching | Internal:6379 | ✅ Ready |
-| **FTP** | File access to WordPress volume | 21, 21000-21010 | ✅ Ready |
-| **Adminer** | Database management UI | https://ggrisole.42.fr/adminer | ✅ Ready |
-| **Static Site** | Custom HTML/CSS showcase | https://ggrisole.42.fr/static | ✅ Ready |
-| **Portainer** | Docker container management | https://localhost:9443 | ✅ Ready |
+| **Redis** | WordPress object caching | Internal:6379 | ✅ Operational |
+| **FTP** | File access to WordPress volume | 21, 21000-21010 | ✅ Operational |
+| **Adminer** | Database management UI | https://ggrisole.42.fr:8443/adminer | ✅ Operational (Fixed Dec 25) |
+| **Static Site** | Custom HTML/CSS showcase | https://ggrisole.42.fr:8443/static/ | ✅ Operational (Fixed Dec 25) |
+| **Portainer** | Docker container management | http://localhost:9443 | ✅ Operational (Fixed Dec 25) |
+
+**Updates**:
+- December 25, 17:40: Fixed Adminer 502 error (HTTP proxy → FastCGI)
+- December 25, 17:45: Fixed Static Site 404 error (added trailing slashes)
+- December 25, 17:30: Fixed Portainer 404 error (full archive extraction)
 
 ---
 
@@ -209,6 +217,143 @@ curl http://localhost:9000
 ---
 
 ## 🔧 Troubleshooting
+
+### Adminer shows 502 Bad Gateway (Fixed December 25, 17:40)
+
+**Symptom:** Adminer container running but NGINX returns 502 Bad Gateway
+
+**Root Cause:** NGINX configured with `proxy_pass` for PHP-FPM service
+- PHP-FPM speaks **FastCGI protocol**, not HTTP
+- Using `proxy_pass` sends HTTP requests to FastCGI listener
+
+**Solution:**
+```nginx
+# WRONG - HTTP proxy to FastCGI service:
+location /adminer {
+    proxy_pass http://adminer:9001;  # ← PHP-FPM doesn't speak HTTP!
+}
+
+# CORRECT - FastCGI configuration:
+location ~ ^/adminer(/.*\.php)?$ {
+    fastcgi_pass adminer:9001;
+    fastcgi_index adminer.php;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME /var/www/html/adminer.php;
+    fastcgi_param SCRIPT_NAME /adminer;
+}
+```
+
+**Fix steps:**
+```bash
+# Update nginx.conf with FastCGI configuration
+vim ~/inception/srcs/requirements/nginx/conf/nginx.conf
+
+# Rebuild NGINX
+cd ~/inception/srcs
+docker-compose stop nginx && docker-compose rm -f nginx
+docker-compose build nginx && docker-compose up -d nginx
+
+# Test
+curl -k -s https://ggrisole.42.fr:8443/adminer | grep '<title>'
+# Expected: <title>Login - Adminer</title> ✅
+```
+
+See [DECEMBER-25-FIXES.md](./DECEMBER-25-FIXES.md#issue-13-adminer-web-ui-502-bad-gateway) for complete details.
+
+---
+
+### Static Site shows 404 Not Found (Fixed December 25, 17:45)
+
+**Symptom:** Static site container running but NGINX returns 404
+
+**Root Cause:** Missing trailing slashes in NGINX proxy configuration
+- Without trailing slash: `/static/page.html` → proxied as `/static/page.html` (wrong!)
+- With trailing slash: `/static/page.html` → proxied as `/page.html` (correct!)
+
+**Solution:**
+```nginx
+# WRONG - No trailing slashes (path preservation):
+location /static {
+    proxy_pass http://static-site:8080;
+}
+
+# CORRECT - Trailing slashes (path rewriting):
+location /static/ {
+    proxy_pass http://static-site:8080/;  # ← Trailing slashes!
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+**Fix steps:**
+```bash
+# Update nginx.conf with trailing slashes
+vim ~/inception/srcs/requirements/nginx/conf/nginx.conf
+
+# Rebuild NGINX
+cd ~/inception/srcs
+docker-compose stop nginx && docker-compose rm -f nginx
+docker-compose build nginx && docker-compose up -d nginx
+
+# Test
+curl -k -s https://ggrisole.42.fr:8443/static/ | grep '<title>'
+# Expected: <title>Inception Project - Static Site</title> ✅
+```
+
+See [DECEMBER-25-FIXES.md](./DECEMBER-25-FIXES.md#issue-14-static-site-404-not-found) for complete details.
+
+---
+
+### Portainer shows 404 on web UI (Fixed December 25, 17:30)
+
+**Symptom:** API responds (`/api/status` works) but web UI returns 404
+
+**Root Cause:** Dockerfile only copies the binary without web UI files (public/ folder)
+
+**Solution:**
+```dockerfile
+# WRONG - Only moves binary, deletes web files:
+RUN tar -xzf portainer.tar.gz && \
+    mv portainer/portainer /usr/local/bin/ && \
+    rm -rf portainer  # ← Deletes public/ folder!
+
+# CORRECT - Keeps entire directory structure:
+RUN tar -xzf portainer-2.19.4-linux-amd64.tar.gz -C /usr/local/bin/ && \
+    rm portainer-2.19.4-linux-amd64.tar.gz
+
+WORKDIR /usr/local/bin/portainer
+CMD ["/usr/local/bin/portainer/portainer", "--bind=:9000", "--data=/data"]
+```
+
+**Fix steps:**
+```bash
+docker-compose stop portainer
+docker-compose rm -f portainer
+docker rmi portainer:inception
+# Update Dockerfile
+docker-compose build portainer
+docker-compose up -d portainer
+```
+
+See [DECEMBER-25-FIXES.md](./DECEMBER-25-FIXES.md#issue-4-portainer-web-ui-404) for complete details.
+
+---
+
+### Portainer timeout after 5 minutes
+
+**Symptom:** Portainer web UI shows timeout error
+
+**Cause:** Security feature - must complete initial setup within 5 minutes
+
+**Solution:**
+```bash
+docker restart portainer
+# Quickly navigate to http://localhost:9443 and create admin user
+```
+
+---
 
 ### Redis not connecting
 ```bash

@@ -1,5 +1,7 @@
 # Inception Project - Troubleshooting Guide & Installation Summary
 
+> **🎄 UPDATE December 25, 2025**: Major fixes applied after 2-week break. See [DECEMBER-25-FIXES.md](./DECEMBER-25-FIXES.md) for complete details on 5 critical issues resolved.
+
 ## Project Overview
 
 | Component | Details |
@@ -8,7 +10,8 @@
 | **Domain** | ggrisole.42.fr |
 | **VM** | Debian 12 Bookworm (penultimate stable) |
 | **Location** | /mnt/vmlab/inception/ |
-| **Containers** | NGINX, WordPress, MariaDB |
+| **Containers** | NGINX, WordPress, MariaDB, Redis, FTP, Adminer, Static Site, Portainer |
+| **Status** | ✅ ALL 8 SERVICES OPERATIONAL (Dec 25, 2025) |
 
 ---
 
@@ -30,22 +33,65 @@ mariadb:    Up (healthy), port 3306
 
 ## 🔥 Critical Issues Encountered & Solutions
 
-### Issue #1: MariaDB Never Initializing
+> **📋 COMPREHENSIVE FIX GUIDE**: For detailed explanation of all 5 major issues and their solutions, see [DECEMBER-25-FIXES.md](./DECEMBER-25-FIXES.md)
+
+### Issue #1: Old Secrets (25 bytes) vs New Secrets (44 bytes)
+
+**Symptom:**
+```bash
+# WordPress logs:
+Waiting for MariaDB...
+Attempt 1/30...
+[continues forever]
+
+# MariaDB logs:
+[Warning] Aborted connection to db: 'unconnected' user: 'unauthenticated'
+```
+
+**Root Cause:**
+- Old secrets from November 28 (25 bytes) cached in `~/inception/secrets/`
+- New secrets generated in wrong location (`~/inception/srcs/secrets/`)
+- Docker compose reads from `~/inception/secrets/` (relative path `../secrets/`)
+
+**Solution:**
+```bash
+# Generate secrets in CORRECT location with NO newline
+cd ~/inception
+mkdir -p secrets
+openssl rand -base64 32 | tr -d '\n' > secrets/db_root_password.txt
+openssl rand -base64 32 | tr -d '\n' > secrets/db_password.txt
+openssl rand -base64 32 | tr -d '\n' > secrets/wp_admin_password.txt
+
+# Verify: each should be exactly 44 bytes
+wc -c secrets/*
+```
+
+---
+
+### Issue #2: MariaDB Never Initializing (Docker Layer Caching)
 
 **Symptom:**
 ```
 MariaDB logs show "Starting MariaDB" but never "Initializing database"
+wpuser never created in mysql.user table
 ```
 
 **Root Cause:**
-Data directory persisted between rebuilds. Docker volume/bind mount caching kept old (corrupted) data.
+`apt-get install mariadb-server` creates default DB files in `/var/lib/mysql/` during Docker build. These files get baked into the image, making the init script think database already exists.
 
-**Solution:**
+**Solution - Update Dockerfile:**
+```dockerfile
+# Add at end of ~/inception/srcs/requirements/mariadb/Dockerfile:
+RUN rm -rf /var/lib/mysql/*
+```
+
+**Then complete cleanup:**
 ```bash
-# Complete cleanup before rebuild
 docker compose down -v
+docker rmi mariadb:inception
 docker system prune -af
-sudo rm -rf ~/data/mariadb ~/data/wordpress
+sudo rm -rf ~/data/mariadb/* ~/data/mariadb/.*
+sudo rm -rf ~/data/wordpress/* ~/data/wordpress/.*
 mkdir -p ~/data/mariadb ~/data/wordpress
 docker compose up -d --build
 ```
