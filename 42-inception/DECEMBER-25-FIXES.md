@@ -708,6 +708,123 @@ curl -k -I https://localhost:8443 2>&1 | grep Location
 
 ---
 
+### Issue #16: WordPress URLs Not Persisting Across Restarts (December 26, PERMANENT FIX)
+
+**Problem:**
+- Issue #15 fix (manually updating URLs) was temporary
+- URLs reverted to `https://ggrisole.42.fr` (no port) after container restart
+- Had to manually run `wp option update` commands after every restart
+- User quote: "I'd like a permanent fix to this, it happens all the time."
+
+**Root Cause:**
+WordPress startup script (`wp-setup.sh`) only set URLs during **initial installation**:
+```bash
+# Initial install block:
+if [ ! -f /var/www/html/wp-config.php ]; then
+    wp core install --url="${WP_URL}" ...  # ← Sets URL on first install
+else
+    # Already installed block:
+    echo "WordPress already installed, checking Redis..."
+    # ← MISSING: No URL update on subsequent starts!
+fi
+```
+
+When WordPress was already installed, the script never updated the URLs, so they remained whatever was in the database.
+
+**Permanent Fix Applied:**
+
+**Step 1: Update wp-setup.sh Script**
+Added URL update to "already installed" block:
+```bash
+else
+    echo "WordPress already installed, checking configuration..."
+    cd /var/www/html
+    
+    # ✅ PERMANENT FIX: Always update URLs on startup
+    echo "Updating WordPress URLs to ${WP_URL}..."
+    wp option update siteurl "${WP_URL}" --allow-root
+    wp option update home "${WP_URL}" --allow-root
+    
+    # [Rest of Redis plugin checks...]
+fi
+```
+
+**Step 2: Fix Environment Variable**
+Updated `srcs/.env` to include port:
+```bash
+# OLD (BROKEN):
+WP_URL=https://ggrisole.42.fr
+
+# NEW (FIXED):
+WP_URL=https://ggrisole.42.fr:8443
+```
+
+**Step 3: Rebuild and Test**
+```bash
+# Copy fixed script
+scp wp-setup-fixed.sh VM:~/inception/srcs/requirements/wordpress/tools/wp-setup.sh
+
+# Rebuild WordPress container
+cd ~/inception
+docker-compose -f srcs/docker-compose.yml stop wordpress
+docker-compose -f srcs/docker-compose.yml rm -f wordpress
+docker-compose -f srcs/docker-compose.yml build wordpress
+docker-compose -f srcs/docker-compose.yml up -d
+
+# Wait for startup
+sleep 15
+
+# Check logs
+docker logs wordpress | grep "Updating WordPress URLs"
+# Output: "Updating WordPress URLs to https://ggrisole.42.fr:8443..."
+# Output: "Success: Updated 'siteurl' option."
+# Output: "Success: Updated 'home' option."
+```
+
+**Verification:**
+```bash
+# Test 1: Check URLs after initial restart
+docker exec wordpress wp option get siteurl --allow-root
+# Output: https://ggrisole.42.fr:8443 ✅
+
+# Test 2: Restart WordPress container
+docker restart wordpress
+sleep 15
+
+# Test 3: Verify URLs still correct
+docker exec wordpress wp option get siteurl --allow-root
+# Output: https://ggrisole.42.fr:8443 ✅ (PERSISTENT!)
+
+# Test 4: Verify connection works
+curl -k -I https://localhost:8443
+# Output: HTTP/1.1 200 OK ✅ (No 301 redirect!)
+```
+
+**Why This Fix Works:**
+1. **Idempotent:** Safe to run on every container start
+2. **Uses Environment Variable:** Reads from `${WP_URL}` in .env
+3. **Automatic:** No manual intervention needed
+4. **Fast:** Adds <1 second to startup time
+5. **Reliable:** Uses WP-CLI (same tool as initial install)
+
+**Files Modified:**
+- `srcs/requirements/wordpress/tools/wp-setup.sh` - Added URL update logic
+- `srcs/.env` - Changed `WP_URL` from `https://ggrisole.42.fr` to `https://ggrisole.42.fr:8443`
+
+**Result:**
+- ✅ WordPress URLs now persist across container restarts
+- ✅ WordPress URLs persist across VM reboots
+- ✅ No more manual `wp option update` commands needed
+- ✅ `https://localhost:8443` returns 200 OK consistently
+
+**Lesson Learned:**
+- Container initialization scripts should be **idempotent**
+- Always update configuration from environment variables on startup, not just on initial install
+- WordPress stores URLs in database, not config files - must use WP-CLI to update
+- Environment variables in docker-compose only reload on full `down/up` cycle
+
+---
+
 ## 🚀 Project Status: READY FOR DEFENSE
 
 All 8 services are operational and properly configured:

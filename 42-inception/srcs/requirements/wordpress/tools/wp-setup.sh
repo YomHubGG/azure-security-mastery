@@ -79,8 +79,13 @@ if [ ! -f /var/www/html/wp-config.php ]; then
     
     echo "WordPress installation complete with Redis caching!"
 else
-    echo "WordPress already installed, checking Redis configuration..."
+    echo "WordPress already installed, checking configuration..."
     cd /var/www/html
+    
+    # ✅ PERMANENT FIX: Always update URLs on startup
+    echo "Updating WordPress URLs to ${WP_URL}..."
+    wp option update siteurl "${WP_URL}" --allow-root
+    wp option update home "${WP_URL}" --allow-root
     
     # Install Redis plugin if not present
     if ! wp plugin is-installed redis-cache --allow-root; then
