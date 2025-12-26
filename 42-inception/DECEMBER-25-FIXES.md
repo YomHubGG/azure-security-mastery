@@ -825,6 +825,132 @@ curl -k -I https://localhost:8443
 
 ---
 
+### Issue #17: 502 Bad Gateway on System Restart (December 26)
+
+**Problem:**
+- After full system restart or `make down && make up`, accessing `https://localhost:8443` returns **502 Bad Gateway**
+- Running `make re` (full rebuild) fixes the issue
+- Intermittent problem - sometimes works, sometimes doesn't
+
+**Root Cause:**
+**Race condition** in container startup order:
+
+1. Docker Compose starts containers based on `depends_on`
+2. NGINX depends on WordPress, but no health check
+3. **Timeline:**
+   - `00:00s` - MariaDB/Redis start
+   - `00:05s` - WordPress container starts (but not ready)
+   - `00:06s` - NGINX starts and tries to connect to `wordpress:9000`
+   - `00:07s` - WordPress still initializing (waiting for MariaDB, downloading core files, etc.)
+   - `00:10s` - NGINX requests → 502 (WordPress not listening yet)
+   - `00:20s` - WordPress finally ready, but NGINX already failed
+
+**Why `make re` Works:**
+- Full rebuild takes longer
+- By the time NGINX starts, WordPress is already ready
+- Masks the timing issue with longer build time
+
+**Current docker-compose.yml:**
+```yaml
+wordpress:
+  depends_on:
+    mariadb:
+      condition: service_healthy  # ✅ Waits for MariaDB
+    redis:
+      condition: service_healthy  # ✅ Waits for Redis
+  # ❌ No health check for WordPress itself!
+
+nginx:
+  depends_on:
+    - wordpress  # ⚠️ Only waits for container start, not readiness!
+```
+
+**Solution Options:**
+
+**Option 1: Add WordPress Health Check (RECOMMENDED)**
+```yaml
+wordpress:
+  # ... existing config ...
+  healthcheck:
+    test: ["CMD", "nc", "-z", "localhost", "9000"]  # Check if PHP-FPM is listening
+    interval: 5s
+    timeout: 3s
+    retries: 5
+    start_period: 30s  # Give 30s for WordPress to initialize
+
+nginx:
+  depends_on:
+    wordpress:
+      condition: service_healthy  # ✅ Wait for WordPress health check
+```
+
+**Option 2: Add Startup Delay to NGINX (WORKAROUND)**
+```dockerfile
+# In nginx Dockerfile
+CMD ["sh", "-c", "sleep 10 && nginx -g 'daemon off;'"]
+```
+
+**Option 3: Use restart_on_failure in NGINX (AUTOMATIC RETRY)**
+```yaml
+nginx:
+  restart: on-failure
+  # NGINX will retry if it fails initially
+```
+
+**Temporary Workaround (Current):**
+```bash
+# After starting services, if you get 502:
+# Option A: Wait 30 seconds
+sleep 30 && curl -k https://localhost:8443
+
+# Option B: Restart NGINX only
+docker restart nginx
+
+# Option C: Full rebuild (what you did)
+make re
+```
+
+**Why This Issue is Common:**
+- WordPress initialization is **slow** (30+ seconds):
+  - Wait for MariaDB (10s)
+  - Wait for Redis (5s)
+  - Download WordPress core (5s)
+  - Check plugins (3s)
+  - Update options (2s)
+  - Start PHP-FPM (2s)
+- NGINX is **fast** (1 second to start)
+- Docker `depends_on` without health check = race condition
+
+**Best Practice Fix:**
+Add health checks to all services that other services depend on:
+- ✅ MariaDB has health check
+- ✅ Redis has health check
+- ❌ WordPress missing health check ← **This is the issue**
+- ❌ Adminer missing health check
+- ❌ Static site missing health check
+
+**Verification After Fix:**
+```bash
+# Should work immediately, no 502 errors:
+make down
+make up
+sleep 5
+curl -k -I https://localhost:8443
+# Expected: HTTP/1.1 200 OK (not 502 Bad Gateway)
+```
+
+**Files to Modify for Permanent Fix:**
+- `srcs/docker-compose.yml` - Add WordPress health check
+- `srcs/requirements/wordpress/Dockerfile` - Install `netcat-openbsd` for health check
+
+**Lesson Learned:**
+- Always add health checks to services that others depend on
+- `depends_on` without `condition: service_healthy` only waits for container start, not readiness
+- Race conditions in distributed systems are timing-dependent and intermittent
+- Rebuilding can mask timing issues by artificially increasing startup time
+
+---
+
 ## 🚀 Project Status: READY FOR DEFENSE
 
 All 8 services are operational and properly configured:
@@ -850,11 +976,14 @@ All 8 services are operational and properly configured:
 - **November 28, 2024**: Initial setup, 25-byte secrets created
 - **December 10, 2024**: Last work session before break
 - **December 25, 2024 15:00**: Return after 2-week break, discovered all issues
-- **December 25, 2024 15:00-17:30**: Fixed Issues #8-12 (infrastructure)
+- **December 25, 2024 15:00-17:30**: Fixed Issues #1-5, #8-12 (infrastructure)
 - **December 25, 2024 17:30-18:00**: Fixed Issues #13-14 (bonus services)
-- **December 25, 2024 18:15**: Fixed Issue #15 (WordPress URL redirect)
-- **December 25, 2024 17:30**: All fixes applied, all services operational ✅
+- **December 25, 2024 18:15**: Fixed Issue #15 (WordPress URL redirect - temporary)
+- **December 25, 2024 18:30**: All fixes applied, all services operational ✅
+- **December 26, 2024 09:00**: Return, Issue #15 recurring
+- **December 26, 2024 09:30**: Fixed Issue #16 (WordPress URL persistence - permanent)
+- **December 26, 2024 10:30**: Discovered Issue #17 (502 Bad Gateway race condition)
 
-**Total debugging time:** ~2.5 hours  
-**Root causes:** 5 distinct issues (secrets, MariaDB init, WordPress data, Portainer UI, port forwarding)  
+**Total debugging time:** ~4 hours over 2 days  
+**Root causes:** 7 distinct issues (secrets, MariaDB init, WordPress data, Portainer UI, port forwarding, URL persistence, startup race condition)  
 **Final result:** 100% operational infrastructure ready for defense
