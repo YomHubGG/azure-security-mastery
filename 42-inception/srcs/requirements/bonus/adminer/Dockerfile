@@ -9,11 +9,9 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /var/www/html
 
-# Download Adminer
 RUN wget "https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php" -O adminer.php && \
     chmod 644 adminer.php
 
-# Configure PHP-FPM to listen on port 9001
 RUN sed -i 's/listen = \/run\/php\/php.*-fpm.sock/listen = 9001/' /etc/php/*/fpm/pool.d/www.conf && \
     mkdir -p /run/php
 

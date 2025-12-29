@@ -4,11 +4,9 @@ RUN apt-get update && apt-get install -y \
     nginx \
     && rm -rf /var/lib/apt/lists/*
 
-# Create static website
 COPY tools/index.html /var/www/html/index.html
 COPY tools/style.css /var/www/html/style.css
 
-# Configure NGINX for static site
 RUN echo 'server { \n\
     listen 8080; \n\
     server_name _; \n\

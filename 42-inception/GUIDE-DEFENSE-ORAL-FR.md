@@ -943,7 +943,29 @@ Entre septembre et novembre 2025, tu as suivi 30 sessions (74 jours calendaires)
 **Ce qui a été appris** : K8s, orchestration, self-healing, PID 1, service discovery.
 
 **Application dans Inception** :
-- Compréhension PID 1 → résolution problème Redis daemon
+- **Compréhension PID 1** → résolution problème Redis daemon
+  
+  **Qu'est-ce que PID 1 ?**
+  - **PID 1** (Process ID 1) est le **premier processus** lancé dans un conteneur Docker
+  - C'est le processus "racine" - si PID 1 se termine, **le conteneur entier s'arrête**
+  - Sur un OS classique, PID 1 = `systemd` ou `init` (gère tous les autres processus)
+  - Dans Docker, PID 1 = **ton application directement** (pas de système d'init)
+  
+  **Le problème Redis** :
+  - Redis configuré avec `daemonize yes` (mode daemon = background)
+  - En mode daemon, Redis se détache du terminal et retourne immédiatement
+  - Docker voit que PID 1 est terminé → pense que le conteneur a fini → l'arrête (exit code 0)
+  - Le conteneur apparaît comme "Exited (0)" alors que Redis voulait tourner en background
+  
+  **La solution** :
+  ```dockerfile
+  CMD ["redis-server", "/etc/redis/redis.conf", "--daemonize", "no"]
+  ```
+  - Force Redis à rester en **foreground** (premier plan)
+  - PID 1 reste actif → conteneur reste "Up"
+  
+  **Concept clé** : **Un conteneur Docker = un seul processus foreground**. Ce n'est pas un mini-OS avec plusieurs services, c'est un processus isolé. Si ce processus devient background, le conteneur meurt.
+
 - Service discovery par nom DNS → configuration WordPress Redis
 - Restart policies (`restart: always`)
 - Health checks (liveness probes)

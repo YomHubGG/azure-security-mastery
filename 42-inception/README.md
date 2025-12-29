@@ -1,35 +1,153 @@
-# 42 Inception - Secure Docker Infrastructure Project
+# Inception
 
-**Project Start**: November 17, 2025  
-**Target Completion**: November 30, 2025  
-**Evaluation Deadline**: December 2025  
-**Security Focus**: Apply Azure cloud security knowledge to container infrastructure
+*This project has been created as part of the 42 curriculum by ggrisole*
 
-> **🎄 FINAL STATUS - December 25, 2025 18:30**:  
-> ✅ **ALL 8 SERVICES OPERATIONAL**  
-> ✅ **FIREFOX BROWSER ACCESS WORKING**  
-> After 2-week break, resolved 8 critical issues in 3.5 hours. See [DECEMBER-25-FIXES.md](./DECEMBER-25-FIXES.md) for complete details.
+## Description
 
----
+Inception is a system administration and Docker infrastructure project that involves setting up a complete web services stack using Docker Compose. The project demonstrates containerization best practices, service orchestration, and secure configuration management.
 
-## 🎯 Project Overview
+The infrastructure consists of:
+- **NGINX**: Web server with TLS/SSL termination
+- **WordPress**: Content management system with PHP-FPM
+- **MariaDB**: Relational database management system
+- **Redis**: Caching layer for WordPress
+- **Adminer**: Database administration interface
+- **FTP Server**: File transfer service
+- **Static Website**: Custom static site showcase
+- **Portainer**: Container management interface
 
-**Objective**: Set up a complete web infrastructure using Docker Compose with multiple services, implementing security best practices learned from Azure Security Journey (Days 35-59).
+All services run in isolated Docker containers connected through a custom network, with data persistence through volume mounts.
 
-**Tech Stack**:
-- Docker & Docker Compose
-- Nginx (TLS/SSL web server)
-- WordPress (PHP-FPM application)
-- MariaDB (database)
-- Bonus: Redis (cache), FTP server, Adminer, Static site, etc.
+## Instructions
 
-**Security Angle**:
-This project demonstrates practical application of:
-- Container security hardening (Day 35)
-- Secret management principles (Day 53)
-- Network isolation patterns (Day 9)
-- Security configuration (Day 55)
-- Infrastructure as Code practices (Day 5)
+### Prerequisites
+- Docker and Docker Compose installed
+- Sufficient disk space for volumes
+- Port 443 available for HTTPS access
+
+### Setup
+1. Clone the repository
+2. Navigate to the `srcs/` directory
+3. Create necessary secrets in `../secrets/`:
+   - `db_root_password.txt`
+   - `db_password.txt`
+   - `wp_admin_password.txt`
+4. Ensure data directories exist: `/home/ggrisole/data/mariadb` and `/home/ggrisole/data/wordpress`
+5. Add domain to `/etc/hosts`: `127.0.0.1 ggrisole.42.fr`
+
+### Running the Project
+From the root directory:
+```bash
+make
+```
+
+This will build and start all containers. Access the website at `https://ggrisole.42.fr`
+
+### Stopping
+```bash
+make down
+```
+
+### Cleaning
+```bash
+make fclean
+```
+
+For detailed user and developer documentation, see `USER_DOC.md` and `DEV_DOC.md`.
+
+## Resources
+
+### Documentation
+- [Docker Official Documentation](https://docs.docker.com/)
+- [Docker Compose File Reference](https://docs.docker.com/compose/compose-file/)
+- [NGINX Documentation](https://nginx.org/en/docs/)
+- [WordPress CLI Documentation](https://wp-cli.org/)
+- [MariaDB Documentation](https://mariadb.org/documentation/)
+
+### AI Usage
+AI tools (GitHub Copilot, ChatGPT) were used to:
+- Assist with Docker best practices and syntax
+- Troubleshoot configuration issues
+- Generate boilerplate code for service initialization scripts
+- Provide explanations of Docker networking concepts
+- Review security configurations
+
+All generated code was reviewed, tested, and modified to meet project requirements. Understanding of the underlying concepts was gained through documentation review and hands-on experimentation.
+
+## Project Design Choices
+
+### Virtual Machines vs Docker
+
+**Virtual Machines**:
+- Full OS virtualization with hypervisor (VirtualBox, VMware)
+- Each VM runs complete guest OS (kernel, libraries, binaries)
+- Heavy resource consumption (GB RAM, disk per VM)
+- Slow boot times (minutes)
+- Strong isolation but significant overhead
+
+**Docker Containers**:
+- OS-level virtualization using host kernel
+- Share host OS kernel, only package application and dependencies
+- Lightweight (MB disk, minimal RAM overhead)
+- Fast startup (seconds)
+- Process-level isolation with namespaces and cgroups
+
+**Why Docker for this project**: Microservices architecture benefits from container speed and density. Each service (NGINX, WordPress, MariaDB) is independently deployable, scalable, and maintainable. Docker Compose orchestrates inter-service communication without VM overhead.
+
+### Secrets vs Environment Variables
+
+**Environment Variables**:
+- Stored in `.env` file or passed via `docker run -e`
+- Visible in container inspect, process lists, and logs
+- Suitable for non-sensitive configuration (URLs, ports, usernames)
+- Easy to modify without rebuilding images
+- Example: `DOMAIN_NAME=ggrisole.42.fr`
+
+**Docker Secrets** (used in this project):
+- Stored encrypted in Docker Swarm or mounted as files in `/run/secrets/`
+- Not visible in `docker inspect` or environment
+- Automatically cleaned on container stop
+- Suitable for passwords, API keys, certificates
+- Example: `/run/secrets/db_password` for database credentials
+
+**Implementation**: Non-sensitive config in `.env`, sensitive data (passwords) in `secrets/` directory mounted via Docker Compose secrets.
+
+### Docker Network vs Host Network
+
+**Host Network** (`network_mode: host`):
+- Container shares host's network stack directly
+- No network isolation or port mapping
+- Performance benefit (no NAT overhead)
+- Security risk: container can access all host network interfaces
+- Not portable: hardcoded to host IPs
+
+**Docker Network** (bridge, used in this project):
+- Custom bridge network `inception_network`
+- Service discovery via DNS (containers reach each other by name)
+- Network isolation: containers can't access host network directly
+- Port mapping controls external exposure (only port 443 exposed)
+- Better security: attack surface limited to defined network
+
+**Why custom network**: Mandatory per subject requirements. Provides isolation while allowing inter-service communication (WordPress → MariaDB, WordPress → Redis). Only NGINX exposes port 443 to host.
+
+### Docker Volumes vs Bind Mounts
+
+**Bind Mounts** (used in this project):
+- Map host directory directly to container path
+- Example: `/home/ggrisole/data/wordpress → /var/www/html`
+- Full access to host filesystem from container
+- Easy to backup/inspect (files visible on host)
+- Mandatory per subject: volumes must be in `/home/login/data/`
+- Potential security risk if container compromised
+
+**Docker Volumes** (managed by Docker):
+- Stored in Docker-managed location (`/var/lib/docker/volumes/`)
+- Abstracted from host filesystem
+- Better performance on some systems
+- Lifecycle managed by Docker (created/removed with containers)
+- Better for true portability
+
+**Implementation**: Using bind mounts with `driver_opts` in docker-compose to satisfy subject requirement of `/home/ggrisole/data/` paths. This allows easy host-side access for backups and verification during evaluation.
 
 ---
 

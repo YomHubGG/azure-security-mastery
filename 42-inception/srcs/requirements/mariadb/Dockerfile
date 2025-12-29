@@ -15,6 +15,3 @@ EXPOSE 3306
 
 ENTRYPOINT ["/usr/local/bin/init-db.sh"]
 CMD ["mysqld", "--user=mysql"]
-
-# Remove pre-created database directory so init script can detect fresh state
-RUN rm -rf /var/lib/mysql/*
