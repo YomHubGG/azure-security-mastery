@@ -1,12 +1,12 @@
 # 🎓 Acquired Skills - Azure Security Journey
 
 **Last Updated**: January 1, 2026  
-**Journey Progress**: Day 59/365 (16.2%)  
-**Sessions Completed**: 30 (Q2 Capstone ✅ Complete)  
+**Journey Progress**: Day 61/365 (16.7%)  
+**Sessions Completed**: 31 (Session #31: KQL/Sentinel Theory ✅ Complete)  
 **Total Cost**: €0.02 (Excellent cost control!)  
 **Timeline Note**: December 2025 paused for 42 École Inception project (Docker/system administration intensive)
 
-**Resuming**: January 2026 with Day 61 - Threat Detection & Intelligence
+**Current Session**: January 1, 2026 - Day 61 Microsoft Sentinel & KQL fundamentals (theory phase complete)
 
 > This document aggregates all "I can..." statements from across your learning journey, organized by skill category for easy reference during interviews, portfolio presentations, and career planning.
 
@@ -512,9 +512,61 @@ Based on acquired skills, you're qualified for:
 
 ---
 
-**Last Updated**: October 14, 2025  
-**Next Update**: After Day 39 (ACI deployment)  
+**Last Updated**: January 1, 2026  
+**Next Update**: After Day 61 hands-on practice (Log Analytics deployment)  
 **Maintenance**: Updated after each major milestone
+
+---
+
+## 🎯 **Day 61 Skills: SIEM & KQL (January 1, 2026)**
+
+### **SIEM/SOAR Concepts**
+- ✅ Understand Security Information and Event Management (SIEM) architecture
+- ✅ Explain Security Orchestration, Automation, and Response (SOAR) workflows
+- ✅ Describe Microsoft Sentinel component architecture
+- ✅ Identify when to use SIEM vs traditional monitoring
+- ✅ Understand log analytics workspace role in threat detection
+
+### **KQL (Kusto Query Language) Fundamentals**
+- ✅ Write pipe-based queries (linear flow vs SQL nested queries)
+- ✅ Apply time filtering for performance optimization (`ago()`, `between()`)
+- ✅ Use aggregation functions (`count()`, `dcount()`, `make_set()`, `percentile()`)
+- ✅ Implement time bucketing for trend analysis (`bin()`)
+- ✅ Create variables with `let` for complex query composition
+- ✅ Perform joins to correlate multi-stage attacks (`innerunique`, `leftouter`, `leftanti`)
+- ✅ Parse JSON/dynamic fields with dot notation
+- ✅ Apply string matching patterns (`contains`, `startswith`, `has`, regex)
+- ✅ Optimize queries for cost and performance
+- ✅ Understand case sensitivity controls (`==` vs `=~`)
+
+### **Threat Detection Patterns**
+- ✅ Detect brute force authentication attacks (failed login aggregation)
+- ✅ Identify successful breaches after failed attempts (join patterns)
+- ✅ Monitor privilege escalation (role assignment tracking)
+- ✅ Track resource deletion events (insider threat detection)
+- ✅ Detect off-hours access (time-based analysis)
+- ✅ Identify anomalous sign-in locations (impossible travel with VPN considerations)
+- ✅ Monitor service principal activity (automated account behavior)
+- ✅ Implement baseline vs anomaly detection patterns
+- ✅ Detect multi-stage attack sequences (chain analysis)
+- ✅ Apply entity behavior analytics (historical pattern comparison)
+
+### **Security Analyst Skills**
+- ✅ Read and interpret Azure Activity logs (resource operations)
+- ✅ Analyze Sign-In logs (authentication events)
+- ✅ Parse Audit logs (configuration changes)
+- ✅ Correlate events across multiple log sources
+- ✅ Handle VPN/proxy challenges in location-based detection
+- ✅ Calculate required speed for impossible travel detection
+- ✅ Optimize queries for 500 MB/day free tier limit
+- ✅ Design detection rules with appropriate thresholds
+
+### **Professional Discussion Topics**
+- ✅ Explain C/C++ advantage in security (memory corruption, binary analysis)
+- ✅ Discuss two-tier security industry (elite researchers vs operators)
+- ✅ Articulate low-level + high-level skill combination value
+- ✅ Compare KQL to SQL/Splunk SPL for log analysis
+- ✅ Explain free tier cost optimization strategies
 
 ---
 

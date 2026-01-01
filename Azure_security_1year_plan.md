@@ -1,13 +1,13 @@
 # 🚀 Azure Security Journey - ACTUAL PROGRESS & UPDATED PLAN
 
-## 📊 **Current Status: Day 59 Complete, Resuming January 2026**
+## 📊 **Current Status: Day 61 Theory Complete - January 1, 2026**
 
-**Real Progress**: Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59 ✅  
-**Timeline**: September 1 → November 14 = **30 sessions in 74 calendar days**  
+**Real Progress**: Days 1-5, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, **61** ✅  
+**Timeline**: September 1 → January 1 = **31 sessions in 122 calendar days** (includes December hiatus)  
 **December 2025**: ⏸️ **PAUSED** for 42 École Inception (Docker/system administration - see [`42-inception/`](../42-inception/))  
-**Resuming**: 🔄 **January 2026** - Day 61 (Threat Detection & Intelligence)  
-**Completed**: **30 sessions** (100% attendance until hiatus! 🎯)  
-**Actual Pace**: ~2.5 days per session (excellent pace!)  
+**Resumed**: ✅ **January 1, 2026** - Day 61 Microsoft Sentinel & KQL (theory complete)  
+**Completed**: **31 sessions** (Session #31: KQL fundamentals mastered! 🎯)  
+**Actual Pace**: ~2.6 days per session (adjusted for December hiatus - excellent!)  
 **Cost**: **€0.02 total** - Exceptional cost control maintained 💰  
 
 **Major Milestones Achieved**:

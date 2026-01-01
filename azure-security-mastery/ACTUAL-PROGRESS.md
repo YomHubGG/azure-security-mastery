@@ -2350,6 +2350,135 @@ azure-security-mastery/
 **Day 31**: ✅ **COMPLETED** (October 6, 2025 - Session #15) - **HYBRID CLOUD SECURITY** - Enterprise architecture mastery
 **Day 33**: ✅ **COMPLETED** (October 10-12, 2025 - Session #16-17) - **Q1 CAPSTONE PROJECT** - Security Integration (documented completion, 5,500+ lines, €0 cost maintained)
 
+---
+
+## 🔄 **QUARTER 3: Advanced Security & Threat Detection** (December 2025 - Present)
+
+### **December 2025 Hiatus**
+**Status**: Paused Azure journey for 42 École project (Inception - Docker Compose infrastructure)  
+**Skills Gained**: Multi-service orchestration, Nginx reverse proxy, TLS certificate management, persistent volumes, service networking (directly applicable to Azure AKS/ACI)  
+**Documentation**: Complete project documentation in `/42-inception/` directory  
+**Resumption**: January 1, 2026 (Day 61)
+
+### 📅 **Session #31** - January 1, 2026 - **Day 61: Microsoft Sentinel & KQL Basics** ✅
+
+**Status**: Theory & Concepts Phase Complete  
+**Focus**: SIEM concepts, KQL query language fundamentals, threat detection patterns  
+**Duration**: 2 hours (theory study)  
+**Cost Impact**: €0.00 (no resources deployed, theory only)
+
+**Learning Objectives Achieved**:
+- ✅ Understanding SIEM (Security Information and Event Management) vs SOAR concepts
+- ✅ KQL (Kusto Query Language) fundamentals and syntax patterns
+- ✅ Pipe-based query architecture (vs SQL nested queries)
+- ✅ Time filtering and optimization techniques (performance + cost)
+- ✅ Data aggregation and summarization (`summarize`, `count()`, `dcount()`)
+- ✅ Security detection patterns (brute force, privilege escalation, lateral movement)
+- ✅ Join operations for multi-stage attack correlation
+- ✅ Time bucketing for trend analysis and anomaly detection
+- ✅ Variables with `let` for complex query composition
+- ✅ VPN/location-based detection challenges and solutions
+- ✅ JSON/dynamic field parsing (Azure log structure)
+
+**Key Concepts Mastered**:
+1. **Pipe-Based Thinking**: Linear query flow (top-to-bottom) vs SQL (nested inside-out)
+2. **Time-First Optimization**: Always filter by time first to reduce data scanned
+3. **Aggregation Patterns**: `count()`, `dcount()`, `make_set()`, `arg_max()`, `percentile()`
+4. **Security Query Patterns**:
+   - Failed authentication detection (brute force)
+   - Impossible travel detection (with VPN considerations)
+   - Privilege escalation monitoring
+   - Off-hours access detection
+   - Resource deletion tracking
+   - Baseline vs anomaly detection
+5. **Join Strategies**: Correlating multi-stage attacks across log tables
+6. **Time Bucketing**: `bin(TimeGenerated, 5m)` for trend analysis
+7. **Let Variables**: Reusable filtered datasets for complex queries
+8. **Case Sensitivity**: Tunable with `==` vs `=~` operators
+9. **JSON Parsing**: Dot notation and array indexing for dynamic fields
+
+**Real-World Detection Queries Created**:
+```kql
+# 10 security detection patterns documented:
+1. Brute force login detection (5+ failed attempts)
+2. Successful breach after failures (compromised accounts)
+3. Resource deletion monitoring (insider threats)
+4. Privilege escalation detection (role assignments)
+5. Suspicious IP correlation (threat intelligence)
+6. Anomalous sign-in locations (geographic analysis)
+7. Off-hours access detection (after 18:00, before 06:00)
+8. Service principal monitoring (automated accounts)
+9. Multi-stage attack sequences (failed → success → escalate)
+10. Entity behavior analytics (new operations detection)
+```
+
+**Documentation Created**:
+- 📄 [`day61-sentinel-kql-basics.md`](03-advanced-security/day61-sentinel-kql-basics.md) - 750+ lines comprehensive guide
+  - SIEM/SOAR architecture overview
+  - KQL fundamentals and SQL comparison
+  - 8 core KQL concepts with examples
+  - 8 practical security queries (ready-to-use)
+  - Time operations and bucketing explained
+  - Join patterns for threat correlation
+  - Top 10 security detection patterns
+  - Common log tables reference (AzureActivity, SigninLogs, AuditLogs)
+  - Best practices (performance, cost, security)
+  - Free tier limitations (500 MB/day ingestion)
+  - Next steps and learning resources
+
+**Key Insights**:
+- **VPN Challenge**: Location-based detection requires ISP tracking, not just geolocation
+- **Time Bucketing**: Groups events into intervals (e.g., 5-minute buckets) for trend analysis
+- **Let Variables**: Enable complex multi-stage query composition (like C variables)
+- **Regex Optional**: Simple patterns (`contains`, `startswith`) cover 80% of use cases
+- **JSON Familiarity**: Azure logs use JavaScript-like dot notation for nested properties
+- **C/C++ Advantage**: Low-level programming background provides superior understanding of:
+  - Memory corruption vulnerabilities
+  - Binary exploitation concepts
+  - Operating system internals
+  - Performance optimization (pointer arithmetic, cache locality)
+  - Embedded/IoT security
+
+**Learning Philosophy Discussion**:
+- Discussed 42 École curriculum evolution (C → Python shift)
+- Analyzed two-tier security industry emerging (elite researchers vs operators)
+- Confirmed student's competitive advantage having C/C++ foundation
+- Rare combination: low-level systems knowledge + modern cloud/automation skills
+
+**Next Session Goals**:
+1. Hands-on practice with Azure Data Explorer demo environment (zero cost)
+2. OR set up Log Analytics workspace (free tier, 500 MB/day)
+3. Run practical queries against real Azure Activity logs
+4. Create first detection rule/alert
+5. Practice query optimization and debugging
+
+**Skills Acquired**:
+- ✅ SIEM/SOAR conceptual framework
+- ✅ KQL query language syntax and patterns
+- ✅ Threat detection methodology (baseline, anomaly, sequence)
+- ✅ Log analysis and correlation techniques
+- ✅ Cost-optimized query design
+- ✅ Security analyst thinking patterns
+
+**Portfolio Value**:
+- Demonstrates SIEM/log analysis skills (critical for SOC roles)
+- Shows query language proficiency (KQL transferable to Splunk SPL concepts)
+- Security detection patterns ready for interview discussions
+- Understanding of cloud-native security monitoring
+
+**Cost Analysis**:
+- **Today's Cost**: €0.00 (theory only, no deployments)
+- **Cumulative Journey Cost**: €0.02 (unchanged)
+- **Free Tier Strategy**: 500 MB/day Log Analytics ingestion when deployed
+- **Next Session**: Will deploy Log Analytics workspace (remains in free tier)
+
+**Velocity Analysis**: 31 sessions in 122 calendar days (Sept 1 - Jan 1) = **3.9 days/session**  
+**Note**: December hiatus included (30 days school project), adjusted pace = **2.6 days/session**  
+**1-Year Progress**: 61/365 days completed = **16.7%** of curriculum in 4 months  
+**Cost Management**: **€0.02 spent** - Exceptional free tier optimization 💰
+
+**Assessment**: ✅ **DAY 61 THEORY COMPLETE** - Ready for hands-on KQL practice! 🎯
+
 **Velocity Analysis**: 15 sessions in 42 calendar days = **2.2 days/session** (Target: 2.0) ✅ **EXCELLENT PACE!**  
 **1-Year Progress**: 33/365 days completed = **9.0%** of curriculum in first 42 days  
 **Cost Management**: **€0 spent** - 100% free tier optimization 💰

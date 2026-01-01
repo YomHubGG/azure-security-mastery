@@ -1,9 +1,9 @@
 # 🔒 Azure Security Mastery Journey
 
-[![Days Completed](https://img.shields.io/badge/Days-59%2F365-blue)](https://github.com/YomHubGG/azure-security-mastery)
+[![Days Completed](https://img.shields.io/badge/Days-61%2F365-blue)](https://github.com/YomHubGG/azure-security-mastery)
 [![Cost](https://img.shields.io/badge/Cost-€0.02-success)](https://github.com/YomHubGG/azure-security-mastery)
 [![Container](https://img.shields.io/badge/Container-ghcr.io-blue)](https://github.com/YomHubGG?tab=packages)
-[![Sessions](https://img.shields.io/badge/Sessions-30-informational)](https://github.com/YomHubGG/azure-security-mastery)
+[![Sessions](https://img.shields.io/badge/Sessions-31-informational)](https://github.com/YomHubGG/azure-security-mastery)
 [![Pipeline](https://img.shields.io/badge/Pipeline-Passing-success)](https://github.com/YomHubGG/azure-security-mastery/actions)
 
 > 365-day comprehensive Azure Security journey with hands-on projects, Infrastructure as Code, container security, Kubernetes orchestration, and modern DevSecOps with OIDC. Everything built on FREE tier with €0.02 total spent!
@@ -12,9 +12,9 @@
 
 **December 2025 Hiatus**: Sessions paused for 42 École school projects (Inception - Docker/System Administration intensive). See [`42-inception/`](42-inception/) for complete documentation of Docker Compose, Nginx, WordPress, MariaDB, and bonus services implementation.
 
-**Resuming**: January 2026 - Day 61 (Threat Detection Focus)  
-**Status**: 30/180 sessions complete (16.7%) | Q2 Capstone ✅ DELIVERED  
-**Next**: Month 3 completion → Threat Intelligence → Incident Response → Q3 Capstone
+**Resuming**: ✅ January 1, 2026 - Day 61 (Microsoft Sentinel & KQL - Theory Complete)  
+**Status**: 31/180 sessions complete (17.2%) | Q2 Capstone ✅ DELIVERED  
+**Next**: Day 61 hands-on practice → Threat Intelligence → Incident Response → Q3 Capstone
 
 ---
 
