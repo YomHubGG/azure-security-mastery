@@ -1,5 +1,21 @@
 # 🤖 Agent Guidelines & Guardrails
 
+## 📅 **PROJECT TIMELINE CONTEXT** (January 2026)
+
+**December 2025 Hiatus**: User paused Azure Security journey for 42 École Inception project  
+**Inception Status**: ✅ COMPLETE - Fully functional Docker Compose infrastructure (9 services)  
+**Current Phase**: Resuming cybersecurity journey - Day 61 (Threat Detection & Intelligence)  
+**Progress**: 30/180 sessions (16.7%) | Q2 Capstone delivered | Cost: €0.02 total  
+**Next Focus**: Complete Month 3 → Threat Intelligence → Incident Response → Q3 Capstone
+
+**Key Context for Agents**:
+- User has Docker Compose expertise from Inception (nginx, WordPress, MariaDB, Redis, FTP + 5 bonus services)
+- School projects (42 École) take priority when mentioned
+- Inception work handled on school machines, not this workspace
+- Resume cybersecurity journey with fresh focus on threat detection/response
+
+---
+
 ## ⛔ **NEVER DO WITHOUT EXPLICIT PERMISSION**
 
 ### **Billing/Trial Related**
@@ -115,21 +131,25 @@ Please confirm you understand the costs and want to proceed."
 ## 🎯 **Session Start Checklist**
 
 Before each session, agent should:
-1. ✅ Read ACTUAL-PROGRESS.md to understand current state
-2. ✅ Check last terminal commands to see recent activity
-3. ✅ Ask user to confirm current objectives
-4. ✅ Verify any cost/trial constraints
-5. ✅ Confirm deployment permissions (read-only vs create)
+1. ✅ Read ACTUAL-PROGRESS.md to understand current state (Day 59 complete)
+2. ✅ Check Azure_security_1year_plan.md for next steps (Day 61+)
+3. ✅ Review MASTER-COMMANDS.md for relevant command reference
+4. ✅ Check last terminal commands to see recent activity
+5. ✅ Ask user to confirm current objectives
+6. ✅ Verify any cost/trial constraints
+7. ✅ Confirm deployment permissions (read-only vs create)
+8. ✅ Acknowledge December hiatus context if relevant
 
 ## 📝 **User Prompt Suggestions**
 
-### **Ideal Session Starter**
+### **Ideal Session Starter (2026)**
 ```
-"Resume Azure learning from Day X. 
+"Resume Azure security journey - Day 61 [Threat Detection].
 Mode: [read-only/create-safe/create-with-costs]
 Constraints: [no trials/free tier only/budget limit]
 Focus: [specific topic/hands-on lab/planning]
 
+Context: Returning from December Inception project.
 Refer to agent-guidelines.md for guardrails."
 ```
 
@@ -140,6 +160,12 @@ Costs: [acceptable/concern/must be free]
 Trials: [ok to start/avoid/revert after]
 
 Check guidelines before proceeding."
+```
+
+### **Quick Reference Query**
+```
+"Show me the Day [X] progress and what's next.
+Update me on: current costs, completed milestones, next focus area."
 ```
 
 ## 🔄 **Iterative Approach**
@@ -159,9 +185,51 @@ Check guidelines before proceeding."
 
 **Remember**: Better to ask too many questions than create unexpected costs or complexity!
 
-*Last updated: October 6, 2025*
+*Last updated: January 1, 2026*
 
-## 💰 **CRITICAL COST LESSONS (October 6, 2025)**
+## 🔄 **JANUARY 2026 RESUMPTION CONTEXT**
+
+### **What Happened in December**
+- User paused Azure journey for **42 École Inception project**
+- Completed full Docker Compose infrastructure (9 services)
+- Gained practical experience: Nginx/TLS, WordPress, MariaDB, Redis, FTP, bonus services
+- All school work done on dedicated school machines (not this workspace)
+- No Azure costs incurred during hiatus (still at €0.02 total)
+
+### **Current State (January 2026)**
+- ✅ 30 sessions completed (Days 1-59)
+- ✅ Q2 Capstone delivered (SecureCloud DevSecOps Platform)
+- ✅ Cost: €0.02 (exceptional control maintained)
+- 🎯 Next: Day 61 - Threat Detection & Intelligence
+- 📊 Progress: 16.7% complete (30/180 sessions)
+
+### **Skills Gained During Hiatus**
+- Docker Compose multi-service orchestration
+- Nginx reverse proxy with TLS 1.3 configuration
+- Service networking and inter-container communication
+- Persistent volume management and backups
+- Secrets management in Docker
+- Healthcheck implementation
+- Resource limits and constraints
+- Multi-service debugging strategies
+
+**Applicable to Azure**:
+- AKS multi-container deployments
+- Azure Container Instances networking
+- App Service multi-tier architectures
+- Load balancer configurations
+- Certificate management in Azure
+
+### **Resumption Priorities**
+1. **No assumption gaps**: Start fresh, review Day 59 completion
+2. **Acknowledge hiatus**: User returning after school project break
+3. **Build on new skills**: Leverage Docker Compose experience
+4. **Maintain cost discipline**: Still targeting €0 additional spending
+5. **Focus shift**: From DevSecOps → Threat Detection/Response
+
+---
+
+## 💰 **CRITICAL COST LESSONS (Updated January 2026)**
 
 ### **Azure Free Trial Reality**
 - ⚠️ **$200 credit expires after 30 DAYS** (not when fully used!)

@@ -1,7 +1,9 @@
 # 🎯 Azure Security Mastery - Master Command Reference
 
-**Last Updated**: November 13, 2025 (Day 57 Complete)  
-**Sessions Completed**: 29 sessions | **Days**: 57/365 | **Cost**: €0.00
+**Last Updated**: January 1, 2026 (Day 59 Complete, Resuming)  
+**Sessions Completed**: 30 sessions | **Days**: 59/365 | **Cost**: €0.02  
+**December 2025**: Paused for 42 École Inception project (Docker Compose infrastructure)  
+**Resuming**: January 2026 - Day 61 (Threat Detection)
 
 ## 🤖 **AGENT GUARDRAILS** - READ FIRST!
 ```
@@ -16,11 +18,13 @@
 ## 📚 **Quick Reference Sections**
 - [Authentication & Resource Management](#authentication)
 - [Container Operations (Podman/Docker)](#container-operations)
+- [Docker Compose Orchestration](#docker-compose-orchestration)
 - [Security Scanning Tools](#security-scanning)
 - [GitHub Actions & CI/CD](#github-actions)
 - [Supply Chain Security](#supply-chain)
 - [Secret Management](#secret-management)
 - [Infrastructure Hardening](#infrastructure-hardening)
+- [Kubernetes Operations](#kubernetes-operations)
 
 ## 🔧 Essential Daily Commands
 
@@ -62,6 +66,134 @@ curl http://localhost:3000/health
 # Cleanup
 podman stop test-container && podman rm test-container
 ```
+
+---
+
+## 🐳 Docker Compose Orchestration
+
+### Basic Operations
+```bash
+# Start all services (detached mode)
+docker-compose up -d
+
+# Start specific service
+docker-compose up -d nginx
+
+# View running services
+docker-compose ps
+
+# View logs (all services)
+docker-compose logs -f
+
+# View logs (specific service)
+docker-compose logs -f mariadb
+
+# Stop all services
+docker-compose down
+
+# Stop and remove volumes (⚠️ DATA LOSS)
+docker-compose down -v
+
+# Rebuild and restart services
+docker-compose up -d --build
+
+# Restart specific service
+docker-compose restart nginx
+```
+
+### Service Management
+```bash
+# Execute command in running container
+docker-compose exec mariadb mysql -u root -p
+
+# Execute as specific user
+docker-compose exec -u www-data wordpress bash
+
+# Scale services (if supported)
+docker-compose up -d --scale app=3
+
+# View resource usage
+docker-compose top
+
+# Validate compose file
+docker-compose config
+
+# Check service health
+docker-compose ps --services --filter "status=running"
+```
+
+### Network & Volume Operations
+```bash
+# List networks
+docker network ls
+
+# Inspect network
+docker network inspect inception
+
+# List volumes
+docker volume ls
+
+# Inspect volume
+docker volume inspect mariadb_data
+
+# Prune unused resources
+docker system prune -a --volumes
+```
+
+### Troubleshooting
+```bash
+# View service status with health checks
+docker-compose ps
+
+# Follow logs of multiple services
+docker-compose logs -f nginx mariadb wordpress
+
+# Check container exit codes
+docker-compose ps -a
+
+# Validate environment variables
+docker-compose config | grep -A 5 environment
+
+# Test service connectivity
+docker-compose exec nginx ping mariadb
+docker-compose exec wordpress curl -v http://nginx
+
+# Debug startup issues
+docker-compose up wordpress  # without -d to see output
+
+# Force recreate containers
+docker-compose up -d --force-recreate
+
+# Remove orphaned containers
+docker-compose down --remove-orphans
+```
+
+### Security & Maintenance
+```bash
+# Check container resource limits
+docker-compose config | grep -A 3 "resources:"
+
+# Verify secrets/configs
+docker-compose config --services
+docker-compose config --volumes
+
+# Update images and recreate
+docker-compose pull
+docker-compose up -d --force-recreate
+
+# Check image vulnerabilities (if using Trivy)
+trivy image $(docker-compose config | grep image: | awk '{print $2}')
+
+# Backup volumes
+docker run --rm -v mariadb_data:/source -v /backup:/backup alpine tar czf /backup/mariadb_backup.tar.gz -C /source .
+
+# Restore volumes
+docker run --rm -v mariadb_data:/target -v /backup:/backup alpine tar xzf /backup/mariadb_backup.tar.gz -C /target
+```
+
+---
+
+## 🔍 Container Operations (Podman/Docker)
 
 ### Azure Container Registry (ACR)
 ```bash
@@ -1777,6 +1909,196 @@ WARN_DAYS=30
 az keyvault secret list --vault-name "$VAULT_NAME" --query "[].{name:name,expires:attributes.expires}" -o json | \
 jq -r --arg warn "$(($(date +%s) + WARN_DAYS * 86400))" '.[] | select(.expires != null) | 
   select(((.expires | fromdateiso8601)) < ($warn | tonumber)) | 
+  "⚠️ Secret \(.name) expires at \(.expires)"'
+EOF
+chmod +x monitor-secrets.sh
+```
+
+---
+
+## 🎯 Day 61+: Threat Detection & Intelligence (UPCOMING)
+
+### Microsoft Sentinel Queries (KQL)
+```bash
+# Basic security alerts
+SecurityAlert
+| where TimeGenerated > ago(24h)
+| summarize count() by AlertName, Severity
+
+# Failed authentication attempts
+SigninLogs
+| where TimeGenerated > ago(1h)
+| where ResultType != 0
+| summarize FailedAttempts=count() by UserPrincipalName, IPAddress
+| where FailedAttempts > 5
+
+# Potential brute force attack
+SigninLogs
+| where TimeGenerated > ago(1h)
+| where ResultType != 0
+| summarize FailedCount=count() by UserPrincipalName, IPAddress, bin(TimeGenerated, 5m)
+| where FailedCount > 10
+
+# Resource modifications
+AzureActivity
+| where OperationNameValue endswith "write"
+| where ActivityStatusValue == "Success"
+| project TimeGenerated, Caller, OperationNameValue, ResourceGroup
+```
+
+### Threat Intelligence Integration
+```bash
+# Check threat intelligence indicators
+az sentinel threat-indicator list --resource-group RG_NAME --workspace-name WORKSPACE_NAME
+
+# Query specific IOC (Indicator of Compromise)
+az sentinel threat-indicator show \
+  --resource-group RG_NAME \
+  --workspace-name WORKSPACE_NAME \
+  --name INDICATOR_NAME
+```
+
+### Log Analytics Queries
+```bash
+# Query Log Analytics workspace
+az monitor log-analytics query \
+  --workspace WORKSPACE_ID \
+  --analytics-query "AzureActivity | where TimeGenerated > ago(1h) | take 10" \
+  --output table
+
+# Failed authentication by location
+az monitor log-analytics query \
+  --workspace WORKSPACE_ID \
+  --analytics-query "SigninLogs | where TimeGenerated > ago(24h) | where ResultType != 0 | summarize count() by Location" \
+  --output table
+```
+
+---
+
+## 🔧 Utility Commands & Troubleshooting
+
+### JSON Processing with jq
+```bash
+# Pretty print JSON
+cat file.json | jq .
+
+# Extract specific field
+cat file.json | jq '.fieldName'
+
+# Filter array
+cat file.json | jq '.items[] | select(.status == "active")'
+
+# Count items
+cat file.json | jq '.items | length'
+
+# Transform structure
+cat file.json | jq '{name: .name, id: .id, status: .status}'
+
+# Combine multiple JSON files
+jq -s '.[0] * .[1]' file1.json file2.json
+```
+
+### Git Operations for Security
+```bash
+# Check for sensitive files before commit
+git status --ignored
+
+# View .gitignore patterns
+cat .gitignore
+
+# Remove accidentally committed secrets (⚠️ REWRITES HISTORY)
+git filter-branch --force --index-filter \
+  "git rm --cached --ignore-unmatch path/to/secret/file" \
+  --prune-empty --tag-name-filter cat -- --all
+
+# Alternative: use BFG Repo-Cleaner (faster)
+bfg --delete-files secret.txt
+git reflog expire --expire=now --all && git gc --prune=now --aggressive
+
+# Verify no secrets in current branch
+trufflehog git file://. --since-commit HEAD~50
+```
+
+### Performance & Cost Monitoring
+```bash
+# Check Azure consumption
+az consumption usage list --start-date 2026-01-01 --end-date 2026-01-31 --output table
+
+# Get current costs
+az consumption usage list --output json | jq '[.[] | .pretaxCost] | add'
+
+# List expensive resources
+az resource list --query "sort_by([?sku.tier=='Premium' || sku.tier=='Standard'], &type)" --output table
+
+# Check resource locks
+az lock list --resource-group RG_NAME --output table
+```
+
+---
+
+## 📖 Learning & Documentation Commands
+
+### Generate Command Reference
+```bash
+# List all available az commands
+az --help | grep "^  [a-z]" | sort
+
+# Get detailed help for specific command
+az container --help
+az security --help
+
+# Export configuration for documentation
+az account show --output yaml > azure-config.yaml
+az group show --name RG_NAME --output yaml > rg-config.yaml
+```
+
+### Session Documentation Template
+```bash
+# Create session log
+cat > session-log-day61.md << 'EOF'
+# Day 61: Threat Detection & Intelligence
+
+**Date**: $(date +%Y-%m-%d)
+**Focus**: Microsoft Sentinel / Threat Intelligence
+**Cost**: €0.00
+**Duration**: 2 hours
+
+## Learning Objectives
+- [ ] Understand KQL query language
+- [ ] Configure basic alert rules
+- [ ] Analyze threat intelligence feeds
+
+## Commands Executed
+\`\`\`bash
+# Command history here
+\`\`\`
+
+## Key Learnings
+- 
+
+## Challenges & Solutions
+- 
+
+## Next Session Preview
+- 
+EOF
+```
+
+---
+
+## 🎓 Interview-Ready Statements
+
+**Docker Compose Orchestration**:
+> "I've built a production-grade multi-service infrastructure with Docker Compose including Nginx reverse proxy with TLS 1.3, WordPress with PHP-FPM, MariaDB with persistent volumes, Redis caching, FTP server, and 5 bonus services. All with proper networking, secrets management, healthchecks, and resource limits."
+
+**DevSecOps Pipeline**:
+> "I implemented a complete CI/CD security pipeline with 4-layer scanning: TruffleHog for secrets, Semgrep for SAST, Trivy for vulnerabilities, and Cosign for image signing. Generated SBOMs and achieved full supply chain security compliance with zero stored credentials using OIDC."
+
+**Cost Optimization**:
+> "Completed 30 Azure security sessions with only €0.02 spent by strategically using free tiers, GitHub Container Registry instead of ACR (€4.60/month saved), and k3s instead of AKS (€238/month saved). Demonstrated enterprise security practices without enterprise costs."
+
+**Threat Detection** (upcoming):
+> "Configured Microsoft Sentinel with custom KQL queries for brute force detection, anomalous login patterns, and resource modification tracking. Integrated threat intelligence feeds and automated incident response workflows."
   "\(.name) expires on \(.expires)"'
 EOF
 

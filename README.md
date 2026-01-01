@@ -1,17 +1,32 @@
 # 🔒 Azure Security Mastery Journey
 
-[![Days Completed](https://img.shields.io/badge/Days-45%2F365-blue)](https://github.com/YomHubGG/azure-security-mastery)
-[![Cost](https://img.shields.io/badge/Cost-€0-success)](https://github.com/YomHubGG/azure-security-mastery)
+[![Days Completed](https://img.shields.io/badge/Days-59%2F365-blue)](https://github.com/YomHubGG/azure-security-mastery)
+[![Cost](https://img.shields.io/badge/Cost-€0.02-success)](https://github.com/YomHubGG/azure-security-mastery)
 [![Container](https://img.shields.io/badge/Container-ghcr.io-blue)](https://github.com/YomHubGG?tab=packages)
-[![Sessions](https://img.shields.io/badge/Sessions-23-informational)](https://github.com/YomHubGG/azure-security-mastery)
+[![Sessions](https://img.shields.io/badge/Sessions-30-informational)](https://github.com/YomHubGG/azure-security-mastery)
 [![Pipeline](https://img.shields.io/badge/Pipeline-Passing-success)](https://github.com/YomHubGG/azure-security-mastery/actions)
 
-> 365-day comprehensive Azure Security journey with hands-on projects, Infrastructure as Code, container security, Kubernetes orchestration, and modern DevSecOps with OIDC. Everything built on FREE tier with €0 spent!
+> 365-day comprehensive Azure Security journey with hands-on projects, Infrastructure as Code, container security, Kubernetes orchestration, and modern DevSecOps with OIDC. Everything built on FREE tier with €0.02 total spent!
+
+## 🔄 **Journey Timeline Update** (January 1, 2026)
+
+**December 2025 Hiatus**: Sessions paused for 42 École school projects (Inception - Docker/System Administration intensive). See [`42-inception/`](42-inception/) for complete documentation of Docker Compose, Nginx, WordPress, MariaDB, and bonus services implementation.
+
+**Resuming**: January 2026 - Day 61 (Threat Detection Focus)  
+**Status**: 30/180 sessions complete (16.7%) | Q2 Capstone ✅ DELIVERED  
+**Next**: Month 3 completion → Threat Intelligence → Incident Response → Q3 Capstone
 
 ---
 
 ## 🚀 Latest Highlights
-
+### 🎯 **Q2 Capstone: SecureCloud DevSecOps Platform** (Day 59 - November 14, 2025)
+- **Full CI/CD Pipeline**: GitHub Actions with 4-layer security scanning
+- **Security Tools**: TruffleHog + Semgrep + Trivy + Cosign image signing
+- **Azure Deployment**: Container Instances (2min 19sec deployment)
+- **Real Debugging**: 13 iterations documented (Git context + Docker builds)
+- **Supply Chain**: SBOM generation + Sigstore signing + vulnerability reporting
+- **Cost Control**: €0.02 total (under budget), immediate cleanup
+- **Interview Ready**: Complete DevSecOps lifecycle with portfolio documentation
 ### � **Modern DevSecOps with OIDC** (Day 45 - October 31, 2025)
 - **Zero Stored Secrets**: OpenID Connect authentication (tokens expire in 1 hour!)
 - **5-Layer Security Scanning**:
@@ -49,20 +64,25 @@
 
 ## 📊 Journey Progress
 
-**Current Status**: Day 45/365 (12.3%)  
-**Sessions Completed**: 23  
-**Total Cost**: €0.00 (Perfect free tier optimization!)  
-**Lines of Documentation**: 35,000+  
-**Lines of Code**: 18,000+  
+**Current Status**: Day 59/365 (16.2%) - Resuming January 2026  
+**Sessions Completed**: 30 (paused December for school projects)  
+**Total Cost**: €0.02 (Exceptional cost control!)  
+**Lines of Documentation**: 45,000+  
+**Lines of Code**: 22,000+  
 **Kubernetes**: k3s deployed locally (€238/month AKS avoided)  
-**CI/CD**: GitHub Actions with OIDC (zero stored secrets)
+**CI/CD**: GitHub Actions with OIDC (zero stored secrets)  
+
+> 📘 **[→ Full Resumption Guide](RESUMPTION-GUIDE-JAN2026.md)** - Comprehensive context for new chat sessions
 
 ### **Completed Milestones**
 - ✅ **Month 1**: Azure Foundations (Days 1-15)
-- ✅ **Month 2**: Security Services (Days 17-21, 33)
-- ✅ **Month 3**: DevSecOps Basics (Day 23, 25, 27, 29, 31)
-- ✅ **Month 4**: Container Security Path (Days 35, 37, 39, 41, 43)
-- 🎯 **Now**: Advanced CI/CD with OIDC (Day 45)
+- ✅ **Month 2**: Security Services (Days 17-23)
+- ✅ **Month 3**: Automation & Q1 Capstone (Days 25-33)
+- ✅ **Month 4**: Container Security & Kubernetes (Days 35-43)
+- ✅ **Month 5**: Advanced DevSecOps (Days 45-53)
+- ✅ **Month 6**: Hardening & Q2 Capstone (Days 55-59)
+- ⏸️ **December 2025**: 42 École Inception (Docker Compose)
+- 🎯 **Next**: Threat Detection & Intelligence (Day 61+)
 
 ---
 
