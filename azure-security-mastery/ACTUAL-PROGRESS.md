@@ -2479,11 +2479,95 @@ azure-security-mastery/
 
 **Assessment**: ✅ **DAY 61 THEORY COMPLETE** - Ready for hands-on KQL practice! 🎯
 
-**Velocity Analysis**: 15 sessions in 42 calendar days = **2.2 days/session** (Target: 2.0) ✅ **EXCELLENT PACE!**  
-**1-Year Progress**: 33/365 days completed = **9.0%** of curriculum in first 42 days  
-**Cost Management**: **€0 spent** - 100% free tier optimization 💰
+---
 
-**Assessment**: ✅ **MONTH 3 = 100% COMPLETE** - Q1 Capstone demonstrates security integration + professional judgment! 🎯
+## 📅 **Session #31 - Day 61: Microsoft Sentinel & KQL Basics** (January 1, 2026)
+
+**Objective**: Master KQL (Kusto Query Language) fundamentals and SIEM concepts for threat detection
+
+**Focus Areas**:
+1. ✅ SIEM vs SOAR conceptual understanding
+2. ✅ KQL pipe-based query syntax (vs SQL comparison)
+3. ✅ Core operators: `where`, `summarize`, `join`, `extend`, `project`
+4. ✅ Time operations: `ago()`, `bin()`, time bucketing for pattern detection
+5. ✅ Security detection patterns: brute force, impossible travel, privilege escalation
+6. ✅ Query optimization for cost and performance (time filters first!)
+7. ✅ `let` variables for reusable query components
+8. ✅ Real-world threat scenarios (VPN false positives, sequence detection)
+
+**Key Accomplishments**:
+- ✅ Created comprehensive KQL learning guide (900+ lines)
+- ✅ 8+ practical security query examples documented
+- ✅ 10 common security detection patterns analyzed
+- ✅ Understanding of Log Analytics free tier (500 MB/day)
+- ✅ Best practices for performance and cost optimization
+- ✅ Correlation techniques for multi-stage attack detection
+
+**Technical Concepts Mastered**:
+```kql
+// Core KQL pattern learned
+TableName
+| where TimeGenerated > ago(24h)      // Time filter first (performance!)
+| where Condition == "value"          // Additional filters
+| summarize Count = count() by Field  // Aggregation (GROUP BY equivalent)
+| order by Count desc                 // Sorting
+| take 10                             // Limit results
+```
+
+**Security Query Patterns**:
+1. **Brute Force Detection**: Failed logins → threshold analysis
+2. **Impossible Travel**: Geographic anomaly detection (+ VPN considerations)
+3. **Privilege Escalation**: Role assignment monitoring
+4. **Sequence Detection**: Multi-stage attack correlation with `let` + `join`
+5. **Baseline Deviation**: Normal behavior vs anomalous activity
+6. **Off-Hours Activity**: Time-based anomaly detection
+7. **Resource Abuse**: Mass deletion or excessive API calls
+8. **Entity Behavior**: User doing something they've never done before
+
+**Professional Insights**:
+- Discussed VPN impact on location-based detection (false positive mitigation)
+- Time bucketing for spike detection (`bin()` function)
+- `let` variables for query reusability and readability
+- Regex patterns vs simple string matching (when to use each)
+- JSON/dynamic property access (JavaScript-style dot notation)
+- C/C++ background as competitive advantage in security (memory concepts)
+
+**Next Steps (Day 61 Part 2)**:
+1. Set up Log Analytics workspace (free tier)
+2. Enable Azure Activity log data connector
+3. Practice queries against real logs
+4. Create first detection rule/alert
+5. Optimize queries and measure performance
+
+**Documentation Created**:
+- [`day61-sentinel-kql-basics.md`](03-advanced-security/day61-sentinel-kql-basics.md) - Complete KQL reference (900+ lines)
+
+**Cost Analysis**:
+- **Today's Cost**: €0.00 (theory only, no deployments)
+- **Cumulative Journey Cost**: €0.02 (unchanged)
+- **Free Tier Strategy**: 500 MB/day Log Analytics ingestion when deployed
+- **Next Session**: Will deploy Log Analytics workspace (remains in free tier)
+
+**Skills Acquired**:
+- ✅ SIEM/SOAR conceptual framework
+- ✅ KQL query language syntax and patterns
+- ✅ Threat detection methodology (baseline, anomaly, sequence)
+- ✅ Log analysis and correlation techniques
+- ✅ Cost-optimized query design
+- ✅ Security analyst thinking patterns
+
+**Portfolio Value**:
+- Demonstrates SIEM/log analysis skills (critical for SOC roles)
+- Shows query language proficiency (KQL transferable to Splunk SPL concepts)
+- Security detection patterns ready for interview discussions
+- Understanding of cloud-native security monitoring
+
+**Velocity Analysis**: 31 sessions in 122 calendar days (Sept 1 - Jan 1) = **3.9 days/session**  
+**Note**: December hiatus included (30 days school project), adjusted pace = **2.6 days/session**  
+**1-Year Progress**: 61/365 days completed = **16.7%** of curriculum in 4 months  
+**Cost Management**: **€0.02 spent** - Exceptional free tier optimization 💰
+
+**Assessment**: ✅ **DAY 61 THEORY COMPLETE** - Ready for hands-on KQL practice! 🎯
 
 **🎉 Major Achievement**: **Enterprise-Ready DevSecOps + Q1 Capstone Complete**
 - ✅ All foundation days documented with real experience

@@ -12,7 +12,7 @@
 
 **December 2025 Hiatus**: Sessions paused for 42 École school projects (Inception - Docker/System Administration intensive). See [`42-inception/`](42-inception/) for complete documentation of Docker Compose, Nginx, WordPress, MariaDB, and bonus services implementation.
 
-**Resuming**: ✅ January 1, 2026 - Day 61 (Microsoft Sentinel & KQL - Theory Complete)  
+**Resuming**: ✅ January 1, 2026 - Day 61 (Microsoft Sentinel & KQL - Theory ✅ Complete)  
 **Status**: 31/180 sessions complete (17.2%) | Q2 Capstone ✅ DELIVERED  
 **Next**: Day 61 hands-on practice → Threat Intelligence → Incident Response → Q3 Capstone
 

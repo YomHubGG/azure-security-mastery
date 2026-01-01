@@ -17,11 +17,12 @@
 1. [Cloud Infrastructure & IaC](#cloud-infrastructure--iac)
 2. [Container Security](#container-security)
 3. [DevSecOps & CI/CD](#devsecops--cicd)
-4. [Hybrid Cloud & Enterprise Architecture](#hybrid-cloud--enterprise-architecture)
-5. [Security Assessment & Compliance](#security-assessment--compliance)
-6. [Application Security](#application-security)
-7. [Cost Optimization](#cost-optimization)
-8. [Professional Skills](#professional-skills)
+4. [Threat Detection & SIEM](#threat-detection--siem)
+5. [Hybrid Cloud & Enterprise Architecture](#hybrid-cloud--enterprise-architecture)
+6. [Security Assessment & Compliance](#security-assessment--compliance)
+7. [Application Security](#application-security)
+8. [Cost Optimization](#cost-optimization)
+9. [Professional Skills](#professional-skills)
 
 ---
 
@@ -202,7 +203,74 @@
 
 ---
 
-## 🛡️ Application Security
+## � Threat Detection & SIEM
+
+### **Microsoft Sentinel & KQL**
+✅ **I can write KQL (Kusto Query Language) queries** for:
+- Security event analysis and correlation
+- Failed login detection (brute force patterns)
+- Privilege escalation monitoring
+- Resource deletion/modification tracking
+- Anomalous behavior identification
+- Multi-stage attack sequence detection
+
+✅ **I understand SIEM/SOAR architecture** including:
+- Data connectors (Azure Activity, Sign-in Logs, Defender alerts)
+- Log Analytics workspace structure
+- Analytics rules (scheduled queries, thresholds)
+- Incident correlation and investigation
+- Playbook automation with Logic Apps
+- Free tier limitations (500 MB/day ingestion)
+
+✅ **I can design security detection rules** using:
+- Time-based analysis (`ago()`, `bin()` for bucketing)
+- Aggregation functions (`count()`, `dcount()`, `make_set()`)
+- Join operations for event correlation
+- `let` variables for reusable query components
+- Baseline vs anomaly detection patterns
+- Entity behavior analytics
+
+✅ **I can optimize queries** for:
+- Performance (time filters first, early projection)
+- Cost reduction (minimize data scanned)
+- Accuracy (reduce false positives)
+- Readability (clear pipe-based logic)
+
+**Real-World Detection Patterns**:
+```kql
+// Multi-stage attack detection
+let FailedLogins = SigninLogs 
+  | where ResultType != "0" 
+  | summarize FailCount = count() by UserPrincipalName;
+SigninLogs
+| where ResultType == "0"
+| join (FailedLogins) on UserPrincipalName
+| where FailCount > 5
+// Detects: Brute force → successful breach sequence
+```
+
+**Interview Soundbite**:
+> "I can write KQL queries to detect security threats across Azure environments. I understand the difference between SIEM (collect/analyze/detect) and SOAR (orchestrate/automate/respond), and I've designed detection rules for common attack patterns like brute force authentication, privilege escalation, and impossible travel scenarios. I'm comfortable with query optimization techniques to balance detection accuracy with cost efficiency in the free tier's 500 MB/day limit."
+
+### **Security Analysis Mindset**
+✅ **I think in security patterns**:
+- Baseline → Anomaly detection
+- Sequence detection (attack chains)
+- Entity behavior analytics
+- False positive mitigation (VPN considerations)
+- Time-based pattern analysis (off-hours activity)
+- Geographic anomaly detection
+
+✅ **I understand real-world constraints**:
+- VPN impact on location-based alerts
+- Time zones and business hours
+- Service account vs human activity
+- Alert fatigue prevention
+- Tuning thresholds based on environment
+
+---
+
+## �🛡️ Application Security
 
 ### **Secure Application Development**
 ✅ **I can implement defense-in-depth security** with:

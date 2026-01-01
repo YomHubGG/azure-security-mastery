@@ -84,19 +84,22 @@
 
 ## **MONTH 5: Q2 CAPSTONE & ADVANCED ARCHITECTURE**
 
-### **Week 21-22: Q2 Capstone Execution** (Nov 14-20)
-- 📅 **Day 59**: Q2 Capstone Deployment
-  - Deploy SecureCloud DevSecOps Platform
-  - Implement 40+ security controls from Days 35-57
+### **Week 21-22: Q2 Capstone & Threat Detection** (Nov 14 - Jan 1)
+- ✅ **Day 59**: Q2 Capstone Deployment ✅ COMPLETE
+  - Deployed SecureCloud DevSecOps Platform
+  - Implemented 40+ security controls from Days 35-57
   - Full CI/CD pipeline with OIDC + SBOM + signing
-  - Container deployment (ACI) with verified €0 cost
-  - Document portfolio-ready project
+  - Container deployment (ACI) with verified €0.02 cost
+  - Portfolio-ready project documented
 
-- 📅 **Day 61**: Advanced Monitoring & Incident Response
-  - Azure Monitor deep dive
-  - Log Analytics query mastery
-  - Alert configuration
-  - Security incident simulation
+- ✅ **Day 61**: Microsoft Sentinel & KQL Basics ✅ THEORY COMPLETE (January 1, 2026)
+  - KQL query language fundamentals (pipe-based syntax)
+  - SIEM/SOAR architecture understanding
+  - Security detection patterns (brute force, privilege escalation, impossible travel)
+  - Query optimization for performance and cost
+  - Threat correlation with `let` + `join` operations
+  - Real-world considerations (VPNs, false positives, alert tuning)
+  - **Next**: Hands-on Log Analytics workspace setup + practical queries
 
 ---
 
